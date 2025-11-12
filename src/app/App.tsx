@@ -1,9 +1,20 @@
-import { userService } from "../entities/users/service/service";
+import { UserHooks } from "../entities/users/hooks";
 
 function App() {
-  const user = userService.getAllUsers();
+  const { data: user } = UserHooks.useGetAllUserQuery();
   console.log(user);
-  return <div>sdfsdfdsf</div>;
+  return (
+    <div>
+      {user?.map((user, i) => {
+        return (
+          <div key={i}>
+            <p className="text-red-500">{user.firstName}</p>
+            <p>{user.email}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export default App;

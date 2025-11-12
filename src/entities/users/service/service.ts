@@ -1,5 +1,5 @@
 import { api } from "../../../shared/api";
-import type { User } from "../types/UserTypes";
+import type { User } from "../model/types";
 
 class UserService {
   async getAllUsers(): Promise<User[]> {
