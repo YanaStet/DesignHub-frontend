@@ -1,3 +1,4 @@
+import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { UserHooks } from "../entities/users/hooks";
 
 function App() {
@@ -7,9 +8,13 @@ function App() {
     <div>
       {user?.map((user, i) => {
         return (
+          // <div key={i}>
+          //   <p>{user.firstName}</p>
+          //   <p>{user.email}</p>
+          // </div>
           <div key={i}>
-            <p className="text-red-500">{user.firstName}</p>
-            <p>{user.email}</p>
+            <Typography variant="h2">{user.firstName}</Typography>
+            <Typography variant="body1">{user.email}</Typography>
           </div>
         );
       })}
