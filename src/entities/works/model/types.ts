@@ -18,3 +18,10 @@ export type Work = {
     id: number;
   }[];
 };
+
+export type WorkQueryParams = {
+  limit: number | null;
+  skip: number | null;
+  categories: string[] | null;
+  tags: string[] | null;
+};

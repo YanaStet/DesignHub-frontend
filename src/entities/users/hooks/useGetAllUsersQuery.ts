@@ -4,7 +4,7 @@ import {
   type UseQueryResult,
 } from "@tanstack/react-query";
 import { USER_KEYS, type User } from "../model";
-import { userService } from "../service/service";
+import { userService } from "../api/service";
 import { AxiosError } from "axios";
 
 export function useGetAllUserQuery<TData = User[]>(
