@@ -1,3 +1,5 @@
 export const USER_KEYS = {
   GET_ALL_USER: "GET_ALL_USER",
+  GET_ME: "GET_ME",
+  GET_USER_BY_ID: "GET_USER_BY_ID",
 };
