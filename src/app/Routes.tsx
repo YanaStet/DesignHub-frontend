@@ -6,6 +6,7 @@ import {
 import { AuthRedirectRoute } from "./AuthRedirectRoute";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
 import { HomePageLazy } from "@/pages/home/Home.page.pazy";
+import { PublicLayout } from "./PublicLayout";
 
 const routes: RouteObject[] = [
   {},
@@ -13,10 +14,14 @@ const routes: RouteObject[] = [
     element: <AuthRedirectRoute />,
     children: [
       {
-        path: ROUTE_PATHS.HOME,
-        element: <HomePageLazy />,
+        element: <PublicLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.HOME,
+            element: <HomePageLazy />,
+          },
+        ],
       },
-      {},
     ],
   },
 ];
