@@ -6,7 +6,7 @@ export type Work = {
   image_url: string | null;
   id: number;
   designer_id: number;
-  upload_date: Date;
+  upload_date: string;
   views_count: number;
   designer: User;
   categories: {

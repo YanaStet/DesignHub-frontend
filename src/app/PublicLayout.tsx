@@ -5,7 +5,7 @@ export function PublicLayout() {
   return (
     <>
       <Header />
-      <div className="px-25 bg-primary-2 h-screen pt-26">
+      <div className="px-25 pt-26 pb-10 bg-primary-2 min-h-screen custom-scrollbar-container overflow-y-scroll">
         <Outlet />
       </div>
     </>

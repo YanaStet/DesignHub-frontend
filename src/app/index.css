@@ -122,7 +122,20 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Базові стилі для скролбару (світла тема) */
+.custom-scrollbar-container::-webkit-scrollbar {
+  width: 8px; /* w-2 */
+}
+
+.custom-scrollbar-container::-webkit-scrollbar-track {
+  border-radius: 9999px; /* rounded-full */
+  background-color: #151517; /* bg-primary-1 */
+}
+
+.custom-scrollbar-container::-webkit-scrollbar-thumb {
+  border-radius: 9999px; /* rounded-full */
+  background-color: #73737a; /* bg-gray-3 */
+}
 
 :root {
   /* Primary colors */
@@ -156,6 +169,7 @@ html,
 body {
   height: 100%;
   overflow-x: hidden;
+  overflow-y: scroll;
   color: var(--color-gray-1);
   background-color: var(--color-gray-8);
   box-sizing: border-box;

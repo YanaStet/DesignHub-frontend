@@ -12,7 +12,7 @@ export function useGetAllWorksQuery<TData = Work[]>(
   options?: Partial<UseQueryOptions<Work[], AxiosError, TData>>
 ): UseQueryResult<TData> {
   return useQuery<Work[], AxiosError, TData>({
-    queryKey: [WORK_KEYS.GET_ALL_WORK],
+    queryKey: [WORK_KEYS.GET_ALL_WORK, params],
     queryFn: () => workService.getAllWorks(params),
     ...options,
   });

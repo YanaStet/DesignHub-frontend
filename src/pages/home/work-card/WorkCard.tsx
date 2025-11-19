@@ -1,10 +1,14 @@
 import type { Work } from "@/entities/works/model";
 import { API_URL } from "@/shared/api";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
+import { Link } from "react-router-dom";
 
 export function WorkCard(work: Work) {
   return (
-    <div className="flex p-3 gap-3 flex-col bg-primary-1 rounded-2xl">
+    <Link
+      to={`/works/${work.id}`}
+      className="flex p-3 gap-3 flex-col bg-primary-1 rounded-2xl hover:scale-103 transition-transform duration-400"
+    >
       <div className="w-50 h-30 2xl:w-80 2xl:h-50 flex justify-center overflow-hidden">
         {work.image_url !== null ? (
           <img
@@ -13,13 +17,20 @@ export function WorkCard(work: Work) {
             className="object-cover w-full rounded-2xl"
           />
         ) : (
-          <div className="w-80 h-50 bg-gray-1 rounded-2xl" />
+          <div className="w-50 h-30 2xl:w-80 2xl:h-50 bg-gray-1 rounded-2xl flex items-center justify-center">
+            <div className="w-15 h-15 rounded-full bg-gray-2" />
+          </div>
         )}
       </div>
-      <Typography variant="body4" className="text-primary-3">
-        {work.designer.firstName} {work.designer.lastName}{" "}
-        <span className="h-1 w-1 rounded-full bg-primary-3"></span>
-      </Typography>
+      <div className="flex gap-1 flex-row items-center">
+        <Typography variant="body4" className="text-primary-3">
+          {work.designer.firstName} {work.designer.lastName}
+        </Typography>
+        <span className="h-1 w-1 rounded-full bg-primary-3" />
+        <Typography variant="body4" className="text-primary-3">
+          {new Date(work.upload_date).toISOString().split("T")[0]}
+        </Typography>
+      </div>
       <Typography variant="h3" className="text-white">
         {work.title}
       </Typography>
@@ -31,13 +42,13 @@ export function WorkCard(work: Work) {
           {work.tags.map((tag) => (
             <div
               key={tag.id}
-              className="text-gray-1 px-2 py-1 rounded-xl bg-gray-7"
+              className="text-gray-1 px-2 py-1 rounded-xl bg-gray-3"
             >
               {tag.name}
             </div>
           ))}
         </div>
       )}
-    </div>
+    </Link>
   );
 }
