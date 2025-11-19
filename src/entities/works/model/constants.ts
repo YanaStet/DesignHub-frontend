@@ -1,3 +1,4 @@
 export const WORK_KEYS = {
   GET_ALL_WORK: "GET_ALL_WORK",
+  INFINITE_QUERY: "INFINITE_QUERY",
 };
