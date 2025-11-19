@@ -15,10 +15,12 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 export function HomePage() {
+  const [searchValue, setSearchValue] = useState("");
   const [params, setParams] = useState<Omit<WorkQueryParams, "skip" | "limit">>(
     {
       categories: null,
       tags: null,
+      q: null,
     }
   );
 
@@ -30,6 +32,14 @@ export function HomePage() {
     hasNextPage,
     isFetchingNextPage,
   } = WorkHooks.useWorkInfiniteQuery(params);
+
+  const handleSearch = () => {
+    setSearchValue(searchValue);
+    setParams((prev) => ({
+      ...prev,
+      q: searchValue,
+    }));
+  };
 
   const allWorks = data?.pages.flatMap((page) => page.data) || [];
 
@@ -52,12 +62,22 @@ export function HomePage() {
         <div className="min-w-175 flex items-center flex-col gap-3">
           <div className="flex gap-3 min-w-175">
             <InputGroup className="w-full">
-              <InputGroupInput placeholder="Search..." />
+              <InputGroupInput
+                className="text-gray-4"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+              />
               <InputGroupAddon>
                 <Search />
               </InputGroupAddon>
             </InputGroup>
-            <Button>Search</Button>
+            <Button onClick={handleSearch}>Search</Button>
           </div>
           {isLoading && !isError ? (
             <Loader className="h-[calc(100vh-64px-120px)]" />

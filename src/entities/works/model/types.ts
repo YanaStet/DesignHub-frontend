@@ -24,4 +24,5 @@ export type WorkQueryParams = {
   skip: number | null;
   categories: string[] | null;
   tags: string[] | null;
+  q: string | null;
 };
