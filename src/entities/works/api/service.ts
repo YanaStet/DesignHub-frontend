@@ -7,6 +7,10 @@ class WorkService {
     const data = await api.get<Work[]>(`/works/?${buildQueryParams(params)}`);
     return data;
   }
+  async getWorkById(workId: number): Promise<Work> {
+    const data = await api.get<Work>(`/works/${workId}`);
+    return data;
+  }
 }
 
 export const workService = new WorkService();

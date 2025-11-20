@@ -54,12 +54,12 @@ export function HomePage() {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <div className="w-full flex justify-around gap-10">
+    <div className="w-full flex justify-around gap-20">
       <div>
         <WorkFilters setParams={setParams} />
       </div>
       <div>
-        <div className="min-w-175 flex items-center flex-col gap-3">
+        <div className="min-w-190 flex items-center flex-col gap-3 overflow-x-hidden">
           <div className="flex gap-3 min-w-175">
             <InputGroup className="w-full">
               <InputGroupInput
@@ -81,8 +81,12 @@ export function HomePage() {
           </div>
           {isLoading && !isError ? (
             <Loader className="h-[calc(100vh-64px-120px)]" />
+          ) : isError ? (
+            <Typography variant="h4" className="text-gray-3 mt-30">
+              Something went wrong...
+            </Typography>
           ) : allWorks && allWorks.length > 0 ? (
-            <div className="flex flex-wrap justify-between gap-3">
+            <div className="flex flex-wrap justify-between gap-3 max-h-[375px] pr-3 overflow-y-scroll rounded-2xl custom-scrollbar-container">
               {allWorks.map((work, index) => (
                 <div
                   key={work.id}
@@ -91,18 +95,19 @@ export function HomePage() {
                   <WorkCard {...work} />
                 </div>
               ))}
+              {!hasNextPage && allWorks.length > 0 && (
+                <div className="w-full flex justify-center">
+                  <Typography variant="body3" className="text-gray-3 mt-4">
+                    You have reached the end.
+                  </Typography>
+                </div>
+              )}
             </div>
           ) : isFetchingNextPage ? (
             <Loader />
           ) : (
             <Typography variant="h4" className="text-gray-3 mt-30">
               No works found
-            </Typography>
-          )}
-
-          {!hasNextPage && allWorks.length > 0 && (
-            <Typography variant="body3" className="text-gray-3 mt-4">
-              You have reached the end.
             </Typography>
           )}
         </div>

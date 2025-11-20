@@ -169,7 +169,7 @@ html,
 body {
   height: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   color: var(--color-gray-1);
   background-color: var(--color-gray-8);
   box-sizing: border-box;
