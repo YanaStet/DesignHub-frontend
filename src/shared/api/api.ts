@@ -1,8 +1,9 @@
-export const API_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+export { BASE_URL };
 
 export class HttpError extends Error {
   status: number;
-  body: any; // Тіло відповіді з помилкою
+  body: any;
 
   constructor(status: number, message: string, body: any) {
     super(message);
@@ -12,120 +13,118 @@ export class HttpError extends Error {
   }
 }
 
-export class ApiService {
-  private baseURL: string;
-  private headers: Record<string, string>;
+class ApiService {
+  private baseUrl: string;
+  private token: string | null = null;
 
-  /**
-   * Створює екземпляр сервісу.
-   * @param baseURL Базовий URL вашого API (напр., 'http://127.0.0.1:8000')
-   */
   constructor() {
-    this.baseURL = API_URL;
-    // Встановлюємо базові заголовки. Їх можна розширити для JWT-токенів.
-    this.headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
+    this.baseUrl = BASE_URL;
+    if (typeof window !== "undefined") {
+      this.token = localStorage.getItem("access-token");
+    }
   }
 
-  /**
-   * Приватний помічник для виконання всіх запитів.
-   * @param path Кінцева точка API (напр., '/users/')
-   * @param options Налаштування 'fetch' (метод, тіло, заголовки)
-   * @returns Проміс з розпарсеними даними (generic T)
-   */
-  private async request<T>(path: string, options: RequestInit): Promise<T> {
-    const url = `${this.baseURL}${path}`;
+  setToken(token: string) {
+    this.token = token;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("authToken", token);
+    }
+  }
 
-    // Можна додати логіку для додавання токена авторизації до заголовків
-    // const token = localStorage.getItem('token');
-    // if (token) {
-    //   headers['Authorization'] = `Bearer ${token}`;
-    // }
+  clearToken() {
+    this.token = null;
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authToken");
+    }
+  }
 
-    try {
-      const response = await fetch(url, { ...options, headers: this.headers });
+  private getHeaders(contentType?: string): HeadersInit {
+    const headers: HeadersInit = {};
+    // null означає, що браузер сам встановить тип (напр. для FormData)
+    if (contentType !== null) {
+      headers["Content-Type"] = contentType || "application/json";
+    }
+    headers["Accept"] = "application/json";
+    if (this.token) {
+      headers["Authorization"] = `Bearer ${this.token}`;
+    }
+    return headers;
+  }
 
-      // Перевіряємо, чи запит успішний
-      if (!response.ok) {
-        let errorBody;
-        try {
-          // Намагаємося прочитати тіло помилки (FastAPI часто повертає JSON)
-          errorBody = await response.json();
-        } catch (e) {
-          // Якщо тіло не JSON, повертаємо текст
-          errorBody = await response.text();
-        }
-
-        // Генеруємо кастомну помилку
-        const message = errorBody.detail || response.statusText;
-        throw new HttpError(response.status, message, errorBody);
+  private async handleResponse<T>(response: Response): Promise<T> {
+    if (!response.ok) {
+      const errorData = await response
+        .json()
+        .catch(() => ({ detail: "Unknown error" }));
+      if (response.status === 401) {
+        this.clearToken();
       }
-
-      // Якщо відповідь 204 No Content, повертаємо null
-      if (response.status === 204) {
-        return null as T;
-      }
-
-      // Парсимо успішну відповідь як JSON
+      throw new HttpError(
+        response.status,
+        errorData.detail || "An error occurred",
+        errorData
+      );
+    }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
       return (await response.json()) as T;
-    } catch (error) {
-      // Обробляємо помилки мережі або наші кастомні помилки
-      console.error("API request error:", error);
-      throw error; // Передаємо помилку далі для обробки у сервісі/компоненті
     }
+    return null as unknown as T;
   }
 
-  /**
-   * Виконує GET-запит.
-   * @param path Кінцева точка API
-   * @param params (Опційно) Об'єкт для query-параметрів
-   * @returns Проміс з даними
-   */
-  public get<T>(path: string, params?: Record<string, string>): Promise<T> {
-    let fullPath = path;
-    if (params) {
-      const queryParams = new URLSearchParams(params);
-      fullPath = `${path}?${queryParams.toString()}`;
-    }
-    return this.request<T>(fullPath, { method: "GET" });
+  // === ВИПРАВЛЕНО: Додано <T> ===
+  async get<T>(path: string): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: "GET",
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse<T>(response);
   }
 
-  /**
-   * Виконує POST-запит.
-   * @param path Кінцева точка API
-   * @param body Дані (об'єкт), які будуть відправлені як JSON
-   * @returns Проміс з даними
-   */
-  public post<T>(path: string, body: unknown): Promise<T> {
-    return this.request<T>(path, {
+  // === ВИПРАВЛЕНО: Додано <T> ===
+  async post<T>(path: string, data: any): Promise<T> {
+    let body: any;
+    let contentType: string | undefined | null;
+
+    if (data instanceof FormData) {
+      body = data;
+      contentType = null;
+    } else if (data instanceof URLSearchParams) {
+      body = data;
+      contentType = "application/x-www-form-urlencoded";
+    } else {
+      body = JSON.stringify(data);
+      contentType = "application/json";
+    }
+
+    const response = await fetch(`${this.baseUrl}${path}`, {
       method: "POST",
-      body: JSON.stringify(body),
+      headers: this.getHeaders(contentType as string),
+      body: body,
     });
+    return this.handleResponse<T>(response);
   }
 
-  /**
-   * Виконує PUT-запит.
-   * @param path Кінцева точка API
-   * @param body Дані (об'єкт), які будуть відправлені як JSON
-   * @returns Проміс з даними
-   */
-  public put<T>(path: string, body: unknown): Promise<T> {
-    return this.request<T>(path, {
+  async put<T>(path: string, data: any): Promise<T> {
+    const isFormData = data instanceof FormData;
+    const response = await fetch(`${this.baseUrl}${path}`, {
       method: "PUT",
-      body: JSON.stringify(body),
+      headers: this.getHeaders(
+        isFormData ? undefined : "application/json"
+      ) as HeadersInit,
+      body: isFormData ? data : JSON.stringify(data),
     });
+    return this.handleResponse<T>(response);
   }
 
-  /**
-   * Виконує DELETE-запит.
-   * @param path Кінцева точка API
-   * @returns Проміс з даними (часто null або { success: true })
-   */
-  public delete<T>(path: string): Promise<T> {
-    return this.request<T>(path, { method: "DELETE" });
+  async delete<T>(path: string): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: "DELETE",
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse<T>(response);
   }
 }
 
-export const api = new ApiService();
+const api = new ApiService();
+export default api;

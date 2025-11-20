@@ -1,4 +1,4 @@
-import { api } from "../../../shared/api";
+import api from "@/shared/api/api";
 import type { Tag } from "../model";
 
 class TagService {

@@ -1,5 +1,5 @@
 import type { Work } from "@/entities/works/model";
-import { API_URL } from "@/shared/api";
+import { BASE_URL } from "@/shared/api";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Link } from "react-router-dom";
 
@@ -12,7 +12,7 @@ export function WorkCard(work: Work) {
       <div className="w-50 h-30 2xl:w-80 2xl:h-50 flex justify-center overflow-hidden">
         {work.image_url !== null ? (
           <img
-            src={API_URL + work.image_url}
+            src={BASE_URL + work.image_url}
             alt="Photo"
             className="object-cover w-full rounded-2xl"
           />

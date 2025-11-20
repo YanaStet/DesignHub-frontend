@@ -1,6 +1,6 @@
 import { buildQueryParams } from "@/shared/utils/query";
-import { api } from "../../../shared/api";
 import type { Work, WorkQueryParams } from "../model";
+import api from "@/shared/api/api";
 
 class WorkService {
   async getAllWorks(params: WorkQueryParams): Promise<Work[]> {
