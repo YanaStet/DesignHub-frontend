@@ -27,19 +27,20 @@ class ApiService {
   setToken(token: string) {
     this.token = token;
     if (typeof window !== "undefined") {
-      localStorage.setItem("authToken", token);
+      localStorage.setItem("access-token", token);
     }
   }
 
   clearToken() {
     this.token = null;
     if (typeof window !== "undefined") {
-      localStorage.removeItem("authToken");
+      localStorage.removeItem("access-token");
     }
   }
 
   private getHeaders(contentType?: string): HeadersInit {
     const headers: HeadersInit = {};
+    this.setToken(localStorage.getItem("access-token") || "");
     // null означає, що браузер сам встановить тип (напр. для FormData)
     if (contentType !== null) {
       headers["Content-Type"] = contentType || "application/json";
@@ -56,9 +57,6 @@ class ApiService {
       const errorData = await response
         .json()
         .catch(() => ({ detail: "Unknown error" }));
-      if (response.status === 401) {
-        this.clearToken();
-      }
       throw new HttpError(
         response.status,
         errorData.detail || "An error occurred",
@@ -78,6 +76,7 @@ class ApiService {
       method: "GET",
       headers: this.getHeaders(),
     });
+
     return this.handleResponse<T>(response);
   }
 

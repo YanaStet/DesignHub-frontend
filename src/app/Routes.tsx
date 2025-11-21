@@ -8,6 +8,8 @@ import { ROUTE_PATHS } from "@/shared/utils/routes";
 import { HomePageLazy } from "@/pages/home/Home.page.pazy";
 import { PublicLayout } from "./PublicLayout";
 import { WorkPageLazy } from "@/pages/work-page/Work.page.pazy";
+import { UnauthorizedLayout } from "./UnauthorizedLayout";
+import { LoginPageLazy } from "@/pages/login/Login.page.lazy";
 
 const routes: RouteObject[] = [
   {},
@@ -30,6 +32,15 @@ const routes: RouteObject[] = [
             element: <div>User Profile Page</div>,
           },
         ],
+      },
+    ],
+  },
+  {
+    element: <UnauthorizedLayout />,
+    children: [
+      {
+        element: <LoginPageLazy />,
+        path: ROUTE_PATHS.LOGIN,
       },
     ],
   },

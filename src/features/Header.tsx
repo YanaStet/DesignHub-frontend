@@ -11,10 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/shadcn-ui/ui/dropdown-menu";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
+import { useMe } from "@/shared/store/meStore";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
 import { Link } from "react-router-dom";
 
 export function Header() {
+  const { me } = useMe();
+
   return (
     <div className="w-full h-16 bg-primary-1 flex items-center justify-between px-15">
       <Link to={ROUTE_PATHS.HOME} className="w-13">
@@ -29,11 +32,17 @@ export function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src="#" alt="@shadcn" />
+              <AvatarFallback>
+                {me?.firstName[0]}
+                {me?.lastName[0]}
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="center">
+          <DropdownMenuContent
+            className="w-56 bg-primary-1 text-gray-4"
+            align="center"
+          >
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Log Out</DropdownMenuItem>
