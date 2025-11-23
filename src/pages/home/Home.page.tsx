@@ -86,7 +86,7 @@ export function HomePage() {
               Something went wrong...
             </Typography>
           ) : allWorks && allWorks.length > 0 ? (
-            <div className="flex flex-wrap justify-between gap-3 max-h-[375px] pr-3 overflow-y-scroll rounded-2xl custom-scrollbar-container">
+            <div className="flex flex-wrap justify-around gap-3 max-h-[375px] pr-3 overflow-y-auto rounded-2xl custom-scrollbar-container">
               {allWorks.map((work, index) => (
                 <div
                   key={work.id}
