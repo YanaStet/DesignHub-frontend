@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/shared/api";
 import logo from "@/shared/assets/logo.png";
 import {
   Avatar,
@@ -16,7 +17,7 @@ import { ROUTE_PATHS } from "@/shared/utils/routes";
 import { Link } from "react-router-dom";
 
 export function Header() {
-  const { me } = useMe();
+  const { me, avatar_url } = useMe();
 
   return (
     <div className="w-full h-16 bg-primary-1 flex items-center justify-between px-15">
@@ -32,7 +33,11 @@ export function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar>
-              <AvatarImage src="#" alt="@shadcn" />
+              <AvatarImage
+                src={BASE_URL + avatar_url}
+                alt="@shadcn"
+                className="object-cover"
+              />
               <AvatarFallback>
                 {me?.firstName[0]}
                 {me?.lastName[0]}
