@@ -1,5 +1,4 @@
 import { WorkHooks } from "@/entities/works/hooks";
-import { WorkCard } from "./work-card/WorkCard";
 import { Loader } from "@/shared/custom-ui/Loader";
 import { Search } from "lucide-react";
 import { WorkFilters } from "./work-filters/WorkFilters";
@@ -11,8 +10,8 @@ import {
 } from "@/shared/shadcn-ui/ui/input-group";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import type { WorkQueryParams } from "@/entities/works/model";
-import { useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
+import { useState } from "react";
+import { InfinityWorkList } from "@/shared/custom-ui/InfinityWorkList";
 
 export function HomePage() {
   const [searchValue, setSearchValue] = useState("");
@@ -43,18 +42,8 @@ export function HomePage() {
 
   const allWorks = data?.pages.flatMap((page) => page.data) || [];
 
-  const { ref, inView } = useInView({
-    rootMargin: "200px",
-  });
-
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   return (
-    <div className="w-full flex justify-around gap-20">
+    <div className="w-full flex justify-around gap-20 px-15 py-10">
       <div>
         <WorkFilters setParams={setParams} />
       </div>
@@ -86,23 +75,12 @@ export function HomePage() {
               Something went wrong...
             </Typography>
           ) : allWorks && allWorks.length > 0 ? (
-            <div className="flex flex-wrap justify-around gap-3 max-h-[375px] pr-3 overflow-y-auto rounded-2xl custom-scrollbar-container">
-              {allWorks.map((work, index) => (
-                <div
-                  key={work.id}
-                  ref={allWorks.length - 1 === index ? ref : null}
-                >
-                  <WorkCard {...work} />
-                </div>
-              ))}
-              {!hasNextPage && allWorks.length > 0 && (
-                <div className="w-full flex justify-center">
-                  <Typography variant="body3" className="text-gray-3 mt-4">
-                    You have reached the end.
-                  </Typography>
-                </div>
-              )}
-            </div>
+            <InfinityWorkList
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              works={allWorks}
+              isFetchingNextPage={isFetchingNextPage}
+            />
           ) : isFetchingNextPage ? (
             <Loader />
           ) : (

@@ -5,7 +5,8 @@ import { workService } from "../api/service";
 
 export type WorksPageData = { data: Work[] };
 
-export function useWorkInfiniteQuery(
+export function useWorkByDesignerIdInfiniteQuery(
+  userId: number,
   initialParams: Omit<WorkQueryParams, "skip" | "limit">
 ) {
   return useInfiniteQuery<
@@ -24,7 +25,9 @@ export function useWorkInfiniteQuery(
         skip: pageParam,
       };
 
-      return workService.getAllWorks(params).then((works) => ({ data: works }));
+      return workService
+        .getWorksByDesignerId(userId, params)
+        .then((works) => ({ data: works }));
     },
 
     getNextPageParam: (lastPage, allPages) => {

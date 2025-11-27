@@ -11,6 +11,17 @@ class WorkService {
     const data = await api.get<Work>(`/works/${workId}`);
     return data;
   }
+  async getWorksByDesignerId(
+    userId: number,
+    params?: Omit<WorkQueryParams, "limit" | "skip">
+  ): Promise<Work[]> {
+    const data = await api.get<Work[]>(
+      params
+        ? `/works/by-designer/${userId}?${buildQueryParams(params)}`
+        : `/works/by-designer/${userId}`
+    );
+    return data;
+  }
 }
 
 export const workService = new WorkService();
