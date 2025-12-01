@@ -1,3 +1,5 @@
+import { isTokenExpired } from "../utils/isTokenExpired";
+
 const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 export { BASE_URL };
 
@@ -40,12 +42,25 @@ class ApiService {
 
   private getHeaders(contentType?: string): HeadersInit {
     const headers: HeadersInit = {};
-    this.setToken(localStorage.getItem("access-token") || "");
+
+    // 1. Отримання токена з localStorage
+    const storedToken = localStorage.getItem("access-token");
+    this.setToken(storedToken || ""); // Оновлюємо внутрішній стан, але це може бути зайвим, якщо виключно покладатися на localStorage
+
+    // 2. Перевірка прострочення (використовуємо наш isTokenExpired)
+    if (this.token && isTokenExpired(this.token)) {
+      console.warn("Токен прострочений! Видаляємо...");
+      this.clearToken(); // Видаляємо прострочений токен
+    }
+
+    // 3. Формування заголовків
     // null означає, що браузер сам встановить тип (напр. для FormData)
     if (contentType !== null) {
       headers["Content-Type"] = contentType || "application/json";
     }
     headers["Accept"] = "application/json";
+
+    // 4. Додавання Authorization тільки якщо токен існує і не був видалений
     if (this.token) {
       headers["Authorization"] = `Bearer ${this.token}`;
     }

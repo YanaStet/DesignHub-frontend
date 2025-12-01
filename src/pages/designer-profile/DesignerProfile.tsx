@@ -14,7 +14,7 @@ import { WorkHooks } from "@/entities/works/hooks";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { InfinityWorkList } from "@/shared/custom-ui/InfinityWorkList";
 
-type StarIcon = "full" | "half" | "empty";
+export type StarIcon = "full" | "half" | "empty";
 
 export function DesignerProfilePage() {
   const { userId } = useParams();
