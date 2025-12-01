@@ -6,8 +6,15 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/shadcn-ui/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/shadcn-ui/ui/dropdown-menu";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
+import { useMe } from "@/shared/store/meStore";
 import clsx from "clsx";
 import { useMemo } from "react";
 
@@ -17,6 +24,7 @@ type CommentProps = {
 };
 
 export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
+  const { me } = useMe();
   const stars: StarIcon[] = useMemo(() => {
     const s: StarIcon[] = [];
     for (let i = 0; i < Math.floor(comment.rating_score || 0); i++) {
@@ -66,6 +74,20 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
               </div>
             ))}
           </div>
+          {comment.author_id === me?.id && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="flex items-center">
+                <Icon name="Comment" className="w-4 h-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-56 bg-primary-1 text-gray-4"
+                align="center"
+              >
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
         <Typography className="text-gray-6">{comment.comment_text}</Typography>
       </div>

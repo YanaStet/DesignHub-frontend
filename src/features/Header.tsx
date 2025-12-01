@@ -14,10 +14,17 @@ import {
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { useMe } from "@/shared/store/meStore";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export function Header() {
   const { me, avatar_url } = useMe();
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    localStorage.removeItem("access-token");
+    localStorage.removeItem("refresh-token");
+    navigate(ROUTE_PATHS.LOGIN);
+  };
 
   return (
     <div className="w-full h-16 bg-primary-1 flex items-center justify-between px-15">
@@ -50,7 +57,7 @@ export function Header() {
           >
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Log Out</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogOut}>Log Out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

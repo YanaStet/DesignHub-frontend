@@ -1,12 +1,13 @@
 import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 import { UserHooks } from "@/entities/users/hooks";
 import { Header } from "@/features/Header";
+import { Loader } from "@/shared/custom-ui/Loader";
 import { useMe } from "@/shared/store/meStore";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 export function PublicLayout() {
-  const { data: me, error } = UserHooks.useGetMeQuery();
+  const { data: me, error, isLoading } = UserHooks.useGetMeQuery();
   const { data: profile } = DesignerProfileHooks.useDesignerProfileQuery();
   const { setMe, setAvatarUrl } = useMe();
 
@@ -21,10 +22,16 @@ export function PublicLayout() {
 
   return (
     <div className="max-h-screen overflow-y-hidden">
-      <Header />
-      <div className="bg-primary-2 h-[calc(100dvh-64px)] custom-scrollbar-container overflow-y-auto">
-        <Outlet />
-      </div>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <Header />
+          <div className="bg-primary-2 h-[calc(100dvh-64px)] custom-scrollbar-container overflow-y-auto">
+            <Outlet />
+          </div>
+        </>
+      )}
     </div>
   );
 }
