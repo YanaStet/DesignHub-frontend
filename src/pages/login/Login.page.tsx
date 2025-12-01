@@ -1,4 +1,5 @@
 import { AuthHooks } from "@/entities/auth/hooks";
+import { showToast } from "@/shared/utils/showToast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +32,7 @@ export function LoginPage() {
       },
       {
         onSuccess: (response) => {
+          showToast("success", "You successfuly entered your account.");
           localStorage.setItem("access-token", response.access_token);
           navigate("/");
         },

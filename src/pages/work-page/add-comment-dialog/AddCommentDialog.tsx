@@ -6,7 +6,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/shared/shadcn-ui/ui/dialog";
 import { useForm } from "react-hook-form";
 import { formSchema, type FormSchema } from "./schema";
@@ -24,13 +23,29 @@ import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { useState } from "react";
 import { commentHooks } from "@/entities/comments/hooks";
 import { useQueryClient } from "@tanstack/react-query";
-import { COMMENT_KEYS } from "@/entities/comments/model";
+import {
+  COMMENT_KEYS,
+  type UpdateCommentRequest,
+} from "@/entities/comments/model";
+import { showToast } from "@/shared/utils/showToast";
 
 type AddCommentDialogProps = {
   workId: number;
+  isEdit?: boolean;
+  handleEditComment?: (comment: UpdateCommentRequest) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  isLoading?: boolean;
 };
 
-export function AddCommentDialog({ workId }: AddCommentDialogProps) {
+export function AddCommentDialog({
+  workId,
+  isEdit,
+  handleEditComment,
+  open,
+  setOpen,
+  isLoading,
+}: AddCommentDialogProps) {
   const [rate, setRate] = useState(1);
   const stars = [
     { type: "full", i: 1 },
@@ -53,39 +68,45 @@ export function AddCommentDialog({ workId }: AddCommentDialogProps) {
   const { mutate } = commentHooks.useCreateCommentMutation();
 
   const onSubmit = (values: FormSchema) => {
-    mutate(
-      {
-        comment_text: values.comment_text,
-        rating_score: rate,
-        work_id: workId,
-      },
-      {
-        onSuccess: () => {
-          console.log("Succes");
-          queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
-          form.reset();
-          setRate(1);
+    if (!isEdit) {
+      mutate(
+        {
+          comment_text: values.comment_text,
+          rating_score: rate,
+          work_id: workId,
         },
-        onError: (error) => {
-          console.error("Помилка створення коментаря:", error);
-        },
+        {
+          onSuccess: () => {
+            showToast("success", "Comment was created.");
+            queryClient.invalidateQueries({
+              queryKey: [COMMENT_KEYS.COMMENTS],
+            });
+            form.reset();
+            setRate(1);
+          },
+          onError: (error) => {
+            console.error("Помилка створення коментаря:", error);
+          },
+        }
+      );
+    } else {
+      if (handleEditComment) {
+        handleEditComment({
+          comment_text: values.comment_text,
+          rating_score: rate,
+        });
       }
-    );
+    }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="default" className="w-full bg-primary-2">
-          Add comment
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Form {...form}>
         <DialogContent className="sm:max-w-[425px] bg-primary-1">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle className="text-gray-6">
-                Write your own comment!
+                {isEdit ? "Edit your comment!" : "Write your own comment!"}
               </DialogTitle>
             </DialogHeader>
             <FormField
@@ -137,7 +158,11 @@ export function AddCommentDialog({ workId }: AddCommentDialogProps) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="bg-primary-2">
+              <Button
+                type="submit"
+                className="bg-primary-2"
+                disabled={isLoading}
+              >
                 Submit
               </Button>
             </DialogFooter>

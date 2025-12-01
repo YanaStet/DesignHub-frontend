@@ -17,3 +17,8 @@ export type CommentRequest = {
   rating_score: number;
   work_id: number;
 };
+
+export type UpdateCommentRequest = {
+  comment_text: string;
+  rating_score: number;
+};

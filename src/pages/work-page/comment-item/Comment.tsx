@@ -1,6 +1,12 @@
-import type { Comment } from "@/entities/comments/model";
+import { commentHooks } from "@/entities/comments/hooks";
+import {
+  COMMENT_KEYS,
+  type Comment,
+  type UpdateCommentRequest,
+} from "@/entities/comments/model";
 import type { StarIcon } from "@/pages/designer-profile/DesignerProfile";
 import { BASE_URL } from "@/shared/api";
+import { CustomAlertDialog } from "@/shared/custom-ui/CustomAlertDialog";
 import {
   Avatar,
   AvatarFallback,
@@ -15,8 +21,11 @@ import {
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { useMe } from "@/shared/store/meStore";
+import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { AddCommentDialog } from "../add-comment-dialog/AddCommentDialog";
+import { showToast } from "@/shared/utils/showToast";
 
 type CommentProps = {
   comment: Comment;
@@ -24,7 +33,40 @@ type CommentProps = {
 };
 
 export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const { me } = useMe();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = commentHooks.useDeleteCommentMutation(
+    comment.id
+  );
+  const { mutate: edit, isPending: isEditLoading } =
+    commentHooks.useUpdateCommentMutation(comment.id);
+
+  const handleDelete = () => {
+    mutate(
+      {},
+      {
+        onSuccess: () => {
+          showToast("success", "Comment was successfuly deleted.");
+          queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
+          setOpenDelete(false);
+        },
+      }
+    );
+  };
+
+  const handleEdit = (body: UpdateCommentRequest) => {
+    edit(body, {
+      onSuccess: () => {
+        showToast("success", "Comment was successfuly edited.");
+        queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
+        setOpenEdit(false);
+      },
+    });
+  };
+
   const stars: StarIcon[] = useMemo(() => {
     const s: StarIcon[] = [];
     for (let i = 0; i < Math.floor(comment.rating_score || 0); i++) {
@@ -40,7 +82,7 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
   }, [comment]);
 
   return (
-    <div className="flex gap-5 w-full mb-5">
+    <div className="flex gap-5 w-full mb-5 p-3 rounded-2xl bg-primary-2">
       <Avatar className="w-10 h-10">
         <AvatarImage
           src={BASE_URL + designerAvatarUrl}
@@ -83,14 +125,34 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
                 className="w-56 bg-primary-1 text-gray-4"
                 align="center"
               >
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setOpenDelete(true)}>
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
         </div>
         <Typography className="text-gray-6">{comment.comment_text}</Typography>
       </div>
+      <CustomAlertDialog
+        open={openDelete}
+        onOpenChange={setOpenDelete}
+        title="Are you absolutely sure?"
+        description="This action will permanently delete your comment."
+        onConfirm={handleDelete}
+        loading={isPending}
+      />
+      <AddCommentDialog
+        isEdit
+        workId={comment.work_id}
+        open={openEdit}
+        setOpen={setOpenEdit}
+        handleEditComment={handleEdit}
+        isLoading={isEditLoading}
+      />
     </div>
   );
 }

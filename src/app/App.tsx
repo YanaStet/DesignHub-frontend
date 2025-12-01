@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Routes } from "./Routes";
+import { Toaster } from "@/shared/shadcn-ui/ui/sonner";
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <Suspense fallback={null}>
         <Routes />
       </Suspense>
+      <Toaster />
     </>
   );
 }

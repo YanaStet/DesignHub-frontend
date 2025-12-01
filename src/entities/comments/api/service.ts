@@ -1,5 +1,5 @@
 import api from "@/shared/api/api";
-import type { Comment, CommentRequest } from "../model";
+import type { Comment, CommentRequest, UpdateCommentRequest } from "../model";
 
 class CommentService {
   async getByWorkIdComments(workId: number): Promise<Comment[]> {
@@ -12,7 +12,7 @@ class CommentService {
   }
   async updateComment(
     commentId: number,
-    body: Omit<CommentRequest, "work_id">
+    body: UpdateCommentRequest
   ): Promise<Comment> {
     const data = await api.put<Comment>(`/comments/${commentId}`, body);
     return data;
