@@ -4,13 +4,6 @@ import { BASE_URL } from "@/shared/api";
 import { Loader } from "@/shared/custom-ui/Loader";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/shared/shadcn-ui/ui/sheet";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Link, useParams } from "react-router-dom";
 import { CommentItem } from "./comment-item/Comment";
@@ -20,9 +13,12 @@ import { useMemo, useState } from "react";
 import type { WorkQueryParams } from "@/entities/works/model";
 import { AddCommentDialog } from "./add-comment-dialog/AddCommentDialog";
 import { WorkCard } from "../home/work-card/WorkCard";
+import { CustomSheet } from "@/shared/custom-ui/CustomSheet";
 
 export function WorkPage() {
   const [open, setOpen] = useState(false);
+  const [openCommentSheet, setOpenCommentSheet] = useState(false);
+  const [openSimilarSheet, setOpenSimilarSheet] = useState(false);
   const { workId } = useParams();
   const { data, isLoading, isError } = WorkHooks.useGetWorkByIdQuery(
     Number(workId)
@@ -142,58 +138,57 @@ export function WorkPage() {
         )}
       </div>
       <div className="w-15 flex flex-col gap-5 items-center">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button className="w-10 h-10 mt-5">
-              <Icon name="Comment" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="bg-primary-1 text-white border-primary-1 p-5">
-            <SheetHeader>
-              <SheetTitle className="text-gray-6">Comments</SheetTitle>
-            </SheetHeader>
-            <Button
-              variant="default"
-              className="w-full bg-primary-2"
-              onClick={() => setOpen(true)}
-            >
-              Add comment
-            </Button>
-            <div className="max-h-[380px] overflow-auto custom-scrollbar-container">
-              {comments?.map((comment, i) => (
-                <CommentItem
-                  comment={comment}
-                  key={i}
-                  designerAvatarUrl={profile?.avatar_url || null}
-                />
-              ))}
-            </div>
-          </SheetContent>
-        </Sheet>
+        <Button
+          className="w-10 h-10 mt-5"
+          onClick={() => setOpenCommentSheet(true)}
+        >
+          <Icon name="Comment" />
+        </Button>
 
         {/* other sheet */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button className="w-10 h-10 mt-5">
-              <Icon name="Similar" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="bg-primary-2 text-white border-primary-1 p-5">
-            <SheetHeader>
-              <SheetTitle className="text-gray-6">Similar works</SheetTitle>
-            </SheetHeader>
-            <div className="max-h-[420px] overflow-y-auto flex flex-col items-center custom-scrollbar-container gap-3">
-              {similarWorks?.map((w, i) => (
-                <WorkCard {...w} key={i} />
-              ))}
-              {similarWorks?.map((w, i) => (
-                <WorkCard {...w} key={i} />
-              ))}
-            </div>
-          </SheetContent>
-        </Sheet>
+        <Button
+          className="w-10 h-10 mt-5"
+          onClick={() => setOpenSimilarSheet(true)}
+        >
+          <Icon name="Similar" />
+        </Button>
       </div>
       <AddCommentDialog open={open} setOpen={setOpen} workId={Number(workId)} />
+
+      <CustomSheet
+        title="Comments"
+        open={openCommentSheet}
+        setOpen={setOpenCommentSheet}
+      >
+        <Button
+          variant="default"
+          className="w-full bg-primary-2"
+          onClick={() => setOpen(true)}
+        >
+          Add comment
+        </Button>
+        <div className="max-h-[380px] overflow-auto custom-scrollbar-container">
+          {comments?.map((comment, i) => (
+            <CommentItem
+              comment={comment}
+              key={i}
+              designerAvatarUrl={profile?.avatar_url || null}
+            />
+          ))}
+        </div>
+      </CustomSheet>
+
+      <CustomSheet
+        title="Similar works"
+        open={openSimilarSheet}
+        setOpen={setOpenSimilarSheet}
+      >
+        <div className="max-h-[420px] overflow-y-auto flex flex-col items-center custom-scrollbar-container gap-3">
+          {similarWorks?.map((w, i) => (
+            <WorkCard {...w} key={i} />
+          ))}
+        </div>
+      </CustomSheet>
     </div>
   );
 }
