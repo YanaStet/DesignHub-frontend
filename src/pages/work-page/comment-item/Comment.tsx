@@ -26,6 +26,7 @@ import clsx from "clsx";
 import { useMemo, useState } from "react";
 import { AddCommentDialog } from "../add-comment-dialog/AddCommentDialog";
 import { showToast } from "@/shared/utils/showToast";
+import { handleApiError } from "@/shared/api/apiError";
 
 type CommentProps = {
   comment: Comment;
@@ -53,6 +54,7 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
           queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
           setOpenDelete(false);
         },
+        onError: (er) => handleApiError(er),
       }
     );
   };
@@ -64,6 +66,7 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
         queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
         setOpenEdit(false);
       },
+      onError: (er) => handleApiError(er),
     });
   };
 

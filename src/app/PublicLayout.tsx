@@ -10,7 +10,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 export function PublicLayout() {
   const { data: me, error, isLoading } = UserHooks.useGetMeQuery();
   const { data: profile } = DesignerProfileHooks.useDesignerProfileQuery();
-  const { setMe, setAvatarUrl } = useMe();
+  const { setMe, setAvatarUrl, setDesignerProfile } = useMe();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +19,7 @@ export function PublicLayout() {
     }
     if (profile?.avatar_url) {
       setAvatarUrl(profile.avatar_url);
+      setDesignerProfile(profile);
     }
     if (!localStorage.getItem("access-token")) {
       navigate(ROUTE_PATHS.LOGIN);

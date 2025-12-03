@@ -55,7 +55,9 @@ export function Header() {
             className="w-56 bg-primary-1 text-gray-4"
             align="center"
           >
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate(ROUTE_PATHS.PROFILE)}>
+              Profile
+            </DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogOut}>Log Out</DropdownMenuItem>
           </DropdownMenuContent>

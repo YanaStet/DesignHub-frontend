@@ -26,6 +26,7 @@ export function WorkFilters({ setParams }: WorkFiltersProps) {
       skip: null,
       categories: selectedCategories.length > 0 ? selectedCategories : null,
       tags: selectedTags.length > 0 ? selectedTags : null,
+      q: null,
     };
 
     setParams(newParams);
@@ -67,6 +68,7 @@ export function WorkFilters({ setParams }: WorkFiltersProps) {
             categories?.map((category) => (
               <div key={category.id} className="flex items-center gap-3">
                 <Checkbox
+                  className="cursor-pointer"
                   id={`category-${category.id}`}
                   checked={selectedCategories.includes(category.id.toString())}
                   onCheckedChange={(checked) =>
@@ -94,6 +96,7 @@ export function WorkFilters({ setParams }: WorkFiltersProps) {
             tags?.map((tag) => (
               <div key={tag.id} className="flex items-center gap-3">
                 <Checkbox
+                  className="cursor-pointer"
                   id={`tag-${tag.id}`}
                   checked={selectedTags.includes(tag.name)}
                   onCheckedChange={(checked) =>

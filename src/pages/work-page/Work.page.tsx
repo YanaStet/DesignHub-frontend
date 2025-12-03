@@ -12,7 +12,7 @@ import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 import { useMemo, useState } from "react";
 import type { WorkQueryParams } from "@/entities/works/model";
 import { AddCommentDialog } from "./add-comment-dialog/AddCommentDialog";
-import { WorkCard } from "../home/work-card/WorkCard";
+import { WorkCard } from "../../shared/custom-ui/WorkCard";
 import { CustomSheet } from "@/shared/custom-ui/CustomSheet";
 
 export function WorkPage() {
@@ -23,9 +23,8 @@ export function WorkPage() {
   const { data, isLoading, isError } = WorkHooks.useGetWorkByIdQuery(
     Number(workId)
   );
-  const { data: comments } = commentHooks.useCommentsByWorkIdQuery(
-    Number(workId)
-  );
+  const { data: comments, isLoading: isCommentsLoading } =
+    commentHooks.useCommentsByWorkIdQuery(Number(workId));
   const { data: profile } = DesignerProfileHooks.useDesignerProfileByIdQuery(
     data?.designer_id || -1
   );
@@ -105,7 +104,7 @@ export function WorkPage() {
                   </div>
                 ) : (
                   <Typography variant="body3" className="text-gray-3">
-                    There is no categories yet.
+                    There is no tags yet.
                   </Typography>
                 )}
                 <Typography variant="h3" className="text-white my-5">
@@ -167,14 +166,23 @@ export function WorkPage() {
         >
           Add comment
         </Button>
-        <div className="max-h-[380px] overflow-auto custom-scrollbar-container">
-          {comments?.map((comment, i) => (
-            <CommentItem
-              comment={comment}
-              key={i}
-              designerAvatarUrl={profile?.avatar_url || null}
-            />
-          ))}
+        <div className="max-h-[380px] overflow-auto custom-scrollbar-container flex flex-col items-center">
+          {isCommentsLoading ? (
+            <Loader />
+          ) : (
+            comments?.map((comment, i) => (
+              <CommentItem
+                comment={comment}
+                key={i}
+                designerAvatarUrl={profile?.avatar_url || null}
+              />
+            ))
+          )}
+          {(comments?.length || 0) < 1 && (
+            <Typography variant="h4" className="text-gray-3 mt-30">
+              There is no comments yet
+            </Typography>
+          )}
         </div>
       </CustomSheet>
 
@@ -182,11 +190,12 @@ export function WorkPage() {
         title="Similar works"
         open={openSimilarSheet}
         setOpen={setOpenSimilarSheet}
+        className="w-70"
       >
         <div className="max-h-[420px] overflow-y-auto flex flex-col items-center custom-scrollbar-container gap-3">
-          {similarWorks?.map((w, i) => (
-            <WorkCard {...w} key={i} />
-          ))}
+          {similarWorks?.map((w, i) =>
+            Number(workId) !== w.id ? <WorkCard {...w} key={i} /> : null
+          )}
         </div>
       </CustomSheet>
     </div>

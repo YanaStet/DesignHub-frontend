@@ -1,6 +1,6 @@
 import type { Work } from "@/entities/works/model";
 import { Typography } from "../shadcn-ui/ui/typography";
-import { WorkCard } from "@/pages/home/work-card/WorkCard";
+import { WorkCard } from "@/shared/custom-ui/WorkCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import type {
@@ -11,6 +11,7 @@ import type {
 import type { AxiosError } from "axios";
 import type { WorksPageData } from "@/entities/works/hooks/useWorkInfiniteQuery";
 import clsx from "clsx";
+import { Loader } from "./Loader";
 
 type InfinityWorkListProps = {
   works: Work[];
@@ -25,6 +26,7 @@ type InfinityWorkListProps = {
     >
   >;
   classNames?: string;
+  myProfile?: boolean;
 };
 
 export function InfinityWorkList({
@@ -33,6 +35,7 @@ export function InfinityWorkList({
   isFetchingNextPage,
   fetchNextPage,
   classNames,
+  myProfile,
 }: InfinityWorkListProps) {
   const { ref, inView } = useInView({
     rootMargin: "200px",
@@ -53,9 +56,10 @@ export function InfinityWorkList({
     >
       {works.map((work, index) => (
         <div key={work.id} ref={works.length - 1 === index ? ref : null}>
-          <WorkCard {...work} />
+          <WorkCard work={work} myProfile={myProfile} />
         </div>
       ))}
+      {isFetchingNextPage && <Loader />}
       {!hasNextPage && works.length > 0 && (
         <div className="w-full flex justify-center">
           <Typography variant="body3" className="text-gray-3 mt-4">

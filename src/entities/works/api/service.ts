@@ -1,5 +1,5 @@
 import { buildQueryParams } from "@/shared/utils/query";
-import type { Work, WorkQueryParams } from "../model";
+import type { Work, WorkQueryParams, WorkRequest } from "../model";
 import api from "@/shared/api/api";
 
 class WorkService {
@@ -20,6 +20,18 @@ class WorkService {
         ? `/works/by-designer/${userId}?${buildQueryParams(params)}`
         : `/works/by-designer/${userId}`
     );
+    return data;
+  }
+  async createWork(body: WorkRequest): Promise<Work> {
+    const data = await api.post<Work>("/works/", body);
+    return data;
+  }
+  async deleteWork(workId: number): Promise<Work> {
+    const data = await api.delete<Work>(`/works/${workId}`);
+    return data;
+  }
+  async updateWork(workId: number, body: WorkRequest): Promise<Work> {
+    const data = await api.put<Work>(`/works/${workId}`, body);
     return data;
   }
 }

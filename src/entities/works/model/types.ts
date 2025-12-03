@@ -1,3 +1,5 @@
+import type { Category } from "@/entities/categories/model";
+import type { Tag } from "@/entities/tags/model";
 import type { User } from "@/entities/users/model";
 
 export type Work = {
@@ -9,14 +11,8 @@ export type Work = {
   upload_date: string;
   views_count: number;
   designer: User;
-  categories: {
-    name: string;
-    id: number;
-  }[];
-  tags: {
-    name: string;
-    id: number;
-  }[];
+  categories: Category[];
+  tags: Tag[];
 };
 
 export type WorkQueryParams = {
@@ -25,4 +21,12 @@ export type WorkQueryParams = {
   categories: string[] | null;
   tags: string[] | null;
   q: string | null;
+};
+
+export type WorkRequest = {
+  title: string;
+  description: string | null;
+  image_url: string | null;
+  categories_ids: number[];
+  tags_names: string[];
 };

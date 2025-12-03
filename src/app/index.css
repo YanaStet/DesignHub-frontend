@@ -122,6 +122,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+.custom-scrollbar-container {
+  scrollbar-gutter: stable;
+}
 /* Базові стилі для скролбару (світла тема) */
 .custom-scrollbar-container::-webkit-scrollbar {
   width: 8px; /* w-2 */

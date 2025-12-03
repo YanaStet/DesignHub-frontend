@@ -11,6 +11,7 @@ import { WorkPageLazy } from "@/pages/work-page/Work.page.pazy";
 import { UnauthorizedLayout } from "./UnauthorizedLayout";
 import { LoginPageLazy } from "@/pages/login/Login.page.lazy";
 import { DesignerProfilePageLazy } from "@/pages/designer-profile/DesignerProfile.page.pazy";
+import { MyProfilePageLazy } from "@/pages/my-profile/MyProfile.page.lazy";
 
 const routes: RouteObject[] = [
   {},
@@ -31,6 +32,10 @@ const routes: RouteObject[] = [
           {
             path: ROUTE_PATHS.USER_PROFILE,
             element: <DesignerProfilePageLazy />,
+          },
+          {
+            path: ROUTE_PATHS.PROFILE,
+            element: <MyProfilePageLazy />,
           },
         ],
       },

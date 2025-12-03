@@ -5,12 +5,14 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../shadcn-ui/ui/sheet";
+import clsx from "clsx";
 
 type CustomSheetProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   title: string;
   children: React.ReactNode;
+  className?: string;
 };
 
 export function CustomSheet({
@@ -18,10 +20,16 @@ export function CustomSheet({
   setOpen,
   children,
   title,
+  className,
 }: CustomSheetProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="bg-primary-1 text-white border-primary-1 p-5">
+      <SheetContent
+        className={clsx(
+          "bg-primary-1 text-white border-primary-1 p-5",
+          className
+        )}
+      >
         <SheetHeader>
           <SheetTitle className="text-gray-6">{title}</SheetTitle>
         </SheetHeader>

@@ -28,6 +28,7 @@ import {
   type UpdateCommentRequest,
 } from "@/entities/comments/model";
 import { showToast } from "@/shared/utils/showToast";
+import { handleApiError } from "@/shared/api/apiError";
 
 type AddCommentDialogProps = {
   workId: number;
@@ -84,9 +85,7 @@ export function AddCommentDialog({
             form.reset();
             setRate(1);
           },
-          onError: (error) => {
-            console.error("Помилка створення коментаря:", error);
-          },
+          onError: (er) => handleApiError(er),
         }
       );
     } else {
