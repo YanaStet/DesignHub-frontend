@@ -9,11 +9,13 @@ import { Link, useParams } from "react-router-dom";
 import { CommentItem } from "./comment-item/Comment";
 import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 
-import { useMemo, useState } from "react";
-import type { WorkQueryParams } from "@/entities/works/model";
+import { useEffect, useMemo, useState } from "react";
+import { WORK_KEYS, type WorkQueryParams } from "@/entities/works/model";
 import { AddCommentDialog } from "./add-comment-dialog/AddCommentDialog";
 import { WorkCard } from "../../shared/custom-ui/WorkCard";
 import { CustomSheet } from "@/shared/custom-ui/CustomSheet";
+import { handleApiError } from "@/shared/api/apiError";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function WorkPage() {
   const [open, setOpen] = useState(false);
@@ -28,6 +30,9 @@ export function WorkPage() {
   const { data: profile } = DesignerProfileHooks.useDesignerProfileByIdQuery(
     data?.designer_id || -1
   );
+  const { mutate: view } = WorkHooks.useViewWorkMutation(Number(workId) || -1);
+
+  const queryClient = useQueryClient();
 
   const params: WorkQueryParams = useMemo(() => {
     const cat = data?.categories.map((c) => String(c.id));
@@ -41,6 +46,18 @@ export function WorkPage() {
     };
   }, [data]);
   const { data: similarWorks } = WorkHooks.useGetAllWorksQuery(params);
+
+  useEffect(() => {
+    view(
+      {},
+      {
+        onError: (er) => handleApiError(er),
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [WORK_KEYS.GET_ALL_WORK] });
+        },
+      }
+    );
+  }, []);
 
   return (
     <div className="flex justify-around">
@@ -88,7 +105,7 @@ export function WorkPage() {
                     }
                   </Typography>
                 </div>
-                <Typography variant="h3" className="text-white my-5">
+                <Typography variant="h3" className="text-white my-3">
                   Tags:
                 </Typography>
                 {data?.tags && data.tags.length > 0 ? (
@@ -107,7 +124,7 @@ export function WorkPage() {
                     There is no tags yet.
                   </Typography>
                 )}
-                <Typography variant="h3" className="text-white my-5">
+                <Typography variant="h3" className="text-white my-3">
                   Categories:
                 </Typography>
                 {data?.categories && data.categories.length > 0 ? (
@@ -126,6 +143,9 @@ export function WorkPage() {
                     There is no categories yet.
                   </Typography>
                 )}
+                <Typography variant="h3" className="text-white my-3">
+                  Views: {data?.views_count}
+                </Typography>
               </div>
             </div>
             <div className="mt-5 w-270">
@@ -194,7 +214,7 @@ export function WorkPage() {
       >
         <div className="max-h-[420px] overflow-y-auto flex flex-col items-center custom-scrollbar-container gap-3">
           {similarWorks?.map((w, i) =>
-            Number(workId) !== w.id ? <WorkCard {...w} key={i} /> : null
+            Number(workId) !== w.id ? <WorkCard work={w} key={i} /> : null
           )}
         </div>
       </CustomSheet>

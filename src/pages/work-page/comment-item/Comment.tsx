@@ -122,7 +122,7 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
           {comment.author_id === me?.id && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="flex items-center">
-                <Icon name="Comment" className="w-4 h-4" />
+                <Icon name="Hamburger" className="w-4 h-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-56 bg-primary-1 text-gray-4"

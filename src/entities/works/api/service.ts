@@ -34,6 +34,10 @@ class WorkService {
     const data = await api.put<Work>(`/works/${workId}`, body);
     return data;
   }
+  async viewWork(workId: number): Promise<string> {
+    const data = await api.post<string>(`/works/${workId}/view`);
+    return data;
+  }
 }
 
 export const workService = new WorkService();

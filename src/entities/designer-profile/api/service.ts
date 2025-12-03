@@ -16,6 +16,24 @@ class DesignerProfileService {
     const data = await api.put<DesignerProfile>(`/profiles/me`, body);
     return data;
   }
+  async updateMyAvatar(body: File): Promise<DesignerProfile> {
+    const formData = new FormData();
+    formData.append("file", body);
+    const data = await api.post<DesignerProfile>(
+      "/profiles/me/avatar",
+      formData
+    );
+    return data;
+  }
+  async updateMyHeader(body: File): Promise<DesignerProfile> {
+    const formData = new FormData();
+    formData.append("file", body);
+    const data = await api.post<DesignerProfile>(
+      "/profiles/me/header-image",
+      formData
+    );
+    return data;
+  }
 }
 
 export const designerProfileService = new DesignerProfileService();

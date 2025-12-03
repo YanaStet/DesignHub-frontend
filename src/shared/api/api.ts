@@ -96,13 +96,17 @@ class ApiService {
   }
 
   // === ВИПРАВЛЕНО: Додано <T> ===
-  async post<T>(path: string, data: any): Promise<T> {
+  async post<T>(path: string, data?: any): Promise<T> {
     let body: any;
     let contentType: string | undefined | null;
 
-    if (data instanceof FormData) {
-      body = data;
+    // Якщо data немає, ми не встановлюємо body і ставимо contentType = null
+    if (data === undefined || data === null) {
+      body = undefined;
       contentType = null;
+    } else if (data instanceof FormData) {
+      body = data;
+      contentType = null; // Браузер сам поставить multipart/form-data з boundary
     } else if (data instanceof URLSearchParams) {
       body = data;
       contentType = "application/x-www-form-urlencoded";
@@ -113,7 +117,7 @@ class ApiService {
 
     const response = await fetch(`${this.baseUrl}${path}`, {
       method: "POST",
-      headers: this.getHeaders(contentType as string),
+      headers: this.getHeaders(contentType as string | undefined),
       body: body,
     });
     return this.handleResponse<T>(response);

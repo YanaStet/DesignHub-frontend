@@ -3,6 +3,7 @@ import { useDeleteWorkMutation } from "./useDeleteWorkMutation";
 import { useGetAllWorksQuery } from "./useGetAllWorksQuery";
 import { useGetWorkByIdQuery } from "./useGetWorkByIdQuery";
 import { useUpdateWorkMutation } from "./useUpdateWorkMutation";
+import { useViewWorkMutation } from "./useViewWorkMutation";
 import { useWorkByDesignerIdInfiniteQuery } from "./useWorkByDesignerIdInfiniteQuery";
 import { useWorkInfiniteQuery } from "./useWorkInfiniteQuery";
 import { useWorksByDesignerIdQuery } from "./useWorksByDesignerIdQuery";
@@ -16,4 +17,5 @@ export const WorkHooks = {
   useCreateWorkMutation,
   useDeleteWorkMutation,
   useUpdateWorkMutation,
+  useViewWorkMutation,
 };

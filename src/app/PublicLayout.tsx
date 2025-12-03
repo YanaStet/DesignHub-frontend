@@ -19,12 +19,14 @@ export function PublicLayout() {
     }
     if (profile?.avatar_url) {
       setAvatarUrl(profile.avatar_url);
+    }
+    if (profile) {
       setDesignerProfile(profile);
     }
     if (!localStorage.getItem("access-token")) {
       navigate(ROUTE_PATHS.LOGIN);
     }
-  }, [me]);
+  }, [me, profile]);
 
   return (
     <div className="max-h-screen overflow-y-hidden">
