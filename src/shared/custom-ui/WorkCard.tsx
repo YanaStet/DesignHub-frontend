@@ -1,7 +1,7 @@
 import { WORK_KEYS, type Work, type WorkRequest } from "@/entities/works/model";
 import { BASE_URL } from "@/shared/api";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "../shadcn-ui/ui/icon";
 import {
   DropdownMenu,
@@ -16,6 +16,8 @@ import { showToast } from "../utils/showToast";
 import { useQueryClient } from "@tanstack/react-query";
 import { handleApiError } from "../api/apiError";
 import { AddWorkDialog } from "@/pages/my-profile/add-work-dialog/AddWorkDialog";
+import { useMe } from "../store/meStore";
+import { ROUTE_PATHS } from "../utils/routes";
 
 type WorkCardProps = {
   work: Work;
@@ -30,7 +32,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
   const { mutate: updateWork, isPending: isUpdateWorkLoading } =
     WorkHooks.useUpdateWorkMutation(work.id);
 
+  const { me } = useMe();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const handleDelete = () => {
     deleteWork(
@@ -117,7 +121,11 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
         </div>
         <div className="flex gap-1 flex-row items-center">
           <Link
-            to={`/users/${work.designer.id}`}
+            to={
+              work.designer_id === me?.id
+                ? ROUTE_PATHS.PROFILE
+                : `/users/${work.designer.id}`
+            }
             onClick={(event) => event.stopPropagation()}
           >
             <Typography

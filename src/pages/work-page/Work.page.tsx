@@ -15,6 +15,8 @@ import { WorkCard } from "../../shared/custom-ui/WorkCard";
 import { CustomSheet } from "@/shared/custom-ui/CustomSheet";
 import { handleApiError } from "@/shared/api/apiError";
 import { useQueryClient } from "@tanstack/react-query";
+import { useMe } from "@/shared/store/meStore";
+import { ROUTE_PATHS } from "@/shared/utils/routes";
 
 export function WorkPage() {
   const [open, setOpen] = useState(false);
@@ -27,6 +29,7 @@ export function WorkPage() {
   const { data: comments, isLoading: isCommentsLoading } =
     commentHooks.useCommentsByWorkIdQuery(Number(workId));
   const { mutate: view } = WorkHooks.useViewWorkMutation(Number(workId) || -1);
+  const { me } = useMe();
 
   const queryClient = useQueryClient();
 
@@ -82,7 +85,11 @@ export function WorkPage() {
                 </Typography>
                 <div className="flex gap-1 flex-row items-center mt-5">
                   <Link
-                    to={`/users/${data?.designer_id}`}
+                    to={
+                      data?.designer_id === me?.id
+                        ? ROUTE_PATHS.PROFILE
+                        : `/users/${data?.designer_id}`
+                    }
                     onClick={(event) => event.stopPropagation()}
                   >
                     <Typography

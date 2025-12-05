@@ -95,8 +95,6 @@ export function MyProfilePage() {
     });
   };
 
-  console.log(myProfile);
-
   return (
     <div className="w-full h-full">
       {myProfile?.bio && myProfile.specialization ? (

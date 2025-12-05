@@ -76,45 +76,37 @@ export function ManageProfileDialog({
     }
   };
   const handleSubmit = (values: DesignerProfileSchema) => {
-    if (defaultValues) {
-      handleUpdateProfile({
-        bio: values.bio || null,
-        experience: experience,
-        specialization: values.specialization || null,
+    if (avatar) {
+      postAvatar(avatar, {
+        onError: () => {
+          showToast("error", "Something went wrong with avatar.");
+          setOpen(false);
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
+          });
+        },
       });
-    } else {
-      if (avatar) {
-        postAvatar(avatar, {
-          onError: () => {
-            showToast("error", "Something went wrong with avatar.");
-            setOpen(false);
-          },
-          onSuccess: () => {
-            queryClient.invalidateQueries({
-              queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
-            });
-            if (header) {
-              postHeader(header, {
-                onError: () => {
-                  showToast("error", "Something went wrong with avatar.");
-                  setOpen(false);
-                },
-                onSuccess: () => {
-                  queryClient.invalidateQueries({
-                    queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
-                  });
-                  handleUpdateProfile({
-                    bio: values.bio || null,
-                    experience: experience,
-                    specialization: values.specialization || null,
-                  });
-                },
-              });
-            }
-          },
-        });
-      }
     }
+    if (header) {
+      postHeader(header, {
+        onError: () => {
+          showToast("error", "Something went wrong with avatar.");
+          setOpen(false);
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
+          });
+        },
+      });
+    }
+    handleUpdateProfile({
+      bio: values.bio || null,
+      experience: experience,
+      specialization: values.specialization || null,
+    });
   };
 
   return (
