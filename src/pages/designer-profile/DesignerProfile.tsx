@@ -6,19 +6,18 @@ import {
   AvatarImage,
 } from "@/shared/shadcn-ui/ui/avatar";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
-import { useMe } from "@/shared/store/meStore";
 import clsx from "clsx";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { WorkHooks } from "@/entities/works/hooks";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { InfinityWorkList } from "@/shared/custom-ui/InfinityWorkList";
+import { UserHooks } from "@/entities/users/hooks";
 
 export type StarIcon = "full" | "half" | "empty";
 
 export function DesignerProfilePage() {
   const { userId } = useParams();
-  const { me } = useMe();
   const { data } = DesignerProfileHooks.useDesignerProfileByIdQuery(
     Number(userId)
   );
@@ -27,11 +26,12 @@ export function DesignerProfilePage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = WorkHooks.useWorkByDesignerIdInfiniteQuery(me?.id || -1, {
+  } = WorkHooks.useWorkByDesignerIdInfiniteQuery(Number(userId) || -1, {
     categories: null,
     q: null,
     tags: null,
   });
+  const { data: user } = UserHooks.useGetUserBiIdQuery(Number(userId));
 
   const allWorks = works?.pages.flatMap((page) => page.data) || [];
 
@@ -77,18 +77,21 @@ export function DesignerProfilePage() {
               className="object-cover"
             />
             <AvatarFallback>
-              {me?.firstName[0]}
-              {me?.lastName[0]}
+              {user?.firstName[0]}
+              {user?.lastName[0]}
             </AvatarFallback>
           </Avatar>
-          <Typography variant="h3" className="text-white mt-10">
-            {me?.firstName} {me?.lastName}
+          <Typography variant="h3" className="text-gray-4 mt-10">
+            {user?.firstName} {user?.lastName}
           </Typography>
           <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
             {data?.bio}
           </Typography>
+          <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
+            Experience: {data?.experience} years
+          </Typography>
           <div className="flex gap-3 mt-5">
-            <Typography variant="body3" className="text-white">
+            <Typography variant="body3" className="text-gray-4">
               {data?.rating}
             </Typography>
             <div className="flex items-center">
@@ -111,8 +114,8 @@ export function DesignerProfilePage() {
           </div>
         </div>
         <div className="w-325">
-          <div className="w-full h-px bg-primary-1"></div>
-          <Typography variant="h4" className="text-white my-5">
+          <div className="w-full h-px bg-gray-6"></div>
+          <Typography variant="h4" className="text-gray-4 my-5">
             Projects
           </Typography>
 

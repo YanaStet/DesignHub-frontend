@@ -153,7 +153,7 @@ export function AddCommentDialog({
 
             <DialogFooter className="mt-5">
               <DialogClose asChild>
-                <Button variant="outline" className="bg-gray-4">
+                <Button variant="outline" className="bg-gray-4 text-gray-2">
                   Cancel
                 </Button>
               </DialogClose>

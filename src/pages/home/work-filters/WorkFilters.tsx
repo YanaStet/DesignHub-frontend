@@ -54,7 +54,7 @@ export function WorkFilters({ setParams }: WorkFiltersProps) {
 
   return (
     <div className="p-6 rounded-2xl bg-primary-1 w-80">
-      <Typography variant="h2" className="text-white mb-4">
+      <Typography variant="h2" className="text-gray-4 mb-4">
         Filters
       </Typography>
 
@@ -68,7 +68,7 @@ export function WorkFilters({ setParams }: WorkFiltersProps) {
             categories?.map((category) => (
               <div key={category.id} className="flex items-center gap-3">
                 <Checkbox
-                  className="cursor-pointer"
+                  className="cursor-pointer border-gray-6"
                   id={`category-${category.id}`}
                   checked={selectedCategories.includes(category.id.toString())}
                   onCheckedChange={(checked) =>
@@ -96,7 +96,7 @@ export function WorkFilters({ setParams }: WorkFiltersProps) {
             tags?.map((tag) => (
               <div key={tag.id} className="flex items-center gap-3">
                 <Checkbox
-                  className="cursor-pointer"
+                  className="cursor-pointer border-gray-6"
                   id={`tag-${tag.id}`}
                   checked={selectedTags.includes(tag.name)}
                   onCheckedChange={(checked) =>

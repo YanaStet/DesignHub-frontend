@@ -27,18 +27,21 @@ import { useMemo, useState } from "react";
 import { AddCommentDialog } from "../add-comment-dialog/AddCommentDialog";
 import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
+import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 
 type CommentProps = {
   comment: Comment;
-  designerAvatarUrl: string | null;
 };
 
-export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
+export function CommentItem({ comment }: CommentProps) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const { me } = useMe();
   const queryClient = useQueryClient();
 
+  const { data: profile } = DesignerProfileHooks.useDesignerProfileByIdQuery(
+    comment.author_id
+  );
   const { mutate, isPending } = commentHooks.useDeleteCommentMutation(
     comment.id
   );
@@ -88,11 +91,11 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
     <div className="flex gap-5 w-full mb-5 p-3 rounded-2xl bg-primary-2">
       <Avatar className="w-10 h-10">
         <AvatarImage
-          src={BASE_URL + designerAvatarUrl}
+          src={BASE_URL + profile?.avatar_url}
           alt="@shadcn"
           className="object-cover"
         />
-        <AvatarFallback>
+        <AvatarFallback className="text-gray-1">
           {comment.author.firstName[0]}
           {comment.author.lastName[0]}
         </AvatarFallback>
@@ -122,7 +125,7 @@ export function CommentItem({ comment, designerAvatarUrl }: CommentProps) {
           {comment.author_id === me?.id && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="flex items-center">
-                <Icon name="Hamburger" className="w-4 h-4" />
+                <Icon name="Hamburger" className="w-4 h-4 text-gray-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-56 bg-primary-1 text-gray-4"

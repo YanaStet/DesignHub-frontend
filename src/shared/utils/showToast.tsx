@@ -39,7 +39,7 @@ const CustomToastContent = ({
           {message}
         </Typography>
       </div>
-      <div className="flex items-center gap-2 h-[40px]">
+      <div className="flex items-center gap-2 h-10">
         {action && (
           <button
             onClick={action.onClick}

@@ -26,7 +26,7 @@ export function CustomSheet({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
         className={clsx(
-          "bg-primary-1 text-white border-primary-1 p-5",
+          "bg-primary-1 text-gray-4 border-primary-1 p-5",
           className
         )}
       >

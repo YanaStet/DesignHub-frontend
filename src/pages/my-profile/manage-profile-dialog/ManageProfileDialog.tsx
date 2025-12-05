@@ -28,8 +28,8 @@ import { useState } from "react";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Label } from "@/shared/shadcn-ui/ui/label";
 import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
-import { handleApiError } from "@/shared/api/apiError";
 import { useQueryClient } from "@tanstack/react-query";
+import { showToast } from "@/shared/utils/showToast";
 
 type ManageProfileDialogProps = {
   open: boolean;
@@ -76,31 +76,44 @@ export function ManageProfileDialog({
     }
   };
   const handleSubmit = (values: DesignerProfileSchema) => {
-    handleUpdateProfile({
-      bio: values.bio || null,
-      experience: experience,
-      specialization: values.specialization || null,
-    });
-    if (avatar) {
-      console.log(avatar);
-      postAvatar(avatar, {
-        onError: (er) => handleApiError(er),
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
-          });
-        },
+    if (defaultValues) {
+      handleUpdateProfile({
+        bio: values.bio || null,
+        experience: experience,
+        specialization: values.specialization || null,
       });
-    }
-    if (header) {
-      postHeader(header, {
-        onError: (er) => handleApiError(er),
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
-          });
-        },
-      });
+    } else {
+      if (avatar) {
+        postAvatar(avatar, {
+          onError: () => {
+            showToast("error", "Something went wrong with avatar.");
+            setOpen(false);
+          },
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
+            });
+            if (header) {
+              postHeader(header, {
+                onError: () => {
+                  showToast("error", "Something went wrong with avatar.");
+                  setOpen(false);
+                },
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
+                  });
+                  handleUpdateProfile({
+                    bio: values.bio || null,
+                    experience: experience,
+                    specialization: values.specialization || null,
+                  });
+                },
+              });
+            }
+          },
+        });
+      }
     }
   };
 
@@ -111,7 +124,7 @@ export function ManageProfileDialog({
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogHeader>
               <DialogTitle className="text-gray-6">
-                {defaultValues ? "Update your work!" : "Add your own work!"}
+                {defaultValues ? "Update your profile!" : "Create profile!"}
               </DialogTitle>
             </DialogHeader>
             <FormField
@@ -150,7 +163,9 @@ export function ManageProfileDialog({
                 </FormItem>
               )}
             />
-            <FormLabel className="text-gray-6 my-3">Experience</FormLabel>
+            <FormLabel className="text-gray-6 my-3">
+              Experience (years)
+            </FormLabel>
             <Input
               placeholder="Experience"
               className="text-gray-6"

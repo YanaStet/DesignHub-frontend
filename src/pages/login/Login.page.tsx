@@ -1,34 +1,52 @@
 import { AuthHooks } from "@/entities/auth/hooks";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/shared/shadcn-ui/ui/form";
+import { Input } from "@/shared/shadcn-ui/ui/input";
+import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { showToast } from "@/shared/utils/showToast";
-import { useState } from "react";
+
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/shared/shadcn-ui/ui/button";
+import { handleApiError } from "@/shared/api/apiError";
+import { useState } from "react";
+import {
+  loginFormSchema,
+  regFormSchema,
+  type LoginFormSchema,
+  type RegFormSchema,
+} from "./loginSchema";
+import { UserHooks } from "@/entities/users/hooks";
 
 export function LoginPage() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const [isReg, setIsReg] = useState(false);
+  const regForm = useForm<RegFormSchema>({
+    resolver: zodResolver(regFormSchema),
+    reValidateMode: "onSubmit",
   });
 
-  const { mutate: login } = AuthHooks.useLoginMutation();
+  const loginForm = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginFormSchema),
+    reValidateMode: "onSubmit",
+  });
+
+  const { mutate: login, isPending: isLoading } = AuthHooks.useLoginMutation();
+  const { mutate: register } = UserHooks.useCreateUserMutation();
 
   const navigate = useNavigate();
 
-  // Функція для оновлення полів введення
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Обробка відправки форми
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmitLogin = (values: LoginFormSchema) => {
     login(
       {
-        username: formData.email,
-        password: formData.password,
+        username: values.email,
+        password: values.password,
       },
       {
         onSuccess: (response) => {
@@ -36,71 +54,212 @@ export function LoginPage() {
           localStorage.setItem("access-token", response.access_token);
           navigate("/");
         },
+        onError: (er) => {
+          handleApiError(er);
+        },
+      }
+    );
+  };
+
+  const handleSubmitReg = (values: RegFormSchema) => {
+    register(
+      {
+        email: values.email,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        password: values.password,
+        role: "designer",
+      },
+      {
+        onSuccess: () => {
+          login(
+            {
+              username: values.email,
+              password: values.password,
+            },
+            {
+              onSuccess: (response) => {
+                showToast("success", "You successfuly entered your account.");
+                localStorage.setItem("access-token", response.access_token);
+                navigate("/");
+              },
+              onError: (er) => {
+                handleApiError(er);
+              },
+            }
+          );
+        },
+        onError: (er) => handleApiError(er),
       }
     );
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
-          Вхід в акаунт
-        </h2>
+    <div className="flex items-center justify-center h-full">
+      <div className="w-full max-w-md p-8 bg-primary-1 rounded-lg shadow-lg flex-col gap-3">
+        <Typography variant="h2" className="text-gray-4">
+          {isReg ? "Sign In" : "Login"}
+        </Typography>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-700"
-            >
-              Електронна пошта
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="name@example.com"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-            />
-          </div>
+        {isReg && (
+          <Form {...regForm}>
+            <form onSubmit={regForm.handleSubmit(handleSubmitReg)}>
+              <FormField
+                control={regForm.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-6 my-3">
+                      First name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="First name"
+                        className="text-gray-6"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={regForm.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-6 my-3">
+                      Last name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Last name"
+                        className="text-gray-6"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={regForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-6 my-3">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email"
+                        className="text-gray-6"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={regForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-6 my-3">Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Password"
+                        className="text-gray-6"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block mb-2 text-sm font-medium text-gray-700"
-            >
-              Пароль
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-            />
-          </div>
+              <Button
+                type="submit"
+                className="mt-3 w-full bg-primary-2"
+                disabled={isLoading}
+              >
+                Sign In
+              </Button>
 
-          {/* Кнопка */}
-          <button
-            type="submit"
-            className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium transition duration-200"
-          >
-            Увійти
-          </button>
-        </form>
+              <Typography
+                className="text-gray-4 flex gap-1 mt-3"
+                variant="body3"
+              >
+                Already have an account?{" "}
+                <span
+                  className="cursor-pointer"
+                  onClick={() => setIsReg(false)}
+                >
+                  Login
+                </span>
+              </Typography>
+            </form>
+          </Form>
+        )}
 
-        <p className="mt-4 text-sm text-center text-gray-600">
-          Ще не маєте акаунту?{" "}
-          <a href="#" className="text-blue-600 hover:underline">
-            Зареєструватися
-          </a>
-        </p>
+        {!isReg && (
+          <Form {...loginForm}>
+            <form onSubmit={loginForm.handleSubmit(handleSubmitLogin)}>
+              <FormField
+                control={loginForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-6 my-3">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email"
+                        className="text-gray-6"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={loginForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-6 my-3">Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Password"
+                        className="text-gray-6"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                className="mt-3 w-full bg-primary-2"
+                disabled={isLoading}
+              >
+                Login
+              </Button>
+              <Typography
+                className="text-gray-4 flex gap-1 mt-3"
+                variant="body3"
+              >
+                Don't have an account yet?{" "}
+                <span className="cursor-pointer" onClick={() => setIsReg(true)}>
+                  Sign In
+                </span>
+              </Typography>
+            </form>
+          </Form>
+        )}
       </div>
     </div>
   );

@@ -270,7 +270,10 @@ export function AddWorkDialog({
 
             <DialogFooter className="mt-5">
               <DialogClose asChild>
-                <Button variant="outline" className="bg-gray-4">
+                <Button
+                  variant="outline"
+                  className="bg-gray-2 text-gray-6 border-gray-6"
+                >
                   Cancel
                 </Button>
               </DialogClose>

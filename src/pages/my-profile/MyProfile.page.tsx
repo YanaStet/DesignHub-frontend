@@ -95,9 +95,11 @@ export function MyProfilePage() {
     });
   };
 
+  console.log(myProfile);
+
   return (
     <div className="w-full h-full">
-      {myProfile ? (
+      {myProfile?.bio && myProfile.specialization ? (
         <>
           <div>
             {myProfile?.header_image_url ? (
@@ -129,14 +131,17 @@ export function MyProfilePage() {
                   {me?.lastName[0]}
                 </AvatarFallback>
               </Avatar>
-              <Typography variant="h3" className="text-white mt-10">
+              <Typography variant="h3" className="text-gray-4 mt-10">
                 {me?.firstName} {me?.lastName}
               </Typography>
               <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
                 {myProfile?.bio}
               </Typography>
+              <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
+                Experience: {myProfile?.experience} years
+              </Typography>
               <div className="flex gap-3 mt-5">
-                <Typography variant="body3" className="text-white">
+                <Typography variant="body3" className="text-gray-4">
                   {myProfile?.rating}
                 </Typography>
                 <div className="flex items-center">
@@ -165,9 +170,9 @@ export function MyProfilePage() {
               </Button>
             </div>
             <div className="w-325">
-              <div className="w-full h-px bg-primary-1"></div>
+              <div className="w-full h-px bg-gray-6"></div>
               <div className="w-full flex justify-between my-5 items-center">
-                <Typography variant="h4" className="text-white">
+                <Typography variant="h4" className="text-gray-4">
                   Projects
                 </Typography>
                 <Button

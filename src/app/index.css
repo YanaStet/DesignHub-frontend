@@ -122,24 +122,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-.custom-scrollbar-container {
-  scrollbar-gutter: stable;
-}
-/* Базові стилі для скролбару (світла тема) */
-.custom-scrollbar-container::-webkit-scrollbar {
-  width: 8px; /* w-2 */
-}
-
-.custom-scrollbar-container::-webkit-scrollbar-track {
-  border-radius: 9999px; /* rounded-full */
-  background-color: #151517; /* bg-primary-1 */
-}
-
-.custom-scrollbar-container::-webkit-scrollbar-thumb {
-  border-radius: 9999px; /* rounded-full */
-  background-color: #73737a; /* bg-gray-3 */
-}
-
 :root {
   /* Primary colors */
   --color-primary-1: #151517;
@@ -166,6 +148,20 @@
   --color-yellow-1: #b97c02;
   --color-yellow-2: #d28d03;
   --color-yellow-3: #fff4dd;
+}
+
+.dark {
+  /* Тут ми "перевертаємо" кольори для ТЕМНОЇ теми */
+
+  /* Якщо primary-1 та primary-2 були фоном для сайдбару/хедеру, 
+     в темній темі вони можуть стати трохи світлішими або змінити відтінок */
+  --color-primary-1: #ffffff; /* Приклад зміни */
+  --color-primary-2: #f3f5f7; /* Приклад зміни */
+
+  --color-gray-1: #f3f3f6;
+  --color-gray-2: #b7b7be;
+  --color-gray-4: #141415;
+  --color-gray-6: #4f4f52;
 }
 
 html,
@@ -271,6 +267,24 @@ button:focus {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--color-gray-5);
   border-radius: 2px;
+}
+
+.custom-scrollbar-container {
+  scrollbar-gutter: stable;
+}
+/* Базові стилі для скролбару (світла тема) */
+.custom-scrollbar-container::-webkit-scrollbar {
+  width: 8px; /* w-2 */
+}
+
+.custom-scrollbar-container::-webkit-scrollbar-track {
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--color-primary-1); /* bg-primary-1 */
+}
+
+.custom-scrollbar-container::-webkit-scrollbar-thumb {
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--color-gray-3); /* bg-gray-3 */
 }
 
 @media (pointer: coarse) {

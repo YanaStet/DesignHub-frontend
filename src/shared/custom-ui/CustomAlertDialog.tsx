@@ -44,7 +44,10 @@ export function CustomAlertDialog({
           )}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel} className="bg-gray-3">
+          <AlertDialogCancel
+            onClick={handleCancel}
+            className="bg-gray-2 text-gray-6"
+          >
             {cancelLabel || "Cancel"}
           </AlertDialogCancel>
           <AlertDialogAction

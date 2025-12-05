@@ -7,7 +7,6 @@ import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Link, useParams } from "react-router-dom";
 import { CommentItem } from "./comment-item/Comment";
-import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 
 import { useEffect, useMemo, useState } from "react";
 import { WORK_KEYS, type WorkQueryParams } from "@/entities/works/model";
@@ -27,9 +26,6 @@ export function WorkPage() {
   );
   const { data: comments, isLoading: isCommentsLoading } =
     commentHooks.useCommentsByWorkIdQuery(Number(workId));
-  const { data: profile } = DesignerProfileHooks.useDesignerProfileByIdQuery(
-    data?.designer_id || -1
-  );
   const { mutate: view } = WorkHooks.useViewWorkMutation(Number(workId) || -1);
 
   const queryClient = useQueryClient();
@@ -81,7 +77,7 @@ export function WorkPage() {
                 )}
               </div>
               <div>
-                <Typography variant="h1" className="text-white">
+                <Typography variant="h1" className="text-gray-4">
                   {data?.title}
                 </Typography>
                 <div className="flex gap-1 flex-row items-center mt-5">
@@ -105,7 +101,7 @@ export function WorkPage() {
                     }
                   </Typography>
                 </div>
-                <Typography variant="h3" className="text-white my-3">
+                <Typography variant="h3" className="text-gray-4 my-3">
                   Tags:
                 </Typography>
                 {data?.tags && data.tags.length > 0 ? (
@@ -124,7 +120,7 @@ export function WorkPage() {
                     There is no tags yet.
                   </Typography>
                 )}
-                <Typography variant="h3" className="text-white my-3">
+                <Typography variant="h3" className="text-gray-4 my-3">
                   Categories:
                 </Typography>
                 {data?.categories && data.categories.length > 0 ? (
@@ -143,13 +139,13 @@ export function WorkPage() {
                     There is no categories yet.
                   </Typography>
                 )}
-                <Typography variant="h3" className="text-white my-3">
+                <Typography variant="h3" className="text-gray-4 my-3">
                   Views: {data?.views_count}
                 </Typography>
               </div>
             </div>
             <div className="mt-5 w-270">
-              <Typography variant="body2" className="text-gray-7 break-words">
+              <Typography variant="body2" className="text-gray-4 break-words">
                 {data?.description}
               </Typography>
             </div>
@@ -161,15 +157,15 @@ export function WorkPage() {
           className="w-10 h-10 mt-5"
           onClick={() => setOpenCommentSheet(true)}
         >
-          <Icon name="Comment" />
+          <Icon name="Comment" className="text-gray-4" />
         </Button>
 
         {/* other sheet */}
         <Button
-          className="w-10 h-10 mt-5"
+          className="w-10 h-10 mt-5 text-gray-4"
           onClick={() => setOpenSimilarSheet(true)}
         >
-          <Icon name="Similar" />
+          <Icon name="Similar" className="text-gray-4" />
         </Button>
       </div>
       <AddCommentDialog open={open} setOpen={setOpen} workId={Number(workId)} />
@@ -191,11 +187,7 @@ export function WorkPage() {
             <Loader />
           ) : (
             comments?.map((comment, i) => (
-              <CommentItem
-                comment={comment}
-                key={i}
-                designerAvatarUrl={profile?.avatar_url || null}
-              />
+              <CommentItem comment={comment} key={i} />
             ))
           )}
           {(comments?.length || 0) < 1 && (

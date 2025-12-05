@@ -132,7 +132,7 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
             {new Date(work.upload_date).toISOString().split("T")[0]}
           </Typography>
         </div>
-        <Typography variant="h4" className="text-white w-50 truncate">
+        <Typography variant="h4" className="text-gray-4 w-50 truncate">
           {work.title}
         </Typography>
         <Typography
