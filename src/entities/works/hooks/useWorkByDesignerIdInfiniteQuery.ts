@@ -6,8 +6,8 @@ import { workService } from "../api/service";
 export type WorksPageData = { data: Work[] };
 
 export function useWorkByDesignerIdInfiniteQuery(
-  userId: number,
-  initialParams: Omit<WorkQueryParams, "skip" | "limit">
+  userId: string,
+  initialParams: Omit<WorkQueryParams, "skip" | "limit">,
 ) {
   return useInfiniteQuery<
     WorksPageData,
@@ -33,7 +33,7 @@ export function useWorkByDesignerIdInfiniteQuery(
     getNextPageParam: (lastPage, allPages) => {
       const totalLoaded = allPages.reduce(
         (sum, page) => sum + page.data.length,
-        0
+        0,
       );
 
       if (lastPage.data.length < 12) return undefined;

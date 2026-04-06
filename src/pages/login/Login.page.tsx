@@ -49,9 +49,8 @@ export function LoginPage() {
         password: values.password,
       },
       {
-        onSuccess: (response) => {
+        onSuccess: () => {
           showToast("success", "You successfuly entered your account.");
-          localStorage.setItem("access-token", response.access_token);
           navigate("/");
         },
         onError: (er) => {
@@ -78,9 +77,8 @@ export function LoginPage() {
               password: values.password,
             },
             {
-              onSuccess: (response) => {
+              onSuccess: () => {
                 showToast("success", "You successfuly entered your account.");
-                localStorage.setItem("access-token", response.access_token);
                 navigate("/");
               },
               onError: (er) => {

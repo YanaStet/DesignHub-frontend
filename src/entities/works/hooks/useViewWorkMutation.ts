@@ -4,7 +4,7 @@ import type { ApiErrorResponse } from "@/shared/types";
 import { workService } from "../api/service";
 
 export function useViewWorkMutation(
-  workId: number
+  workId: string,
 ): UseMutationResult<string, AxiosError<ApiErrorResponse>> {
   return useMutation({
     mutationFn: () => workService.viewWork(workId),

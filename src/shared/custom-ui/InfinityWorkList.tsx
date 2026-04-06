@@ -9,19 +9,19 @@ import type {
   InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import type { WorksPageData } from "@/entities/works/hooks/useWorkInfiniteQuery";
 import clsx from "clsx";
 import { Loader } from "./Loader";
+import type { PaginationResponse } from "../types";
 
 type InfinityWorkListProps = {
   works: Work[];
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: (
-    options?: FetchNextPageOptions | undefined
+    options?: FetchNextPageOptions | undefined,
   ) => Promise<
     InfiniteQueryObserverResult<
-      InfiniteData<WorksPageData, unknown>,
+      InfiniteData<PaginationResponse<Work>, unknown>,
       AxiosError<unknown, any>
     >
   >;
@@ -51,7 +51,7 @@ export function InfinityWorkList({
     <div
       className={clsx(
         "flex flex-wrap justify-around gap-3 max-h-[375px] xl:max-h-[400px] 2xl:max-h-[700px] pr-3 overflow-y-auto rounded-2xl custom-scrollbar-container",
-        classNames
+        classNames,
       )}
     >
       {works.map((work, index) => (

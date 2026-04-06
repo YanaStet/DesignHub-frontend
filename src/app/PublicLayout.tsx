@@ -23,10 +23,14 @@ export function PublicLayout() {
     if (profile) {
       setDesignerProfile(profile);
     }
-    if (!localStorage.getItem("access-token")) {
+  }, [me, profile]);
+
+  // Якщо запит /me повернув помилку (401) — користувач не авторизований
+  useEffect(() => {
+    if (error) {
       navigate(ROUTE_PATHS.LOGIN);
     }
-  }, [me, profile]);
+  }, [error, navigate]);
 
   return (
     <div className="max-h-screen overflow-y-hidden">

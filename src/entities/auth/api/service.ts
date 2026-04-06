@@ -3,16 +3,18 @@ import type { AuthRequest, AuthResponse } from "../model/types";
 
 class AuthService {
   async login(body: AuthRequest): Promise<AuthResponse> {
-    const formData = new URLSearchParams();
-    formData.append("username", body.username);
-    formData.append("password", body.password);
+    const requestBody = {
+      email: body.username,
+      password: body.password,
+    };
 
-    const response = await fetch(`${BASE_URL}/token`, {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
       },
-      body: formData,
+      body: JSON.stringify(requestBody),
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -23,6 +25,13 @@ class AuthService {
     const data: AuthResponse = await response.json();
 
     return data;
+  }
+
+  async logout(): Promise<void> {
+    await fetch(`${BASE_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
   }
 }
 

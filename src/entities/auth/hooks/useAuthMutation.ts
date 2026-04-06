@@ -15,8 +15,7 @@ export function useLoginMutation(): UseMutationResult<
   return useMutation({
     mutationFn: (credentials: AuthRequest) => authService.login(credentials),
 
-    onSuccess: (data) => {
-      localStorage.setItem("access-token", data.access_token);
+    onSuccess: () => {
       navigate("/");
     },
   });

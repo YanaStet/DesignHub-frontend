@@ -1,12 +1,14 @@
-export type Role = "designer" | "moderator" | "admin";
+export type Role = "user" | "moderator" | "admin";
 
 export type User = {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
   role: Role;
-  registration_date: Date;
+  createdAt: string;
+  updatedAt: string;
+  avatar: string;
 };
 
 export type UserRequest = {

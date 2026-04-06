@@ -1,24 +1,18 @@
+import type { User } from "@/entities/users/model";
+import type { Work } from "@/entities/works/model";
+
 export type Comment = {
-  comment_text: string;
-  rating_score: number;
-  id: number;
-  author_id: number;
-  work_id: number;
-  review_date: string;
-  author: {
-    id: number;
-    firstName: string;
-    lastName: string;
-  };
+  content: string;
+  id: string;
+  design: Work;
+  author: User;
 };
 
 export type CommentRequest = {
-  comment_text: string;
-  rating_score: number;
-  work_id: number;
+  content: string;
+  designId: string;
 };
 
 export type UpdateCommentRequest = {
-  comment_text: string;
-  rating_score: number;
+  content: string;
 };

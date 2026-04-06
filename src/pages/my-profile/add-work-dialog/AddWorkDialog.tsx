@@ -29,8 +29,6 @@ import {
 } from "@/shared/shadcn-ui/ui/dropdown-menu";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { tagHooks } from "@/entities/tags/hooks";
-import type { Category } from "@/entities/categories/model";
-import { categoryHooks } from "@/entities/categories/hooks";
 import type { Work, WorkRequest } from "@/entities/works/model";
 import { imageHooks } from "@/entities/image/hooks";
 import { handleApiError } from "@/shared/api/apiError";
@@ -52,7 +50,6 @@ export function AddWorkDialog({
 }: AddWorkDialogProps) {
   const [img, setImg] = useState<File | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const form = useForm<WorkCreateSchema>({
     resolver: zodResolver(workCreateSchema),
@@ -64,7 +61,6 @@ export function AddWorkDialog({
   });
 
   const { data: tags } = tagHooks.useGetAllTagsQuery();
-  const { data: categoris } = categoryHooks.useGetAllCategoriesQuery();
   const { mutate: uploadImage } = imageHooks.useUploadImageMutation();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,20 +74,14 @@ export function AddWorkDialog({
       setSelectedTags([...selectedTags, name]);
     }
   };
-  const handleAddCategory = (c: Category) => {
-    if (!selectedCategories.includes(c)) {
-      setSelectedCategories([...selectedCategories, c]);
-    }
-  };
   const handleSubmit = (body: WorkCreateSchema) => {
     if (img) {
       uploadImage(img, {
         onSuccess: (data) => {
           handleCreateWork({
-            tags_names: selectedTags,
+            tagsIds: selectedTags,
             description: body.description || null,
             title: body.title,
-            categories_ids: selectedCategories.map((c) => c.id),
             image_url: data.file_url,
           });
         },
@@ -100,18 +90,16 @@ export function AddWorkDialog({
     }
     if (defaultValues) {
       handleCreateWork({
-        tags_names: selectedTags,
+        tagsIds: selectedTags,
         description: body.description || null,
         title: body.title,
-        categories_ids: selectedCategories.map((c) => c.id),
-        image_url: defaultValues.image_url,
+        image_url: defaultValues.content_url,
       });
     }
   };
 
   useEffect(() => {
     if (defaultValues) {
-      setSelectedCategories(defaultValues.categories);
       setSelectedTags(defaultValues.tags.map((t) => t.name));
     }
   }, []);
@@ -220,48 +208,6 @@ export function AddWorkDialog({
                     onClick={() => {
                       const newTags = selectedTags.filter((t) => t !== name);
                       setSelectedTags(newTags);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            <Label className="text-gray-6 mt-3">Categories</Label>
-            <div className="mt-3 flex gap-3 flex-wrap">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="bg-gray-2">
-                    <Icon name="Plus" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-56 bg-primary-1 text-gray-4"
-                  align="center"
-                >
-                  {categoris?.map((c, i) => (
-                    <DropdownMenuItem
-                      onClick={() => handleAddCategory(c)}
-                      key={i}
-                    >
-                      {c.name}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              {selectedCategories.map((category, i) => (
-                <div
-                  key={i}
-                  className="p-2 rounded-2xl bg-gray-2 flex text-gray-4 w-min text-sm gap-2 items-center"
-                >
-                  {category.name}
-                  <Icon
-                    name="Cross"
-                    className="text-gray-4 w-4 h-4 cursor-pointer"
-                    onClick={() => {
-                      const newCategories = selectedCategories.filter(
-                        (cat) => cat.id !== category.id
-                      );
-                      setSelectedCategories(newCategories);
                     }}
                   />
                 </div>

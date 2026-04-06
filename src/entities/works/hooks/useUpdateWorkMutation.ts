@@ -5,7 +5,7 @@ import type { Work, WorkRequest } from "../model";
 import { workService } from "../api/service";
 
 export function useUpdateWorkMutation(
-  workId: number
+  workId: string,
 ): UseMutationResult<Work, AxiosError<ApiErrorResponse>, WorkRequest> {
   return useMutation({
     mutationFn: (body: WorkRequest) => workService.updateWork(workId, body),

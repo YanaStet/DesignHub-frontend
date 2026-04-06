@@ -9,3 +9,11 @@ export type ApiErrorResponse = {
     type: "Validation";
   }[];
 };
+
+export type PaginationResponse<T> = {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};

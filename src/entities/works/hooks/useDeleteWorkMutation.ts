@@ -5,7 +5,7 @@ import type { Work } from "../model";
 import { workService } from "../api/service";
 
 export function useDeleteWorkMutation(
-  workId: number
+  workId: string,
 ): UseMutationResult<Work, AxiosError<ApiErrorResponse>> {
   return useMutation({
     mutationFn: () => workService.deleteWork(workId),

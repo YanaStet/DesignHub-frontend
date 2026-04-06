@@ -17,10 +17,9 @@ export function HomePage() {
   const [searchValue, setSearchValue] = useState("");
   const [params, setParams] = useState<Omit<WorkQueryParams, "skip" | "limit">>(
     {
-      categories: null,
       tags: null,
       q: null,
-    }
+    },
   );
 
   const {

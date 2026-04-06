@@ -1,3 +1,0 @@
-export const CATEGORY_KEYS = {
-  ALL_CATEGORIES: "ALL_CATEGORIES",
-};

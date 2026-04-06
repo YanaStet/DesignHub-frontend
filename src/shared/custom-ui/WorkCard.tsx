@@ -1,7 +1,7 @@
 import { WORK_KEYS, type Work, type WorkRequest } from "@/entities/works/model";
 import { BASE_URL } from "@/shared/api";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Icon } from "../shadcn-ui/ui/icon";
 import {
   DropdownMenu,
@@ -34,7 +34,6 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
 
   const { me } = useMe();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const handleDelete = () => {
     deleteWork(
@@ -51,7 +50,7 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
           handleApiError(er);
           setOpenDelete(false);
         },
-      }
+      },
     );
   };
   const handleEdit = (values: WorkRequest) => {
@@ -107,9 +106,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
           </div>
         )}
         <div className="w-50 h-30 2xl:w-70 2xl:h-40 flex justify-center overflow-hidden">
-          {work.image_url !== null ? (
+          {work.content_url !== null ? (
             <img
-              src={BASE_URL + work.image_url}
+              src={BASE_URL + work.content_url}
               alt="Photo"
               className="object-cover w-full rounded-2xl"
             />
@@ -122,9 +121,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
         <div className="flex gap-1 flex-row items-center">
           <Link
             to={
-              work.designer_id === me?.id
+              work.author.id === me?.id
                 ? ROUTE_PATHS.PROFILE
-                : `/users/${work.designer.id}`
+                : `/users/${work.author.id}`
             }
             onClick={(event) => event.stopPropagation()}
           >
@@ -132,12 +131,12 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
               variant="body4"
               className="text-primary-3 hover:underline"
             >
-              {work.designer.firstName} {work.designer.lastName}
+              {work.author.firstName} {work.author.lastName}
             </Typography>
           </Link>
           <span className="h-1 w-1 rounded-full bg-primary-3" />
           <Typography variant="body4" className="text-primary-3">
-            {new Date(work.upload_date).toISOString().split("T")[0]}
+            {new Date(work.createdAt).toISOString().split("T")[0]}
           </Typography>
         </div>
         <Typography variant="h4" className="text-gray-4 w-50 truncate">

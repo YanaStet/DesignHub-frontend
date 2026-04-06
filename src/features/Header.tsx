@@ -1,4 +1,5 @@
 import { BASE_URL } from "@/shared/api";
+import { authService } from "@/entities/auth/api/service";
 import logo from "@/shared/assets/logo.png";
 import {
   Avatar,
@@ -21,9 +22,8 @@ export function Header() {
   const { me, avatar_url, setMe, setAvatarUrl, setDesignerProfile } = useMe();
   const navigate = useNavigate();
 
-  const handleLogOut = () => {
-    localStorage.removeItem("access-token");
-    localStorage.removeItem("refresh-token");
+  const handleLogOut = async () => {
+    await authService.logout();
     setMe(null);
     setAvatarUrl(undefined);
     setDesignerProfile(null);
