@@ -8,8 +8,8 @@ import { COMMENT_KEYS, type Comment } from "../model";
 import { commentService } from "../api/service";
 
 export function useCommentsByWorkIdQuery<TData = Comment[]>(
-  workId: number,
-  options?: Partial<UseQueryOptions<Comment[], AxiosError, TData>>
+  workId: string,
+  options?: Partial<UseQueryOptions<Comment[], AxiosError, TData>>,
 ): UseQueryResult<TData> {
   return useQuery<Comment[], AxiosError, TData>({
     queryKey: [COMMENT_KEYS.COMMENTS],

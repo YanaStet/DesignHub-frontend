@@ -5,7 +5,7 @@ import type { Comment, UpdateCommentRequest } from "../model";
 import { commentService } from "../api/service";
 
 export function useUpdateCommentMutation(
-  commentId: number
+  commentId: string,
 ): UseMutationResult<
   Comment,
   AxiosError<ApiErrorResponse>,

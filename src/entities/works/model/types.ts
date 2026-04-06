@@ -5,10 +5,10 @@ export type Work = {
   title: string;
   description: string;
   cover_url: string;
-  content_url: string
-  id: string;
+  content_url: string;
+  _id: string;
   createdAt: string;
-  updatedAt: string
+  updatedAt: string;
   views: number;
   author: User;
   tags: Tag[];

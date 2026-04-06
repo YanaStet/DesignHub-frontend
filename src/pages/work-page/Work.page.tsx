@@ -24,20 +24,18 @@ export function WorkPage() {
   const [openSimilarSheet, setOpenSimilarSheet] = useState(false);
   const { workId } = useParams();
   const { data, isLoading, isError } = WorkHooks.useGetWorkByIdQuery(
-    Number(workId)
+    workId || "",
   );
   const { data: comments, isLoading: isCommentsLoading } =
-    commentHooks.useCommentsByWorkIdQuery(Number(workId));
-  const { mutate: view } = WorkHooks.useViewWorkMutation(Number(workId) || -1);
+    commentHooks.useCommentsByWorkIdQuery(workId || "");
+  const { mutate: view } = WorkHooks.useViewWorkMutation(workId || "");
   const { me } = useMe();
 
   const queryClient = useQueryClient();
 
   const params: WorkQueryParams = useMemo(() => {
-    const cat = data?.categories.map((c) => String(c.id));
     const t = data?.tags.map((t) => t.name);
     return {
-      categories: cat || null,
       tags: t || null,
       q: null,
       limit: null,
@@ -54,7 +52,7 @@ export function WorkPage() {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [WORK_KEYS.GET_ALL_WORK] });
         },
-      }
+      },
     );
   }, []);
 
@@ -67,9 +65,9 @@ export function WorkPage() {
           <>
             <div className="flex gap-10">
               <div className="w-130 h-70 2xl:w-165 2xl:h-90 overflow-hidden rounded-2xl">
-                {data?.image_url ? (
+                {data?.content_url ? (
                   <img
-                    src={BASE_URL + data.image_url}
+                    src={BASE_URL + data.content_url}
                     alt="Photo"
                     className="object-cover w-full h-full"
                   />
@@ -86,9 +84,9 @@ export function WorkPage() {
                 <div className="flex gap-1 flex-row items-center mt-5">
                   <Link
                     to={
-                      data?.designer_id === me?.id
+                      data?.author.id === me?.id
                         ? ROUTE_PATHS.PROFILE
-                        : `/users/${data?.designer_id}`
+                        : `/users/${data?.author.id}`
                     }
                     onClick={(event) => event.stopPropagation()}
                   >
@@ -96,16 +94,17 @@ export function WorkPage() {
                       variant="body4"
                       className="text-primary-3 hover:underline"
                     >
-                      {data?.designer.firstName} {data?.designer.lastName}
+                      {data?.author.firstName} {data?.author.lastName}
                     </Typography>
                   </Link>
                   <span className="h-1 w-1 rounded-full bg-primary-3" />
                   <Typography variant="body4" className="text-primary-3">
-                    {
-                      new Date(data?.upload_date || "")
+                    {/* {
+                      new Date(data?.createdAt || "")
                         .toISOString()
                         .split("T")[0]
-                    }
+                    } */}
+                    {data?.createdAt}
                   </Typography>
                 </div>
                 <Typography variant="h3" className="text-gray-4 my-3">
@@ -127,27 +126,9 @@ export function WorkPage() {
                     There is no tags yet.
                   </Typography>
                 )}
+
                 <Typography variant="h3" className="text-gray-4 my-3">
-                  Categories:
-                </Typography>
-                {data?.categories && data.categories.length > 0 ? (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {data.categories.map((category) => (
-                      <div
-                        key={category.id}
-                        className="text-gray-1 px-2 py-1 rounded-xl bg-gray-3 text-sm"
-                      >
-                        {category.name}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <Typography variant="body3" className="text-gray-3">
-                    There is no categories yet.
-                  </Typography>
-                )}
-                <Typography variant="h3" className="text-gray-4 my-3">
-                  Views: {data?.views_count}
+                  Views: {data?.views}
                 </Typography>
               </div>
             </div>
@@ -212,8 +193,8 @@ export function WorkPage() {
         className="w-70"
       >
         <div className="max-h-[420px] overflow-y-auto flex flex-col items-center custom-scrollbar-container gap-3">
-          {similarWorks?.map((w, i) =>
-            Number(workId) !== w.id ? <WorkCard work={w} key={i} /> : null
+          {similarWorks?.data?.map((w, i) =>
+            workId !== w._id ? <WorkCard work={w} key={i} /> : null,
           )}
         </div>
       </CustomSheet>

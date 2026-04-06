@@ -5,7 +5,7 @@ import type { Comment } from "../model";
 import { commentService } from "../api/service";
 
 export function useDeleteCommentMutation(
-  commentId: number
+  commentId: string,
 ): UseMutationResult<Comment, AxiosError<ApiErrorResponse>> {
   return useMutation({
     mutationFn: () => commentService.deleteComment(commentId),

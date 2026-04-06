@@ -8,8 +8,8 @@ import { AxiosError } from "axios";
 import { workService } from "../api/service";
 
 export function useGetWorkByIdQuery<TData = Work>(
-  workId: number,
-  options?: Partial<UseQueryOptions<Work, AxiosError, TData>>
+  workId: string,
+  options?: Partial<UseQueryOptions<Work, AxiosError, TData>>,
 ): UseQueryResult<TData> {
   return useQuery<Work, AxiosError, TData>({
     queryKey: [WORK_KEYS.GET_ALL_WORK, workId],

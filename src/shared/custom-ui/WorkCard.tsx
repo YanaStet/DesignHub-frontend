@@ -28,9 +28,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const { mutate: deleteWork, isPending: isDeleteLoading } =
-    WorkHooks.useDeleteWorkMutation(work.id);
+    WorkHooks.useDeleteWorkMutation(work._id);
   const { mutate: updateWork, isPending: isUpdateWorkLoading } =
-    WorkHooks.useUpdateWorkMutation(work.id);
+    WorkHooks.useUpdateWorkMutation(work._id);
 
   const { me } = useMe();
   const queryClient = useQueryClient();
@@ -72,7 +72,7 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
   return (
     <>
       <Link
-        to={`/works/${work.id}`}
+        to={`/works/${work._id}`}
         className="relative flex p-3 gap-3 flex-col bg-primary-1 rounded-2xl hover:scale-103 transition-transform duration-400"
       >
         {myProfile && (
@@ -106,9 +106,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
           </div>
         )}
         <div className="w-50 h-30 2xl:w-70 2xl:h-40 flex justify-center overflow-hidden">
-          {work.content_url !== null ? (
+          {work.cover_url !== null ? (
             <img
-              src={BASE_URL + work.content_url}
+              src={BASE_URL + work.cover_url}
               alt="Photo"
               className="object-cover w-full rounded-2xl"
             />
