@@ -6,10 +6,8 @@ import {
 } from "@/shared/shadcn-ui/ui/avatar";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { useMe } from "@/shared/store/meStore";
-import clsx from "clsx";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { WorkHooks } from "@/entities/works/hooks";
-import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { InfinityWorkList } from "@/shared/custom-ui/InfinityWorkList";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import { AddWorkDialog } from "./add-work-dialog/AddWorkDialog";
@@ -38,32 +36,17 @@ export function MyProfilePage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = WorkHooks.useWorkByDesignerIdInfiniteQuery(me?.id || -1, {
-    categories: null,
+  } = WorkHooks.useWorkByDesignerIdInfiniteQuery(me?._id || "", {
     q: null,
     tags: null,
   });
+
   const { mutate, isPending: isWorkCreateLoading } =
     WorkHooks.useCreateWorkMutation();
   const { mutate: editProfile, isPending: isProfileLoading } =
     DesignerProfileHooks.useUpdateDesignerProfileMutation();
 
-  const allWorks = works?.pages.flatMap((page) => page.data) || [];
-
-  const stars: StarIcon[] = useMemo(() => {
-    const s: StarIcon[] = [];
-    for (let i = 0; i < Math.floor(myProfile?.rating || 0); i++) {
-      s.push("full");
-    }
-    if (myProfile && myProfile.rating % 1 >= 0.5) {
-      s.push("half");
-    }
-    while (s.length < 5) {
-      s.push("empty");
-    }
-    return s;
-  }, [myProfile]);
-
+  const allWorks = works?.pages.flatMap((page) => page) || [];
   const handleAddWork = (body: WorkRequest) => {
     mutate(body, {
       onSuccess: () => {
@@ -95,6 +78,7 @@ export function MyProfilePage() {
     });
   };
 
+
   return (
     <div className="w-full h-full">
       {myProfile?.bio && myProfile.specialization ? (
@@ -120,7 +104,7 @@ export function MyProfilePage() {
             <div>
               <Avatar className="w-37 h-37 absolute top-[-75px]">
                 <AvatarImage
-                  src={BASE_URL + myProfile?.avatar_url}
+                  src={BASE_URL + myProfile?.avatar}
                   alt="@shadcn"
                   className="object-cover"
                 />
@@ -138,28 +122,7 @@ export function MyProfilePage() {
               <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
                 Experience: {myProfile?.experience} years
               </Typography>
-              <div className="flex gap-3 mt-5">
-                <Typography variant="body3" className="text-gray-4">
-                  {myProfile?.rating}
-                </Typography>
-                <div className="flex items-center">
-                  {stars?.map((star) => (
-                    <div className="w-4 h-4">
-                      {star === "half" ? (
-                        <Icon name="HalfStar" className="text-amber-300"></Icon>
-                      ) : (
-                        <Icon
-                          name="Star"
-                          className={clsx(
-                            star === "full" && "text-amber-300",
-                            star === "empty" && "text-primary-2"
-                          )}
-                        ></Icon>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
+
               <Button
                 className="mt-5 w-full"
                 onClick={() => setOpenDesignerProfileDialog(true)}

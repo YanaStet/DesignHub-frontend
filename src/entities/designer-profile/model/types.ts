@@ -3,11 +3,8 @@ export type DesignerProfile = {
   experience: number | null;
   bio: string | null;
   header_image_url: string | null;
-  avatar_url: string | null;
-  designer_id: number;
-  rating: number;
-  views_count: number;
-  work_amount: number;
+  avatar: string | null;
+  user: string;
 };
 
 export type DesignerProfileRequest = {

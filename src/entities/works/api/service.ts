@@ -22,8 +22,8 @@ class WorkService {
   ): Promise<Work[]> {
     const data = await api.get<Work[]>(
       params
-        ? `/designs/by-designer/${userId}?${buildQueryParams(params)}`
-        : `/designs/by-designer/${userId}`,
+        ? `/designs/user/${userId}?${buildQueryParams(params)}`
+        : `/designs/user/${userId}`,
     );
     return data;
   }

@@ -2,17 +2,17 @@ import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { WORK_KEYS, type Work, type WorkQueryParams } from "../model";
 import type { AxiosError } from "axios";
 import { workService } from "../api/service";
+import type { PaginationResponse } from "@/shared/types";
 
-export type WorksPageData = { data: Work[] };
 
 export function useWorkByDesignerIdInfiniteQuery(
   userId: string,
   initialParams: Omit<WorkQueryParams, "skip" | "limit">,
 ) {
   return useInfiniteQuery<
-    WorksPageData,
+    Work[],
     AxiosError,
-    InfiniteData<WorksPageData>, // TData (дані після select, тут = InfiniteData)
+    InfiniteData<PaginationResponse<Work>>, // TData (дані після select, тут = InfiniteData)
     [string, typeof initialParams],
     number
   >({
@@ -25,18 +25,21 @@ export function useWorkByDesignerIdInfiniteQuery(
         skip: pageParam,
       };
 
+      console.log(workService
+        .getWorksByDesignerId(userId, params))
       return workService
         .getWorksByDesignerId(userId, params)
-        .then((works) => ({ data: works }));
     },
 
     getNextPageParam: (lastPage, allPages) => {
       const totalLoaded = allPages.reduce(
-        (sum, page) => sum + page.data.length,
+        (sum, page) => {
+          return sum + page.length
+        },
         0,
       );
 
-      if (lastPage.data.length < 12) return undefined;
+      if (lastPage.length < 12) return undefined;
 
       return totalLoaded; // skip for next page
     },

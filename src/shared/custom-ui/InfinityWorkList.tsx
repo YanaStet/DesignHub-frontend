@@ -47,6 +47,7 @@ export function InfinityWorkList({
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+
   return (
     <div
       className={clsx(
@@ -55,7 +56,7 @@ export function InfinityWorkList({
       )}
     >
       {works.map((work, index) => (
-        <div key={work.id} ref={works.length - 1 === index ? ref : null}>
+        <div key={work._id} ref={works.length - 1 === index ? ref : null}>
           <WorkCard work={work} myProfile={myProfile} />
         </div>
       ))}

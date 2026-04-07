@@ -3,11 +3,11 @@ import type { DesignerProfile, DesignerProfileRequest } from "../model";
 
 class DesignerProfileService {
   async getDesignerProfileById(id: number): Promise<DesignerProfile> {
-    const data = await api.get<DesignerProfile>(`/profiles/${id}`);
+    const data = await api.get<DesignerProfile>(`/designer-profiles/${id}`);
     return data;
   }
   async getMyDesignerProfile(): Promise<DesignerProfile> {
-    const data = await api.get<DesignerProfile>(`/profiles/me`);
+    const data = await api.get<DesignerProfile>(`/designer-profiles/me`);
     return data;
   }
   async updateMyDesignerProfile(
