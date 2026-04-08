@@ -29,26 +29,26 @@ import {
 } from "@/shared/shadcn-ui/ui/dropdown-menu";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { tagHooks } from "@/entities/tags/hooks";
-import type { Work, WorkRequest } from "@/entities/works/model";
-import type { Tag } from "@/entities/tags/model";
+import { WORK_KEYS, type Work } from "@/entities/works/model";
+import { TAG_KEYS, type Tag } from "@/entities/tags/model";
+import { WorkHooks } from "@/entities/works/hooks";
+import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AddWorkDialogProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  handleCreateWork: (body: WorkRequest) => void;
-  isLoading: boolean;
-  defaultValues?: Work;
+  defaultValues: Work;
 };
 
-export function AddWorkDialog({
+export function EditWorkDialog({
   open,
-  handleCreateWork,
   setOpen,
-  isLoading,
   defaultValues,
 }: AddWorkDialogProps) {
-  const [img, setImg] = useState<File | null>(null);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [coverImg, setCoverImg] = useState<File | null>(null);
+  const [contentFile, setContentFile] = useState<File | null>(null);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(defaultValues.tags);
 
   const form = useForm<WorkCreateSchema>({
     resolver: zodResolver(workCreateSchema),
@@ -60,12 +60,17 @@ export function AddWorkDialog({
   });
 
   const { data: tags } = tagHooks.useGetAllTagsQuery();
+  const { mutateAsync: updateWork, isPending: isUpdateWorkLoading } = WorkHooks.useUpdateWorkMutation(defaultValues._id);
+  const { mutate: updateCover, isPending: isUpdateCoverLoading } = WorkHooks.useUpdateCoverMutation(defaultValues._id);
+  const { mutate: updateContent, isPending: isUpdateContentLoading } = WorkHooks.useUpdateContentMutation(defaultValues._id);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setImg(file);
-    }
+  const queryClient = useQueryClient();
+
+  const handleCoverChange = (file: File | null) => {
+    setCoverImg(file);
+  };
+  const handleContentChange = (file: File | null) => {
+    setContentFile(file);
   };
   const handleAddTag = (tag: Tag) => {
     if (!selectedTags.includes(tag)) {
@@ -73,13 +78,27 @@ export function AddWorkDialog({
     }
   };
   const handleSubmit = (body: WorkCreateSchema) => {
-    handleCreateWork({
+    updateWork({
       tags: selectedTags.map((t) => t._id),
       description: body.description || null,
       title: body.title,
-      coverImage: img,
-      designFile: img,
+    }, {
+      onSuccess: () => {
+        setOpen(false);
+        form.reset();
+        queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY, defaultValues._id, TAG_KEYS.ALL_TAGS] });
+      }
     });
+  };
+  const handleUpdateCover = () => {
+    if (coverImg) {
+      updateCover(coverImg);
+    }
+  };
+  const handleUpdateContent = () => {
+    if (contentFile) {
+      updateContent(contentFile);
+    }
   };
 
   useEffect(() => {
@@ -141,13 +160,38 @@ export function AddWorkDialog({
                   ? "Leave the field empty, if you want to keep previous image"
                   : "Picture"}
               </Label>
-              <Input
-                id="picture"
-                type="file"
-                onChange={handleFileChange}
-                className="text-gray-6 file:text-gray-3"
-                required={!defaultValues}
-              />
+              <div className="flex gap-2 items-center">
+                <div className="w-full">
+                  <FileUploadField
+                    onChange={handleCoverChange}
+                    value={coverImg}
+                    accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+                    label="Upload cover image"
+                    icon={<Icon name="Plus" />}
+                  />
+                </div>
+                <Button type="button" disabled={isUpdateCoverLoading} onClick={handleUpdateCover}>Update</Button>
+              </div>
+            </div>
+
+            <div className="grid w-full max-w-sm items-center gap-3">
+              <Label htmlFor="picture" className="text-gray-6 mt-3">
+                {defaultValues
+                  ? "Leave the field empty, if you want to keep previous image"
+                  : "Picture"}
+              </Label>
+              <div className="flex gap-2 items-center">
+                <div className="w-full">
+                  <FileUploadField
+                    onChange={handleContentChange}
+                    value={contentFile}
+                    accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+                    label="Upload content image"
+                    icon={<Icon name="Plus" />}
+                  />
+                </div>
+                <Button type="button" disabled={isUpdateContentLoading} onClick={handleUpdateContent}>Update</Button>
+              </div>
             </div>
 
             <Label className="text-gray-6 mt-3">Tags</Label>
@@ -202,7 +246,7 @@ export function AddWorkDialog({
               <Button
                 type="submit"
                 className="bg-primary-2"
-                disabled={isLoading}
+                disabled={isUpdateWorkLoading}
               >
                 Submit
               </Button>

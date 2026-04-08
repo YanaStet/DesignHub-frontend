@@ -1,5 +1,4 @@
-import { WORK_KEYS, type Work, type WorkRequest } from "@/entities/works/model";
-import { BASE_URL } from "@/shared/api";
+import { WORK_KEYS, type Work } from "@/entities/works/model";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Link } from "react-router-dom";
 import { Icon } from "../shadcn-ui/ui/icon";
@@ -15,9 +14,9 @@ import { useState } from "react";
 import { showToast } from "../utils/showToast";
 import { useQueryClient } from "@tanstack/react-query";
 import { handleApiError } from "../api/apiError";
-import { AddWorkDialog } from "@/pages/my-profile/add-work-dialog/AddWorkDialog";
 import { useMe } from "../store/meStore";
 import { ROUTE_PATHS } from "../utils/routes";
+import { EditWorkDialog } from "@/pages/my-profile/edit-work-dialog/EditWorkDialog";
 
 type WorkCardProps = {
   work: Work;
@@ -29,8 +28,6 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
   const [openEdit, setOpenEdit] = useState(false);
   const { mutate: deleteWork, isPending: isDeleteLoading } =
     WorkHooks.useDeleteWorkMutation(work._id);
-  const { mutate: updateWork, isPending: isUpdateWorkLoading } =
-    WorkHooks.useUpdateWorkMutation(work._id);
 
   const { me } = useMe();
   const queryClient = useQueryClient();
@@ -52,21 +49,6 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
         },
       },
     );
-  };
-  const handleEdit = (values: WorkRequest) => {
-    updateWork(values, {
-      onSuccess: () => {
-        showToast("success", "Work was successfuly updated.");
-        setOpenEdit(false);
-        queryClient.invalidateQueries({
-          queryKey: [WORK_KEYS.INFINITE_QUERY],
-        });
-      },
-      onError: (er) => {
-        handleApiError(er);
-        setOpenEdit(false);
-      },
-    });
   };
 
   return (
@@ -106,9 +88,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
           </div>
         )}
         <div className="w-50 h-30 2xl:w-70 2xl:h-40 flex justify-center overflow-hidden">
-          {work.cover_url !== null ? (
+          {work.coverUrl !== null ? (
             <img
-              src={BASE_URL + work.cover_url}
+              src={work.coverUrl}
               alt="Photo"
               className="object-cover w-full rounded-2xl"
             />
@@ -121,9 +103,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
         <div className="flex gap-1 flex-row items-center">
           <Link
             to={
-              work.author.id === me?.id
+              work.author._id === me?._id
                 ? ROUTE_PATHS.PROFILE
-                : `/users/${work.author.id}`
+                : `/users/${work.author._id}`
             }
             onClick={(event) => event.stopPropagation()}
           >
@@ -152,7 +134,7 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
           <div className="mt-2 flex flex-wrap gap-2 max-w-50 max-h-10 overflow-y-auto custom-scrollbar-container">
             {work.tags.map((tag) => (
               <div
-                key={tag.id}
+                key={tag._id}
                 className="text-gray-1 px-2 py-1 rounded-xl bg-gray-3 text-xs"
               >
                 {tag.name}
@@ -170,11 +152,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
         description="Your work will be deleted permanently."
         loading={isDeleteLoading}
       />
-      <AddWorkDialog
+      <EditWorkDialog
         open={openEdit}
         setOpen={setOpenEdit}
-        handleCreateWork={handleEdit}
-        isLoading={isUpdateWorkLoading}
         defaultValues={work}
       />
     </>

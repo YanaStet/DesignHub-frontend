@@ -46,7 +46,9 @@ export function MyProfilePage() {
   const { mutate: editProfile, isPending: isProfileLoading } =
     DesignerProfileHooks.useUpdateDesignerProfileMutation();
 
-  const allWorks = works?.pages.flatMap((page) => page) || [];
+
+  const allWorks = works?.pages.flatMap((page) => page.data) || [];
+
   const handleAddWork = (body: WorkRequest) => {
     mutate(body, {
       onSuccess: () => {

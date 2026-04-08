@@ -1,6 +1,5 @@
 import { commentHooks } from "@/entities/comments/hooks";
 import { WorkHooks } from "@/entities/works/hooks";
-import { BASE_URL } from "@/shared/api";
 import { Loader } from "@/shared/custom-ui/Loader";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
@@ -56,6 +55,7 @@ export function WorkPage() {
     );
   }, []);
 
+
   return (
     <div className="flex justify-around">
       <div className="px-15 py-10">
@@ -65,9 +65,9 @@ export function WorkPage() {
           <>
             <div className="flex gap-10">
               <div className="w-130 h-70 2xl:w-165 2xl:h-90 overflow-hidden rounded-2xl">
-                {data?.content_url ? (
+                {data?.designUrl ? (
                   <img
-                    src={BASE_URL + data.content_url}
+                    src={data.designUrl}
                     alt="Photo"
                     className="object-cover w-full h-full"
                   />
@@ -84,9 +84,9 @@ export function WorkPage() {
                 <div className="flex gap-1 flex-row items-center mt-5">
                   <Link
                     to={
-                      data?.author.id === me?.id
+                      data?.author._id === me?._id
                         ? ROUTE_PATHS.PROFILE
-                        : `/users/${data?.author.id}`
+                        : `/users/${data?.author._id}`
                     }
                     onClick={(event) => event.stopPropagation()}
                   >
@@ -114,7 +114,7 @@ export function WorkPage() {
                   <div className="mt-2 flex flex-wrap gap-2">
                     {data.tags.map((tag) => (
                       <div
-                        key={tag.id}
+                        key={tag._id}
                         className="text-gray-1 px-2 py-1 rounded-xl bg-gray-3 text-sm"
                       >
                         {tag.name}

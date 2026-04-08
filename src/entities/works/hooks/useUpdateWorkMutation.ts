@@ -6,8 +6,8 @@ import { workService } from "../api/service";
 
 export function useUpdateWorkMutation(
   workId: string,
-): UseMutationResult<Work, AxiosError<ApiErrorResponse>, WorkRequest> {
+): UseMutationResult<Work, AxiosError<ApiErrorResponse>, Omit<WorkRequest, "coverImage" | "designFile">> {
   return useMutation({
-    mutationFn: (body: WorkRequest) => workService.updateWork(workId, body),
+    mutationFn: (body: Omit<WorkRequest, "coverImage" | "designFile">) => workService.updateWork(workId, body),
   });
 }

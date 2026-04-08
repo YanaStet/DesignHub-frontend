@@ -47,20 +47,20 @@ export function WorkFilters({ setParams }: WorkFiltersProps) {
         <Typography variant="h4" className="text-gray-4 mb-4">
           Tags
         </Typography>
-        <div className="flex flex-col gap-3 max-h-30 overflow-y-scroll custom-scrollbar-container">
+        <div className="flex flex-col gap-3 max-h-70 overflow-y-scroll custom-scrollbar-container">
           {isLoadingTags && <Loader />}
           {!isLoadingTags &&
             tags?.map((tag) => (
-              <div key={tag.id} className="flex items-center gap-3">
+              <div key={tag._id} className="flex items-center gap-3">
                 <Checkbox
                   className="cursor-pointer border-gray-6"
-                  id={`tag-${tag.id}`}
+                  id={`tag-${tag._id}`}
                   checked={selectedTags.includes(tag.name)}
                   onCheckedChange={(checked) =>
                     handleTagChange(tag.name, !!checked)
                   }
                 />
-                <Label htmlFor={`tag-${tag.id}`} className="text-gray-4">
+                <Label htmlFor={`tag-${tag._id}`} className="text-gray-4">
                   {tag.name}
                 </Label>
               </div>

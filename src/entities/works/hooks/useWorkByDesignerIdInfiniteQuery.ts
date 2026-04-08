@@ -10,13 +10,14 @@ export function useWorkByDesignerIdInfiniteQuery(
   initialParams: Omit<WorkQueryParams, "skip" | "limit">,
 ) {
   return useInfiniteQuery<
-    Work[],
+    PaginationResponse<Work>,
     AxiosError,
     InfiniteData<PaginationResponse<Work>>, // TData (дані після select, тут = InfiniteData)
-    [string, typeof initialParams],
+    [string, string, typeof initialParams],
     number
   >({
-    queryKey: [WORK_KEYS.INFINITE_QUERY, initialParams],
+    queryKey: [WORK_KEYS.INFINITE_QUERY, userId, initialParams],
+    enabled: !!userId,
 
     queryFn: ({ pageParam = 0 }) => {
       const params: WorkQueryParams = {
@@ -25,21 +26,16 @@ export function useWorkByDesignerIdInfiniteQuery(
         skip: pageParam,
       };
 
-      console.log(workService
-        .getWorksByDesignerId(userId, params))
-      return workService
-        .getWorksByDesignerId(userId, params)
+      return workService.getWorksByDesignerId(userId, params);
     },
 
     getNextPageParam: (lastPage, allPages) => {
       const totalLoaded = allPages.reduce(
-        (sum, page) => {
-          return sum + page.length
-        },
+        (sum, page) => sum + page.data.length,
         0,
       );
 
-      if (lastPage.length < 12) return undefined;
+      if (lastPage.data.length < 12) return undefined;
 
       return totalLoaded; // skip for next page
     },

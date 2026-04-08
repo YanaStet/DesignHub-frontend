@@ -4,8 +4,8 @@ import type { User } from "@/entities/users/model";
 export type Work = {
   title: string;
   description: string;
-  cover_url: string;
-  content_url: string;
+  coverUrl: string;
+  designUrl: string;
   _id: string;
   createdAt: string;
   updatedAt: string;
@@ -24,6 +24,8 @@ export type WorkQueryParams = {
 export type WorkRequest = {
   title: string;
   description: string | null;
-  image_url: string | null;
-  tagsIds: string[];
+  coverImage: File | null;
+  designFile: File | null;
+  tags: string[];
 };
+
