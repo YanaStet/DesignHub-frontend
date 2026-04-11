@@ -1,61 +1,40 @@
 import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
-import { BASE_URL } from "@/shared/api";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/shared/shadcn-ui/ui/avatar";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
-import clsx from "clsx";
-import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { WorkHooks } from "@/entities/works/hooks";
-import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { InfinityWorkList } from "@/shared/custom-ui/InfinityWorkList";
 import { UserHooks } from "@/entities/users/hooks";
-
-export type StarIcon = "full" | "half" | "empty";
 
 export function DesignerProfilePage() {
   const { userId } = useParams();
   const { data } = DesignerProfileHooks.useDesignerProfileByIdQuery(
-    Number(userId)
+    userId || ""
   );
   const {
     data: works,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = WorkHooks.useWorkByDesignerIdInfiniteQuery(Number(userId) || -1, {
-    categories: null,
+  } = WorkHooks.useWorkByDesignerIdInfiniteQuery(userId || "", {
     q: null,
     tags: null,
   });
-  const { data: user } = UserHooks.useGetUserBiIdQuery(Number(userId));
+  const { data: user } = UserHooks.useGetUserBiIdQuery(userId || "");
 
   const allWorks = works?.pages.flatMap((page) => page.data) || [];
-
-  const stars: StarIcon[] = useMemo(() => {
-    const s: StarIcon[] = [];
-    for (let i = 0; i < Math.floor(data?.rating || 0); i++) {
-      s.push("full");
-    }
-    if (data && data.rating % 1 >= 0.5) {
-      s.push("half");
-    }
-    while (s.length < 5) {
-      s.push("empty");
-    }
-    return s;
-  }, [data]);
 
   return (
     <div>
       <div>
-        {data?.header_image_url ? (
+        {data?.header_image ? (
           <div className="w-full max-h-35 2xl:max-h-60 overflow-hidden">
             <img
-              src={BASE_URL + data?.header_image_url}
+              src={data?.header_image}
               alt="Photo"
               className="object-cover h-full w-full"
             />
@@ -72,7 +51,7 @@ export function DesignerProfilePage() {
         <div>
           <Avatar className="w-37 h-37 absolute top-[-75px]">
             <AvatarImage
-              src={BASE_URL + data?.avatar_url}
+              src={data?.avatar || undefined}
               alt="@shadcn"
               className="object-cover"
             />
@@ -90,28 +69,6 @@ export function DesignerProfilePage() {
           <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
             Experience: {data?.experience} years
           </Typography>
-          <div className="flex gap-3 mt-5">
-            <Typography variant="body3" className="text-gray-4">
-              {data?.rating}
-            </Typography>
-            <div className="flex items-center">
-              {stars?.map((star) => (
-                <div className="w-4 h-4">
-                  {star === "half" ? (
-                    <Icon name="HalfStar" className="text-amber-300"></Icon>
-                  ) : (
-                    <Icon
-                      name="Star"
-                      className={clsx(
-                        star === "full" && "text-amber-300",
-                        star === "empty" && "text-primary-2"
-                      )}
-                    ></Icon>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
         <div className="w-325">
           <div className="w-full h-px bg-gray-6"></div>

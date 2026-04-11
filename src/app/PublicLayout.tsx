@@ -17,8 +17,8 @@ export function PublicLayout() {
     if (me !== undefined && error === null) {
       setMe(me);
     }
-    if (profile?.avatar_url) {
-      setAvatarUrl(profile.avatar_url);
+    if (profile?.avatar) {
+      setAvatarUrl(profile.avatar);
     }
     if (profile) {
       setDesignerProfile(profile);

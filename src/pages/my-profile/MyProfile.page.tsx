@@ -1,4 +1,3 @@
-import { BASE_URL } from "@/shared/api";
 import {
   Avatar,
   AvatarFallback,
@@ -86,10 +85,10 @@ export function MyProfilePage() {
       {myProfile?.bio && myProfile.specialization ? (
         <>
           <div>
-            {myProfile?.header_image_url ? (
+            {myProfile?.header_image ? (
               <div className="w-full max-h-35 2xl:max-h-60 overflow-hidden">
                 <img
-                  src={BASE_URL + myProfile?.header_image_url}
+                  src={myProfile?.header_image}
                   alt="Photo"
                   className="object-cover h-full w-full"
                 />
@@ -106,7 +105,7 @@ export function MyProfilePage() {
             <div>
               <Avatar className="w-37 h-37 absolute top-[-75px]">
                 <AvatarImage
-                  src={BASE_URL + myProfile?.avatar}
+                  src={myProfile.avatar || undefined}
                   alt="@shadcn"
                   className="object-cover"
                 />

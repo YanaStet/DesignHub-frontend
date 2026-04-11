@@ -2,7 +2,7 @@ import api from "@/shared/api/api";
 import type { DesignerProfile, DesignerProfileRequest } from "../model";
 
 class DesignerProfileService {
-  async getDesignerProfileById(id: number): Promise<DesignerProfile> {
+  async getDesignerProfileById(id: string): Promise<DesignerProfile> {
     const data = await api.get<DesignerProfile>(`/designer-profiles/${id}`);
     return data;
   }
@@ -13,25 +13,14 @@ class DesignerProfileService {
   async updateMyDesignerProfile(
     body: DesignerProfileRequest
   ): Promise<DesignerProfile> {
-    const data = await api.put<DesignerProfile>(`/profiles/me`, body);
-    return data;
-  }
-  async updateMyAvatar(body: File): Promise<DesignerProfile> {
-    const formData = new FormData();
-    formData.append("file", body);
-    const data = await api.post<DesignerProfile>(
-      "/profiles/me/avatar",
-      formData
-    );
-    return data;
-  }
-  async updateMyHeader(body: File): Promise<DesignerProfile> {
-    const formData = new FormData();
-    formData.append("file", body);
-    const data = await api.post<DesignerProfile>(
-      "/profiles/me/header-image",
-      formData
-    );
+    const request = new FormData();
+    if (body.bio) request.append("bio", body.bio);
+    if (body.specialization) request.append("specialization", body.specialization);
+    if (body.experience) request.append("experience", body.experience.toString());
+    if (body.avatar) request.append("avatar", body.avatar);
+    if (body.header) request.append("header", body.header);
+
+    const data = await api.post<DesignerProfile>(`/designer-profiles`, request);
     return data;
   }
 }

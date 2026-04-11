@@ -1,5 +1,4 @@
 import {
-  DESIGNER_PROFILE_KEYS,
   type DesignerProfile,
   type DesignerProfileRequest,
 } from "@/entities/designer-profile/model";
@@ -27,9 +26,8 @@ import { designerProfileSchema, type DesignerProfileSchema } from "./schema";
 import { useState } from "react";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Label } from "@/shared/shadcn-ui/ui/label";
-import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
-import { useQueryClient } from "@tanstack/react-query";
-import { showToast } from "@/shared/utils/showToast";
+import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
+import { Icon } from "@/shared/shadcn-ui/ui/icon";
 
 type ManageProfileDialogProps = {
   open: boolean;
@@ -58,54 +56,21 @@ export function ManageProfileDialog({
       specialization: defaultValues?.specialization || "",
     },
   });
-  const queryClient = useQueryClient();
 
-  const { mutate: postAvatar } = DesignerProfileHooks.usePostAvatarMutation();
-  const { mutate: postHeader } = DesignerProfileHooks.usePostHeaderMutation();
-
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setAvatar(file);
-    }
+  const handleAvatarChange = (avatar: File | null) => {
+    setAvatar(avatar);
   };
-  const handleHeaderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setHeader(file);
-    }
+  const handleHeaderChange = (header: File | null) => {
+    setHeader(header);
   };
   const handleSubmit = (values: DesignerProfileSchema) => {
-    if (avatar) {
-      postAvatar(avatar, {
-        onError: () => {
-          showToast("error", "Something went wrong with avatar.");
-          setOpen(false);
-        },
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
-          });
-        },
-      });
-    }
-    if (header) {
-      postHeader(header, {
-        onError: () => {
-          showToast("error", "Something went wrong with avatar.");
-          setOpen(false);
-        },
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
-          });
-        },
-      });
-    }
+
     handleUpdateProfile({
       bio: values.bio || null,
       experience: experience,
       specialization: values.specialization || null,
+      avatar: avatar,
+      header: header,
     });
   };
 
@@ -182,12 +147,12 @@ export function ManageProfileDialog({
                   ? "Leave the field empty, if you want to keep previous avatar"
                   : "Avatar"}
               </Label>
-              <Input
-                id="avatar"
-                type="file"
+              <FileUploadField
                 onChange={handleAvatarChange}
-                className="text-gray-6 file:text-gray-3"
-                required={!defaultValues}
+                value={avatar}
+                accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+                label="Upload avatar"
+                icon={<Icon name="Plus" />}
               />
             </div>
 
@@ -197,12 +162,12 @@ export function ManageProfileDialog({
                   ? "Leave the field empty, if you want to keep previous header"
                   : "Header"}
               </Label>
-              <Input
-                id="header"
-                type="file"
+              <FileUploadField
                 onChange={handleHeaderChange}
-                className="text-gray-6 file:text-gray-3"
-                required={!defaultValues}
+                value={header}
+                accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+                label="Upload header"
+                icon={<Icon name="Plus" />}
               />
             </div>
 

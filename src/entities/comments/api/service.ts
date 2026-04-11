@@ -7,14 +7,14 @@ class CommentService {
     return data;
   }
   async createComment(body: CommentRequest): Promise<Comment> {
-    const data = await api.post<Comment>("/comments/", body);
+    const data = await api.post<Comment>(`/comments/${body.designId}`, { text: body.content });
     return data;
   }
   async updateComment(
     commentId: string,
     body: UpdateCommentRequest,
   ): Promise<Comment> {
-    const data = await api.put<Comment>(`/comments/${commentId}`, body);
+    const data = await api.put<Comment>(`/comments/${commentId}`, { text: body.content });
     return data;
   }
   async deleteComment(commentId: string): Promise<Comment> {

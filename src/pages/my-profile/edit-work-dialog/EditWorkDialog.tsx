@@ -30,10 +30,12 @@ import {
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { tagHooks } from "@/entities/tags/hooks";
 import { WORK_KEYS, type Work } from "@/entities/works/model";
-import { TAG_KEYS, type Tag } from "@/entities/tags/model";
+import { type Tag } from "@/entities/tags/model";
 import { WorkHooks } from "@/entities/works/hooks";
 import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
 import { useQueryClient } from "@tanstack/react-query";
+import { showToast } from "@/shared/utils/showToast";
+import { handleApiError } from "@/shared/api/apiError";
 
 type AddWorkDialogProps = {
   open: boolean;
@@ -86,18 +88,34 @@ export function EditWorkDialog({
       onSuccess: () => {
         setOpen(false);
         form.reset();
-        queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY, defaultValues._id, TAG_KEYS.ALL_TAGS] });
+        queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY] });
+        showToast("success", "You successfully updated the work!");
+      },
+      onError: (er) => {
+        handleApiError(er);
       }
     });
   };
   const handleUpdateCover = () => {
     if (coverImg) {
-      updateCover(coverImg);
+      updateCover(coverImg, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY] });
+          showToast("success", "Cover image updated!");
+        },
+        onError: handleApiError
+      });
     }
   };
   const handleUpdateContent = () => {
     if (contentFile) {
-      updateContent(contentFile);
+      updateContent(contentFile, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY] });
+          showToast("success", "Content image updated!");
+        },
+        onError: handleApiError
+      });
     }
   };
 

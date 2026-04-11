@@ -8,7 +8,7 @@ import { DESIGNER_PROFILE_KEYS, type DesignerProfile } from "../model";
 import { designerProfileService } from "../api/service";
 
 export function useDesignerProfileByIdQuery<TData = DesignerProfile>(
-  designer_id: number,
+  designer_id: string,
   options?: Partial<UseQueryOptions<DesignerProfile, AxiosError, TData>>
 ): UseQueryResult<TData> {
   return useQuery<DesignerProfile, AxiosError, TData>({

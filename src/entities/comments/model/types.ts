@@ -1,10 +1,9 @@
 import type { User } from "@/entities/users/model";
-import type { Work } from "@/entities/works/model";
 
 export type Comment = {
   content: string;
-  id: string;
-  design: Work;
+  _id: string;
+  design: string;
   author: User;
 };
 

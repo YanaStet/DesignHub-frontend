@@ -67,7 +67,7 @@ export function LoginPage() {
         firstName: values.firstName,
         lastName: values.lastName,
         password: values.password,
-        role: "designer",
+        role: "user",
       },
       {
         onSuccess: () => {

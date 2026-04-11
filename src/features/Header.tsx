@@ -1,4 +1,3 @@
-import { BASE_URL } from "@/shared/api";
 import { authService } from "@/entities/auth/api/service";
 import logo from "@/shared/assets/logo.png";
 import {
@@ -21,6 +20,7 @@ import { Link, useNavigate } from "react-router-dom";
 export function Header() {
   const { me, avatar_url, setMe, setAvatarUrl, setDesignerProfile } = useMe();
   const navigate = useNavigate();
+
 
   const handleLogOut = async () => {
     await authService.logout();
@@ -51,7 +51,7 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <Avatar>
               <AvatarImage
-                src={BASE_URL + avatar_url}
+                src={avatar_url}
                 alt="@shadcn"
                 className="object-cover"
               />

@@ -16,7 +16,7 @@ export type Work = {
 
 export type WorkQueryParams = {
   limit: number | null;
-  skip: number | null;
+  page: number | null;
   tags: string[] | null;
   q: string | null;
 };

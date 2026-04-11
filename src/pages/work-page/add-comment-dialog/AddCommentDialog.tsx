@@ -19,8 +19,6 @@ import {
   FormMessage,
 } from "@/shared/shadcn-ui/ui/form";
 import { Input } from "@/shared/shadcn-ui/ui/input";
-import { Icon } from "@/shared/shadcn-ui/ui/icon";
-import { useState } from "react";
 import { commentHooks } from "@/entities/comments/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -31,7 +29,7 @@ import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
 
 type AddCommentDialogProps = {
-  workId: number;
+  workId: string;
   isEdit?: boolean;
   handleEditComment?: (comment: UpdateCommentRequest) => void;
   open: boolean;
@@ -47,14 +45,7 @@ export function AddCommentDialog({
   setOpen,
   isLoading,
 }: AddCommentDialogProps) {
-  const [rate, setRate] = useState(1);
-  const stars = [
-    { type: "full", i: 1 },
-    { type: "empty", i: 2 },
-    { type: "empty", i: 3 },
-    { type: "empty", i: 4 },
-    { type: "empty", i: 5 },
-  ];
+
 
   const queryClient = useQueryClient();
 
@@ -72,9 +63,8 @@ export function AddCommentDialog({
     if (!isEdit) {
       mutate(
         {
-          comment_text: values.comment_text,
-          rating_score: rate,
-          work_id: workId,
+          content: values.comment_text,
+          designId: workId,
         },
         {
           onSuccess: () => {
@@ -83,7 +73,6 @@ export function AddCommentDialog({
               queryKey: [COMMENT_KEYS.COMMENTS],
             });
             form.reset();
-            setRate(1);
           },
           onError: (er) => handleApiError(er),
         }
@@ -91,8 +80,7 @@ export function AddCommentDialog({
     } else {
       if (handleEditComment) {
         handleEditComment({
-          comment_text: values.comment_text,
-          rating_score: rate,
+          content: values.comment_text,
         });
       }
     }
@@ -125,31 +113,7 @@ export function AddCommentDialog({
                 </FormItem>
               )}
             />
-            <div className="flex gap-1 mt-5">
-              {stars.map((star, i) => {
-                if (i < rate) {
-                  return (
-                    <Icon
-                      name="Star"
-                      className="w-5 h-5 cursor-pointer text-amber-300"
-                      onClick={() => {
-                        setRate(i + 1);
-                      }}
-                    />
-                  );
-                } else {
-                  return (
-                    <Icon
-                      name="Star"
-                      className="w-5 h-5 cursor-pointer text-primary-2"
-                      onClick={() => {
-                        setRate(i + 1);
-                      }}
-                    />
-                  );
-                }
-              })}
-            </div>
+
 
             <DialogFooter className="mt-5">
               <DialogClose asChild>

@@ -7,7 +7,7 @@ import type { PaginationResponse } from "@/shared/types";
 
 export function useWorkByDesignerIdInfiniteQuery(
   userId: string,
-  initialParams: Omit<WorkQueryParams, "skip" | "limit">,
+  initialParams: Omit<WorkQueryParams, "page" | "limit">,
 ) {
   return useInfiniteQuery<
     PaginationResponse<Work>,
@@ -19,27 +19,22 @@ export function useWorkByDesignerIdInfiniteQuery(
     queryKey: [WORK_KEYS.INFINITE_QUERY, userId, initialParams],
     enabled: !!userId,
 
-    queryFn: ({ pageParam = 0 }) => {
+    queryFn: ({ pageParam = 1 }) => {
       const params: WorkQueryParams = {
         ...initialParams,
         limit: 12,
-        skip: pageParam,
+        page: pageParam,
       };
 
       return workService.getWorksByDesignerId(userId, params);
     },
 
-    getNextPageParam: (lastPage, allPages) => {
-      const totalLoaded = allPages.reduce(
-        (sum, page) => sum + page.data.length,
-        0,
-      );
-
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length < 12) return undefined;
 
-      return totalLoaded; // skip for next page
+      return lastPage.page + 1; // next page number
     },
 
-    initialPageParam: 0,
+    initialPageParam: 1,
   });
 }

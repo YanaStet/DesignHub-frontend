@@ -8,7 +8,7 @@ import { userService } from "../api/service";
 import { AxiosError } from "axios";
 
 export function useGetUserBiIdQuery<TData = User>(
-  userId: number,
+  userId: string,
   options?: Partial<UseQueryOptions<User, AxiosError, TData>>
 ): UseQueryResult<TData> {
   return useQuery<User, AxiosError, TData>({

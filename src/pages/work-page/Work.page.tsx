@@ -16,8 +16,11 @@ import { handleApiError } from "@/shared/api/apiError";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMe } from "@/shared/store/meStore";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
+import { Input } from "@/shared/shadcn-ui/ui/input";
+import { COMMENT_KEYS } from "@/entities/comments/model";
 
 export function WorkPage() {
+  const [commentText, setCommentText] = useState("");
   const [open, setOpen] = useState(false);
   const [openCommentSheet, setOpenCommentSheet] = useState(false);
   const [openSimilarSheet, setOpenSimilarSheet] = useState(false);
@@ -42,6 +45,20 @@ export function WorkPage() {
     };
   }, [data]);
   const { data: similarWorks } = WorkHooks.useGetAllWorksQuery(params);
+  const { mutate: createComment } = commentHooks.useCreateCommentMutation();
+
+  const handlePostComment = () => {
+    createComment({
+      content: commentText,
+      designId: workId || "",
+    }, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
+        setCommentText("");
+      },
+      onError: (er) => handleApiError(er),
+    })
+  }
 
   useEffect(() => {
     view(
@@ -156,20 +173,23 @@ export function WorkPage() {
           <Icon name="Similar" className="text-gray-4" />
         </Button>
       </div>
-      <AddCommentDialog open={open} setOpen={setOpen} workId={Number(workId)} />
+      <AddCommentDialog open={open} setOpen={setOpen} workId={workId || ""} />
 
       <CustomSheet
         title="Comments"
         open={openCommentSheet}
         setOpen={setOpenCommentSheet}
       >
-        <Button
-          variant="default"
-          className="w-full bg-primary-2"
-          onClick={() => setOpen(true)}
-        >
-          Add comment
-        </Button>
+        <div className="flex gap-2">
+          <Input placeholder="Write your thoughts" className="w-full" value={commentText} onChange={(e) => setCommentText(e.target.value)} />
+          <Button
+            variant="default"
+            className="w-10 h-10 bg-primary-2"
+            onClick={handlePostComment}
+          >
+            Add
+          </Button>
+        </div>
         <div className="max-h-[380px] overflow-auto custom-scrollbar-container flex flex-col items-center">
           {isCommentsLoading ? (
             <Loader />

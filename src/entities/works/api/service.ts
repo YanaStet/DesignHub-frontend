@@ -33,7 +33,7 @@ class WorkService {
     request.append("description", body.description || "");
     request.append("coverImage", body.coverImage || "");
     request.append("designFile", body.designFile || "");
-    request.append("tagsIds", body.tagsIds.join(","));
+    request.append("tags", JSON.stringify(body.tags));
     const data = await api.post<Work>("/designs", request);
     return data;
   }

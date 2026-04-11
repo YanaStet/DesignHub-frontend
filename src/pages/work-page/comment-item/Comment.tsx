@@ -4,8 +4,6 @@ import {
   type Comment,
   type UpdateCommentRequest,
 } from "@/entities/comments/model";
-import type { StarIcon } from "@/pages/designer-profile/DesignerProfile";
-import { BASE_URL } from "@/shared/api";
 import { CustomAlertDialog } from "@/shared/custom-ui/CustomAlertDialog";
 import {
   Avatar,
@@ -22,8 +20,7 @@ import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { useMe } from "@/shared/store/meStore";
 import { useQueryClient } from "@tanstack/react-query";
-import clsx from "clsx";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { AddCommentDialog } from "../add-comment-dialog/AddCommentDialog";
 import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
@@ -40,13 +37,13 @@ export function CommentItem({ comment }: CommentProps) {
   const queryClient = useQueryClient();
 
   const { data: profile } = DesignerProfileHooks.useDesignerProfileByIdQuery(
-    comment.author_id
+    comment.author._id
   );
   const { mutate, isPending } = commentHooks.useDeleteCommentMutation(
-    comment.id
+    comment._id
   );
   const { mutate: edit, isPending: isEditLoading } =
-    commentHooks.useUpdateCommentMutation(comment.id);
+    commentHooks.useUpdateCommentMutation(comment._id);
 
   const handleDelete = () => {
     mutate(
@@ -73,25 +70,11 @@ export function CommentItem({ comment }: CommentProps) {
     });
   };
 
-  const stars: StarIcon[] = useMemo(() => {
-    const s: StarIcon[] = [];
-    for (let i = 0; i < Math.floor(comment.rating_score || 0); i++) {
-      s.push("full");
-    }
-    if (comment.rating_score % 1 >= 0.5) {
-      s.push("half");
-    }
-    while (s.length < 5) {
-      s.push("empty");
-    }
-    return s;
-  }, [comment]);
-
   return (
     <div className="flex gap-5 w-full mb-5 p-3 rounded-2xl bg-primary-2">
       <Avatar className="w-10 h-10">
         <AvatarImage
-          src={BASE_URL + profile?.avatar_url}
+          src={profile?.avatar || undefined}
           alt="@shadcn"
           className="object-cover"
         />
@@ -105,24 +88,8 @@ export function CommentItem({ comment }: CommentProps) {
           <Typography className="text-gray-6">
             {comment.author.firstName} {comment.author.lastName}
           </Typography>
-          <div className="flex items-center">
-            {stars?.map((star) => (
-              <div className="w-4 h-4">
-                {star === "half" ? (
-                  <Icon name="HalfStar" className="text-amber-300"></Icon>
-                ) : (
-                  <Icon
-                    name="Star"
-                    className={clsx(
-                      star === "full" && "text-amber-300",
-                      star === "empty" && "text-primary-2"
-                    )}
-                  ></Icon>
-                )}
-              </div>
-            ))}
-          </div>
-          {comment.author_id === me?.id && (
+
+          {comment.author._id === me?._id && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="flex items-center">
                 <Icon name="Hamburger" className="w-4 h-4 text-gray-4" />
@@ -141,7 +108,7 @@ export function CommentItem({ comment }: CommentProps) {
             </DropdownMenu>
           )}
         </div>
-        <Typography className="text-gray-6">{comment.comment_text}</Typography>
+        <Typography className="text-gray-6">{comment.content}</Typography>
       </div>
       <CustomAlertDialog
         open={openDelete}
@@ -153,7 +120,7 @@ export function CommentItem({ comment }: CommentProps) {
       />
       <AddCommentDialog
         isEdit
-        workId={comment.work_id}
+        workId={comment.design}
         open={openEdit}
         setOpen={setOpenEdit}
         handleEditComment={handleEdit}

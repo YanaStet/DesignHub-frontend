@@ -5,7 +5,7 @@ import { workService } from "../api/service";
 import type { PaginationResponse } from "@/shared/types";
 
 export function useWorkInfiniteQuery(
-  initialParams: Omit<WorkQueryParams, "skip" | "limit">,
+  initialParams: Omit<WorkQueryParams, "page" | "limit">,
 ) {
   return useInfiniteQuery<
     PaginationResponse<Work>,
@@ -16,27 +16,22 @@ export function useWorkInfiniteQuery(
   >({
     queryKey: [WORK_KEYS.INFINITE_QUERY, initialParams],
 
-    queryFn: ({ pageParam = 0 }) => {
+    queryFn: ({ pageParam = 1 }) => {
       const params: WorkQueryParams = {
         ...initialParams,
         limit: 12,
-        skip: pageParam,
+        page: pageParam,
       };
 
       return workService.getPaginatedWorks(params);
     },
 
-    getNextPageParam: (lastPage, allPages) => {
-      const totalLoaded = allPages.reduce(
-        (sum, page) => sum + page.data.length,
-        0,
-      );
-
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length < 12) return undefined;
 
-      return totalLoaded; // skip for next page
+      return lastPage.page + 1; // next page number
     },
 
-    initialPageParam: 0,
+    initialPageParam: 1,
   });
 }

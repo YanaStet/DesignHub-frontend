@@ -8,7 +8,6 @@ export type User = {
   role: Role;
   createdAt: string;
   updatedAt: string;
-  avatar: string;
 };
 
 export type UserRequest = {
