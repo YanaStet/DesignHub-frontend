@@ -18,6 +18,8 @@ import { useMe } from "@/shared/store/meStore";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
 import { Input } from "@/shared/shadcn-ui/ui/input";
 import { COMMENT_KEYS } from "@/entities/comments/model";
+import { LikeHooks } from "@/entities/likes/hooks";
+import { LIKE_KEYS } from "@/entities/likes/model";
 
 export function WorkPage() {
   const [commentText, setCommentText] = useState("");
@@ -25,13 +27,16 @@ export function WorkPage() {
   const [openCommentSheet, setOpenCommentSheet] = useState(false);
   const [openSimilarSheet, setOpenSimilarSheet] = useState(false);
   const { workId } = useParams();
+  const { me } = useMe();
+
   const { data, isLoading, isError } = WorkHooks.useGetWorkByIdQuery(
     workId || "",
   );
   const { data: comments, isLoading: isCommentsLoading } =
     commentHooks.useCommentsByWorkIdQuery(workId || "");
+  const { data: likes, isLoading: isLikesLoading } = LikeHooks.useGetLikesQuery(workId || "");
   const { mutate: view } = WorkHooks.useViewWorkMutation(workId || "");
-  const { me } = useMe();
+  const { mutate: like } = LikeHooks.useToggleLikeMutation(workId || "");
 
   const queryClient = useQueryClient();
 
@@ -41,7 +46,7 @@ export function WorkPage() {
       tags: t || null,
       q: null,
       limit: null,
-      skip: null,
+      page: null,
     };
   }, [data]);
   const { data: similarWorks } = WorkHooks.useGetAllWorksQuery(params);
@@ -55,6 +60,15 @@ export function WorkPage() {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
         setCommentText("");
+      },
+      onError: (er) => handleApiError(er),
+    })
+  }
+
+  const handleToggleLike = async () => {
+    like(undefined, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [LIKE_KEYS.LIKES] });
       },
       onError: (er) => handleApiError(er),
     })
@@ -95,9 +109,14 @@ export function WorkPage() {
                 )}
               </div>
               <div>
-                <Typography variant="h1" className="text-gray-4">
-                  {data?.title}
-                </Typography>
+                <div className="flex items-center gap-2">
+                  <Button className="bg-transparent hover:bg-transparent hover:scale-120 transition-all cursor-pointer duration-300" onClick={handleToggleLike}>
+                    {isLikesLoading ? <Loader /> : likes?.liked ? <Icon name="FullHeart" className="w-5" /> : <Icon className="w-5" name="HeartOutline" />}
+                  </Button>
+                  <Typography variant="h1" className="text-gray-4">
+                    {data?.title}
+                  </Typography>
+                </div>
                 <div className="flex gap-1 flex-row items-center mt-5">
                   <Link
                     to={

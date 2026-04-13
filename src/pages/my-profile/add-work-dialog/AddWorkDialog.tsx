@@ -31,6 +31,7 @@ import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { tagHooks } from "@/entities/tags/hooks";
 import type { Work, WorkRequest } from "@/entities/works/model";
 import type { Tag } from "@/entities/tags/model";
+import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
 
 type AddWorkDialogProps = {
   open: boolean;
@@ -61,8 +62,7 @@ export function AddWorkDialog({
 
   const { data: tags } = tagHooks.useGetAllTagsQuery();
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleFileChange = (file: File | null) => {
     if (file) {
       setImg(file);
     }
@@ -141,12 +141,12 @@ export function AddWorkDialog({
                   ? "Leave the field empty, if you want to keep previous image"
                   : "Picture"}
               </Label>
-              <Input
-                id="picture"
-                type="file"
+              <FileUploadField
                 onChange={handleFileChange}
-                className="text-gray-6 file:text-gray-3"
-                required={!defaultValues}
+                value={img}
+                accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+                label="Upload content image"
+                icon={<Icon name="Plus" />}
               />
             </div>
 

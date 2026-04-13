@@ -2,8 +2,10 @@
 import Comment from "./svg/comment.svg?react";
 import CrossOutlined from "./svg/cross-outlined.svg?react";
 import Cross from "./svg/cross.svg?react";
+import FullHeart from "./svg/full-heart.svg?react";
 import HalfStar from "./svg/half-star.svg?react";
 import Hamburger from "./svg/hamburger.svg?react";
+import HeartOutline from "./svg/heart-outline.svg?react";
 import Plus from "./svg/plus.svg?react";
 import Similar from "./svg/similar.svg?react";
 import Star from "./svg/star.svg?react";
@@ -14,8 +16,10 @@ export const Icons = {
   Comment,
   CrossOutlined,
   Cross,
+  FullHeart,
   HalfStar,
   Hamburger,
+  HeartOutline,
   Plus,
   Similar,
   Star,
