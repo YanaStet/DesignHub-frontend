@@ -4,4 +4,5 @@ export const ROUTE_PATHS = {
   WORK_PAGE: "/works/:workId",
   LOGIN: "/login",
   PROFILE: "/profile",
+  ADMIN: "/admin",
 };

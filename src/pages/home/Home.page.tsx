@@ -19,6 +19,7 @@ export function HomePage() {
     {
       tags: null,
       q: null,
+      page: 1,
     },
   );
 

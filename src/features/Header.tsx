@@ -11,10 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/shadcn-ui/ui/dropdown-menu";
-import { Toggle } from "@/shared/shadcn-ui/ui/toggle";
 import { useMe } from "@/shared/store/meStore";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
-import { toggleTheme } from "@/shared/utils/toggleTheme";
 import { Link, useNavigate } from "react-router-dom";
 
 export function Header() {
@@ -35,17 +33,7 @@ export function Header() {
       <Link to={ROUTE_PATHS.HOME} className="w-13">
         <img src={logo} alt="Logo" className="object-cover" />
       </Link>
-      <div>
-        <Toggle
-          onClick={toggleTheme}
-          aria-label="Toggle bookmark"
-          size="sm"
-          variant="default"
-          className="data-[state=on]:text-gray-4 data-[state=on]:bg-gray-2 data-[state=off]:text-gray-6"
-        >
-          Light theme
-        </Toggle>
-      </div>
+
       <div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -69,6 +57,7 @@ export function Header() {
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogOut}>Log Out</DropdownMenuItem>
+            {me?.role !== 'user' && <DropdownMenuItem onClick={() => navigate(ROUTE_PATHS.ADMIN)}>Admin page</DropdownMenuItem>}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

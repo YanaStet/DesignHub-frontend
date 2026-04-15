@@ -10,8 +10,9 @@ import { PublicLayout } from "./PublicLayout";
 import { WorkPageLazy } from "@/pages/work-page/Work.page.pazy";
 import { UnauthorizedLayout } from "./UnauthorizedLayout";
 import { LoginPageLazy } from "@/pages/login/Login.page.lazy";
-import { DesignerProfilePageLazy } from "@/pages/designer-profile/DesignerProfile.page.pazy";
 import { MyProfilePageLazy } from "@/pages/my-profile/MyProfile.page.lazy";
+import { DesignerProfilePageLazy } from "@/pages/designer-profile/DesignerProfile.page.pazy";
+import { AdminPageLazy } from "@/pages/admin-page/Admin.page.pazy";
 
 const routes: RouteObject[] = [
   {},
@@ -37,6 +38,10 @@ const routes: RouteObject[] = [
             path: ROUTE_PATHS.PROFILE,
             element: <MyProfilePageLazy />,
           },
+          {
+            path: ROUTE_PATHS.ADMIN,
+            element: <AdminPageLazy />,
+          }
         ],
       },
     ],
