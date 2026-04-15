@@ -61,6 +61,14 @@ class WorkService {
     const data = await api.put<Work>(`/designs/update-file/${workId}`, request);
     return data;
   }
+  async getLikedWorksByDesignerId(designerId: string, params?: WorkQueryParams): Promise<PaginationResponse<Work>> {
+    const data = await api.get<PaginationResponse<Work>>(
+      params
+        ? `/designs/liked-designs/${designerId}?${buildQueryParams(params)}`
+        : `/designs/liked-designs/${designerId}`,
+    );
+    return data;
+  }
 }
 
 export const workService = new WorkService();

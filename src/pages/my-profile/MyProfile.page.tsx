@@ -20,10 +20,12 @@ import {
   DESIGNER_PROFILE_KEYS,
   type DesignerProfileRequest,
 } from "@/entities/designer-profile/model";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/shadcn-ui/ui/tabs";
 
 export type StarIcon = "full" | "half" | "empty";
 
 export function MyProfilePage() {
+  const [selectedTab, setSelectedTab] = useState<"projects" | "liked">("projects");
   const [openWorkDialog, setOpenWorkDialog] = useState(false);
   const [openDesignerProfileDialog, setOpenDesignerProfileDialog] =
     useState(false);
@@ -39,6 +41,10 @@ export function MyProfilePage() {
     q: null,
     tags: null,
   });
+  const { data: likedWorks, fetchNextPage: fetchNextLikedWorksPage, hasNextPage: hasNextLikedWorksPage, isFetchingNextPage: isFetchingNextLikedWorksPage } = WorkHooks.useLikedWorksByDesignerIdIfinityQuery(me?._id || "", {
+    q: null,
+    tags: null
+  })
 
   const { mutate, isPending: isWorkCreateLoading } =
     WorkHooks.useCreateWorkMutation();
@@ -47,6 +53,39 @@ export function MyProfilePage() {
 
 
   const allWorks = works?.pages.flatMap((page) => page.data) || [];
+  const allLikedWorks = likedWorks?.pages.flatMap((page) => page.data) || [];
+
+  const tabDisplay = {
+    projects: allWorks.length > 0 ? (
+      <InfinityWorkList
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        works={allWorks}
+        myProfile
+      />
+    ) : (
+      <div className="h-full w-full flex justify-center items-center">
+        <Typography variant="body2" className="text-gray-3">
+          There is no works yet
+        </Typography>
+      </div>
+    ),
+    liked: allLikedWorks.length > 0 ? (
+      <InfinityWorkList
+        works={allLikedWorks}
+        fetchNextPage={fetchNextLikedWorksPage}
+        hasNextPage={hasNextLikedWorksPage}
+        isFetchingNextPage={isFetchingNextLikedWorksPage}
+      />
+    ) : (
+      <div className="h-full w-full flex justify-center items-center">
+        <Typography variant="body2" className="text-gray-3">
+          There is no liked works yet
+        </Typography>
+      </div>
+    )
+  }
 
   const handleAddWork = (body: WorkRequest) => {
     mutate(body, {
@@ -134,9 +173,12 @@ export function MyProfilePage() {
             <div className="w-325">
               <div className="w-full h-px bg-gray-6"></div>
               <div className="w-full flex justify-between my-5 items-center">
-                <Typography variant="h4" className="text-gray-4">
-                  Projects
-                </Typography>
+                <Tabs defaultValue="projects" >
+                  <TabsList variant="line">
+                    <TabsTrigger value="projects" onClick={() => setSelectedTab("projects")} className="text-lg text-white hover:text-gray-300 data-[state=active]:text-gray-400 after:bg-gray-400">Projects</TabsTrigger>
+                    <TabsTrigger value="liked" onClick={() => setSelectedTab("liked")} className="text-lg text-white hover:text-gray-300 data-[state=active]:text-gray-400 after:bg-gray-400">Liked</TabsTrigger>
+                  </TabsList>
+                </Tabs>
                 <Button
                   className="cursor-pointer"
                   onClick={() => setOpenWorkDialog(true)}
@@ -145,7 +187,10 @@ export function MyProfilePage() {
                 </Button>
               </div>
 
-              {allWorks && allWorks.length > 0 ? (
+              {selectedTab === 'projects' && tabDisplay.projects}
+              {selectedTab === 'liked' && tabDisplay.liked}
+
+              {/* {allWorks && allWorks.length > 0 ? (
                 <InfinityWorkList
                   fetchNextPage={fetchNextPage}
                   hasNextPage={hasNextPage}
@@ -160,6 +205,20 @@ export function MyProfilePage() {
                   </Typography>
                 </div>
               )}
+              {allLikedWorks && allLikedWorks.length > 0 ? (
+                <InfinityWorkList
+                  works={allLikedWorks}
+                  fetchNextPage={fetchNextLikedWorksPage}
+                  hasNextPage={hasNextLikedWorksPage}
+                  isFetchingNextPage={isFetchingNextLikedWorksPage}
+                />
+              ) : (
+                <div className="h-full w-full flex justify-center items-center">
+                  <Typography variant="body2" className="text-gray-3">
+                    There is no works yet
+                  </Typography>
+                </div>
+              )} */}
             </div>
           </div>
           <AddWorkDialog
