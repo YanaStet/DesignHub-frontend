@@ -9,6 +9,7 @@ import HeartOutline from "./svg/heart-outline.svg?react";
 import Plus from "./svg/plus.svg?react";
 import Similar from "./svg/similar.svg?react";
 import Star from "./svg/star.svg?react";
+import ThreeDots from "./svg/three-dots.svg?react";
 import TickOutlined from "./svg/tick-outlined.svg?react";
 import Warning from "./svg/warning.svg?react";
 
@@ -23,6 +24,7 @@ export const Icons = {
   Plus,
   Similar,
   Star,
+  ThreeDots,
   TickOutlined,
   Warning,
 };

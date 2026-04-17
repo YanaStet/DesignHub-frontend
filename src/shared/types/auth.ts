@@ -17,3 +17,8 @@ export type PaginationResponse<T> = {
   limit: number;
   totalPages: number;
 };
+
+export type PaginationParams = {
+  page: number;
+  limit: number;
+}

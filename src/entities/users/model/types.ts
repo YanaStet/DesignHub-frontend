@@ -1,3 +1,5 @@
+import type { PaginationResponse } from "@/shared/types";
+
 export type Role = "user" | "moderator" | "admin";
 
 export type User = {
@@ -8,6 +10,7 @@ export type User = {
   role: Role;
   createdAt: string;
   updatedAt: string;
+  isBanned: boolean;
 };
 
 export type UserRequest = {
@@ -17,3 +20,5 @@ export type UserRequest = {
   password: string;
   role: Role;
 };
+
+export type PaginatedUsers = PaginationResponse<User>;

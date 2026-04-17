@@ -12,6 +12,7 @@ export type Work = {
   views: number;
   author: User;
   tags: Tag[];
+  isHidden: boolean
 };
 
 export type WorkQueryParams = {
