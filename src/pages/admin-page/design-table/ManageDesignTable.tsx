@@ -5,7 +5,7 @@ import { getWorkColumns } from "./columns";
 export const ManageDesignTable = () => {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = WorkHooks.useWorkInfiniteQuery({ q: "", tags: [] });
 
-    const { mutate } = WorkHooks.useDeleteWorkMutation("");
+    const { mutate } = WorkHooks.useBanWorkMutation();
 
     return (
         <div>

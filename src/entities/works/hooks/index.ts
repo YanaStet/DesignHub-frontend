@@ -1,3 +1,4 @@
+import { useBanWorkMutation } from "./useBanWorkMutation";
 import { useCreateWorkMutation } from "./useCreateWorkMutation";
 import { useDeleteWorkMutation } from "./useDeleteWorkMutation";
 import { useGetAllWorksQuery } from "./useGetAllWorksQuery";
@@ -23,5 +24,6 @@ export const WorkHooks = {
   useViewWorkMutation,
   useUpdateCoverMutation,
   useUpdateContentMutation,
-  useLikedWorksByDesignerIdIfinityQuery
+  useLikedWorksByDesignerIdIfinityQuery,
+  useBanWorkMutation
 };

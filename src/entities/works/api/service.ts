@@ -69,6 +69,10 @@ class WorkService {
     );
     return data;
   }
+  async banWork(workId: string): Promise<Work> {
+    const data = await api.put<Work>(`/designs/ban/${workId}`, {});
+    return data;
+  }
 }
 
 export const workService = new WorkService();

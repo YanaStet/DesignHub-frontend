@@ -3,6 +3,7 @@ import { ManageUserTable } from "./user-table/ManageUserTable";
 import { ManageReportTable } from "./report-table/ManageReportTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/shadcn-ui/ui/tabs";
 import { ManageDesignTable } from "./design-table/ManageDesignTable";
+import { ManageCommentTable } from "./comment-table/ManageCommentTable";
 
 export function AdminPage() {
   return (
@@ -13,6 +14,7 @@ export function AdminPage() {
           <TabsTrigger value="reports" className="text-lg text-white hover:text-gray-300 data-[state=active]:text-gray-400 after:bg-gray-400">Reports</TabsTrigger>
           <TabsTrigger value="users" className="text-lg text-white hover:text-gray-300 data-[state=active]:text-gray-400 after:bg-gray-400">Users</TabsTrigger>
           <TabsTrigger value="designs" className="text-lg text-white hover:text-gray-300 data-[state=active]:text-gray-400 after:bg-gray-400">Designs</TabsTrigger>
+          <TabsTrigger value="comments" className="text-lg text-white hover:text-gray-300 data-[state=active]:text-gray-400 after:bg-gray-400">Comments</TabsTrigger>
         </TabsList>
         <TabsContent value="reports">
           <ManageReportTable />
@@ -22,6 +24,9 @@ export function AdminPage() {
         </TabsContent>
         <TabsContent value="designs">
           <ManageDesignTable />
+        </TabsContent>
+        <TabsContent value="comments">
+          <ManageCommentTable />
         </TabsContent>
       </Tabs>
     </div>

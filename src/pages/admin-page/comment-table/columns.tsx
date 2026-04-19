@@ -8,16 +8,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import clsx from "clsx";
-import { WORK_KEYS, type Work } from "@/entities/works/model";
+import { COMMENT_KEYS, type Comment } from "@/entities/comments/model";
 
-export const getWorkColumns = (mutate: UseMutateFunction<Work, AxiosError<ApiErrorResponse, any>, string, unknown>): ColumnDef<Work>[] => {
-    const queryClient = useQueryClient()
+export const getCommentColumns = (mutate: UseMutateFunction<Comment, AxiosError<ApiErrorResponse, any>, string, unknown>): ColumnDef<Comment>[] => {
+    const queryClient = useQueryClient();
 
-    const handleBanWork = (id: string) => {
+    const handleBanComment = (id: string) => {
         mutate(id, {
             onSuccess: () => {
-                showToast('success', 'Work banned successfully')
-                queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY] });
+                showToast('success', 'Comment banned successfully')
+                queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] })
             },
             onError: (er) => {
                 handleApiError(er)
@@ -26,12 +26,18 @@ export const getWorkColumns = (mutate: UseMutateFunction<Work, AxiosError<ApiErr
     }
 
     return [{
-        accessorKey: "title",
-        header: "Title"
+        accessorKey: "content",
+        header: "Content"
     },
     {
-        accessorKey: "description",
-        header: "Description"
+        accessorKey: "design",
+        header: "Design",
+        cell: ({ row }) => {
+            const comment = row.original;
+            return (
+                <span>{comment.design.title}</span>
+            );
+        }
     },
     {
         accessorKey: "author",
@@ -57,9 +63,9 @@ export const getWorkColumns = (mutate: UseMutateFunction<Work, AxiosError<ApiErr
         accessorKey: "isHidden",
         header: "Status",
         cell: ({ row }) => {
-            const work = row.original;
+            const comment = row.original;
             return (
-                <span className={clsx("p-2 rounded-full", work.isHidden ? "bg-red-950 text-red-300" : "bg-green-950 text-green-300")}>{work.isHidden ? "Hidden" : "Visible"}</span>
+                <span className={clsx("p-2 rounded-full", comment.isHidden ? "bg-red-950 text-red-300" : "bg-green-950 text-green-300")}>{comment.isHidden ? "Hidden" : "Visible"}</span>
 
             );
         }
@@ -68,7 +74,7 @@ export const getWorkColumns = (mutate: UseMutateFunction<Work, AxiosError<ApiErr
         accessorKey: "actions",
         header: "Actions",
         cell: ({ row }) => {
-            const user = row.original;
+            const comment = row.original;
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -78,7 +84,7 @@ export const getWorkColumns = (mutate: UseMutateFunction<Work, AxiosError<ApiErr
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 bg-primary-1 text-gray-4"
                         align="center">
-                        <DropdownMenuItem onClick={() => handleBanWork(user._id)}>Ban</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleBanComment(comment._id)}>Ban</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
