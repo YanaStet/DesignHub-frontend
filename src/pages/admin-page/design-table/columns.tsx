@@ -13,10 +13,10 @@ import { WORK_KEYS, type Work } from "@/entities/works/model";
 export const getWorkColumns = (mutate: UseMutateFunction<Work, AxiosError<ApiErrorResponse, any>, string, unknown>): ColumnDef<Work>[] => {
     const queryClient = useQueryClient()
 
-    const handleBanWork = (id: string) => {
-        mutate(id, {
+    const handleBanWork = (work: Work) => {
+        mutate(work._id, {
             onSuccess: () => {
-                showToast('success', 'Work banned successfully')
+                showToast('success', `Work ${!work.isHidden ? "hidden" : "unhidden"} successfully`)
                 queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY] });
             },
             onError: (er) => {
@@ -78,7 +78,7 @@ export const getWorkColumns = (mutate: UseMutateFunction<Work, AxiosError<ApiErr
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 bg-primary-1 text-gray-4"
                         align="center">
-                        <DropdownMenuItem onClick={() => handleBanWork(user._id)}>Ban</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleBanWork(user)}>{user.isHidden ? "Unban" : "Ban"}</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

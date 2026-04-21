@@ -11,10 +11,10 @@ import { Button } from "@/shared/shadcn-ui/ui/button";
 import clsx from "clsx";
 
 export const getUserColumns = (mutate: UseMutateFunction<User, AxiosError<ApiErrorResponse, any>, string, unknown>): ColumnDef<User>[] => {
-    const handleBanUser = (id: string) => {
-        mutate(id, {
+    const handleBanUser = (user: User) => {
+        mutate(user._id, {
             onSuccess: () => {
-                showToast('success', 'User banned successfully')
+                showToast('success', `User ${!user.isBanned ? "banned" : "unbanned"} successfully`)
             },
             onError: (er) => {
                 handleApiError(er)
@@ -59,7 +59,7 @@ export const getUserColumns = (mutate: UseMutateFunction<User, AxiosError<ApiErr
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 bg-primary-1 text-gray-4"
                         align="center">
-                        <DropdownMenuItem onClick={() => handleBanUser(user._id)}>Ban</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleBanUser(user)}>{user.isBanned ? "Unban" : "Ban"}</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

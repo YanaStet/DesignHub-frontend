@@ -10,19 +10,20 @@ import { Button } from "@/shared/shadcn-ui/ui/button";
 import clsx from "clsx";
 import { COMMENT_KEYS, type Comment } from "@/entities/comments/model";
 
-export const getCommentColumns = (mutate: UseMutateFunction<Comment, AxiosError<ApiErrorResponse, any>, string, unknown>): ColumnDef<Comment>[] => {
+export const getCommentColumns = (mutate: UseMutateFunction<Comment, AxiosError<ApiErrorResponse, any>, string, unknown>, setOpen: (open: boolean) => void): ColumnDef<Comment>[] => {
     const queryClient = useQueryClient();
 
-    const handleBanComment = (id: string) => {
-        mutate(id, {
-            onSuccess: () => {
-                showToast('success', 'Comment banned successfully')
-                queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] })
-            },
-            onError: (er) => {
-                handleApiError(er)
-            }
-        })
+    const handleBanComment = (comment: Comment) => {
+        setOpen(true)
+        // mutate(comment._id, {
+        //     onSuccess: () => {
+        //         showToast('success', `Comment ${!comment.isHidden ? "hidden" : "unhidden"} successfully`)
+        //         queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] })
+        //     },
+        //     onError: (er) => {
+        //         handleApiError(er)
+        //     }
+        // })
     }
 
     return [{
@@ -84,7 +85,7 @@ export const getCommentColumns = (mutate: UseMutateFunction<Comment, AxiosError<
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 bg-primary-1 text-gray-4"
                         align="center">
-                        <DropdownMenuItem onClick={() => handleBanComment(comment._id)}>Ban</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleBanComment(comment)}>{comment.isHidden ? "Unban" : "Ban"}</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
