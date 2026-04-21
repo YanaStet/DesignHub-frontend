@@ -34,7 +34,9 @@ export function WorkPage() {
   );
   const { data: comments, isLoading: isCommentsLoading } =
     commentHooks.useCommentsByWorkIdQuery(workId || "");
-  const { data: likes, isLoading: isLikesLoading } = LikeHooks.useGetLikesQuery(workId || "");
+  const { data: likes, isLoading: isLikesLoading } = LikeHooks.useGetLikesQuery(
+    workId || "",
+  );
   const { mutate: view } = WorkHooks.useViewWorkMutation(workId || "");
   const { mutate: like } = LikeHooks.useToggleLikeMutation(workId || "");
 
@@ -53,17 +55,20 @@ export function WorkPage() {
   const { mutate: createComment } = commentHooks.useCreateCommentMutation();
 
   const handlePostComment = () => {
-    createComment({
-      content: commentText,
-      designId: workId || "",
-    }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
-        setCommentText("");
+    createComment(
+      {
+        content: commentText,
+        designId: workId || "",
       },
-      onError: (er) => handleApiError(er),
-    })
-  }
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [COMMENT_KEYS.COMMENTS] });
+          setCommentText("");
+        },
+        onError: (er) => handleApiError(er),
+      },
+    );
+  };
 
   const handleToggleLike = async () => {
     like(undefined, {
@@ -71,8 +76,8 @@ export function WorkPage() {
         queryClient.invalidateQueries({ queryKey: [LIKE_KEYS.LIKES] });
       },
       onError: (er) => handleApiError(er),
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     view(
@@ -85,7 +90,6 @@ export function WorkPage() {
       },
     );
   }, []);
-
 
   return (
     <div className="flex justify-around">
@@ -110,8 +114,17 @@ export function WorkPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <Button className="bg-transparent hover:bg-transparent hover:scale-120 transition-all cursor-pointer duration-300" onClick={handleToggleLike}>
-                    {isLikesLoading ? <Loader /> : likes?.liked ? <Icon name="FullHeart" className="w-5" /> : <Icon className="w-5" name="HeartOutline" />}
+                  <Button
+                    className="bg-transparent hover:bg-transparent hover:scale-120 transition-all cursor-pointer duration-300"
+                    onClick={handleToggleLike}
+                  >
+                    {isLikesLoading ? (
+                      <Loader />
+                    ) : likes?.liked ? (
+                      <Icon name="FullHeart" className="w-5" />
+                    ) : (
+                      <Icon className="w-5" name="HeartOutline" />
+                    )}
                   </Button>
                   <Typography variant="h1" className="text-gray-4">
                     {data?.title}
@@ -200,7 +213,12 @@ export function WorkPage() {
         setOpen={setOpenCommentSheet}
       >
         <div className="flex gap-2">
-          <Input placeholder="Write your thoughts" className="w-full" value={commentText} onChange={(e) => setCommentText(e.target.value)} />
+          <Input
+            placeholder="Write your thoughts"
+            className="w-full"
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+          />
           <Button
             variant="default"
             className="w-10 h-10 bg-primary-2"
@@ -213,6 +231,7 @@ export function WorkPage() {
           {isCommentsLoading ? (
             <Loader />
           ) : (
+            comments &&
             comments?.map((comment, i) => (
               <CommentItem comment={comment} key={i} />
             ))

@@ -27,7 +27,7 @@ export function useWorkInfiniteQuery(
     },
 
     getNextPageParam: (lastPage) => {
-      if (lastPage.data.length < 12) return undefined;
+      if (!lastPage?.data || lastPage.data.length < 12) return undefined;
 
       return lastPage.page + 1; // next page number
     },

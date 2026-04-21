@@ -4,9 +4,16 @@ import type { ApiErrorResponse } from "@/shared/types";
 import type { Comment } from "../model";
 import { commentService } from "../api/service";
 
-export function useBanCommentMutation(
-): UseMutationResult<Comment, AxiosError<ApiErrorResponse>, string> {
-    return useMutation({
-        mutationFn: (commentId: string) => commentService.banComment(commentId),
-    });
+export function useBanCommentMutation(): UseMutationResult<
+  Comment,
+  AxiosError<ApiErrorResponse>,
+  {
+    id: string;
+    reason: string;
+  }
+> {
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      commentService.banComment(id, reason),
+  });
 }

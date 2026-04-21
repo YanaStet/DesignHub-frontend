@@ -41,7 +41,10 @@ class WorkService {
     const data = await api.delete<Work>(`/designs/delete-design/${workId}`);
     return data;
   }
-  async updateWork(workId: string, body: Omit<WorkRequest, "coverImage" | "designFile">): Promise<Work> {
+  async updateWork(
+    workId: string,
+    body: Omit<WorkRequest, "coverImage" | "designFile">,
+  ): Promise<Work> {
     const data = await api.put<Work>(`/designs/update/${workId}`, body);
     return data;
   }
@@ -52,7 +55,10 @@ class WorkService {
   async updateCoverImg(workId: string, coverImage: File): Promise<Work> {
     const request = new FormData();
     request.append("coverImage", coverImage);
-    const data = await api.put<Work>(`/designs/update-cover/${workId}`, request);
+    const data = await api.put<Work>(
+      `/designs/update-cover/${workId}`,
+      request,
+    );
     return data;
   }
   async updateContentImg(workId: string, designFile: File): Promise<Work> {
@@ -61,7 +67,10 @@ class WorkService {
     const data = await api.put<Work>(`/designs/update-file/${workId}`, request);
     return data;
   }
-  async getLikedWorksByDesignerId(designerId: string, params?: WorkQueryParams): Promise<PaginationResponse<Work>> {
+  async getLikedWorksByDesignerId(
+    designerId: string,
+    params?: WorkQueryParams,
+  ): Promise<PaginationResponse<Work>> {
     const data = await api.get<PaginationResponse<Work>>(
       params
         ? `/designs/liked-designs/${designerId}?${buildQueryParams(params)}`
@@ -69,8 +78,10 @@ class WorkService {
     );
     return data;
   }
-  async banWork(workId: string): Promise<Work> {
-    const data = await api.put<Work>(`/designs/ban/${workId}`, {});
+  async banWork(workId: string, reason: string): Promise<Work> {
+    const data = await api.put<Work>(`/designs/ban/${workId}`, {
+      reason,
+    });
     return data;
   }
 }

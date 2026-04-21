@@ -12,7 +12,7 @@ export function useCommentsByWorkIdQuery<TData = Comment[]>(
   options?: Partial<UseQueryOptions<Comment[], AxiosError, TData>>,
 ): UseQueryResult<TData> {
   return useQuery<Comment[], AxiosError, TData>({
-    queryKey: [COMMENT_KEYS.COMMENTS],
+    queryKey: [COMMENT_KEYS.COMMENTS, 'by-work', workId],
     queryFn: () => commentService.getByWorkIdComments(workId),
     ...options,
   });

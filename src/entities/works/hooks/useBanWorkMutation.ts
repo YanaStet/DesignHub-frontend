@@ -4,9 +4,16 @@ import type { ApiErrorResponse } from "@/shared/types";
 import type { Work } from "../model";
 import { workService } from "../api/service";
 
-export function useBanWorkMutation(
-): UseMutationResult<Work, AxiosError<ApiErrorResponse>, string> {
-    return useMutation({
-        mutationFn: (workId: string) => workService.banWork(workId),
-    });
+export function useBanWorkMutation(): UseMutationResult<
+  Work,
+  AxiosError<ApiErrorResponse>,
+  {
+    id: string;
+    reason: string;
+  }
+> {
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      workService.banWork(id, reason),
+  });
 }

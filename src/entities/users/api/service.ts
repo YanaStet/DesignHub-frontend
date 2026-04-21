@@ -21,11 +21,15 @@ class UserService {
     return data;
   }
   async getPaginatedUsers(params: PaginationParams): Promise<PaginatedUsers> {
-    const data = await api.get<PaginatedUsers>(`/users/paginated?${buildQueryParams(params)}`);
+    const data = await api.get<PaginatedUsers>(
+      `/users/paginated?${buildQueryParams(params)}`,
+    );
     return data;
   }
-  async banUser(id: string): Promise<User> {
-    const data = await api.put<User>(`/users/${id}/ban`, {});
+  async banUser(id: string, reason: string): Promise<User> {
+    const data = await api.put<User>(`/users/${id}/ban`, {
+      reason,
+    });
     return data;
   }
 }

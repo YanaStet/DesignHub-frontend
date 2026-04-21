@@ -9,30 +9,36 @@ class CommentService {
     return data;
   }
   async createComment(body: CommentRequest): Promise<Comment> {
-    const data = await api.post<Comment>(`/comments/${body.designId}`, { text: body.content });
+    const data = await api.post<Comment>(`/comments/${body.designId}`, {
+      text: body.content,
+    });
     return data;
   }
   async updateComment(
     commentId: string,
     body: UpdateCommentRequest,
   ): Promise<Comment> {
-    const data = await api.put<Comment>(`/comments/${commentId}`, { text: body.content });
+    const data = await api.put<Comment>(`/comments/${commentId}`, {
+      text: body.content,
+    });
     return data;
   }
   async deleteComment(commentId: string): Promise<Comment> {
     const data = await api.delete<Comment>(`/comments/${commentId}`);
     return data;
   }
-  async getPaginatedComments(params?: PaginationParams): Promise<PaginationResponse<Comment>> {
+  async getPaginatedComments(
+    params?: PaginationParams,
+  ): Promise<PaginationResponse<Comment>> {
     const data = await api.get<PaginationResponse<Comment>>(
-      params
-        ? `/comments?${buildQueryParams(params)}`
-        : `/comments`,
+      params ? `/comments?${buildQueryParams(params)}` : `/comments`,
     );
     return data;
   }
-  async banComment(commentId: string): Promise<Comment> {
-    const data = await api.put<Comment>(`/comments/ban/${commentId}`, {});
+  async banComment(commentId: string, reason: string): Promise<Comment> {
+    const data = await api.put<Comment>(`/comments/ban/${commentId}`, {
+      reason,
+    });
     return data;
   }
 }
