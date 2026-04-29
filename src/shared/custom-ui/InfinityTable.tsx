@@ -30,32 +30,34 @@ export default function InfinityTable<T>({ data, columns, hasNextPage, isFetchin
     }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     return (
-        <table className='w-full max-h-full'>
-            <thead>
-                {table.getHeaderGroups().map((hg) => (
-                    <tr key={hg.id}>
-                        {hg.headers.map((header) => (
-                            <th key={header.id} className='p-3 rounded border-2 border-gray-800 bg-primary-3 text-white font-bold text-center'>
-                                {flexRender(header.column.columnDef.header, header.getContext())}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-            </thead>
-            <tbody>
-                {table.getRowModel().rows.map((row, rowIndex) => (
-                    <tr
-                        key={row.id}
-                        ref={rowIndex === data.length - 1 ? ref : null}
-                    >
-                        {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id} className='p-3 rounded border-2 border-gray-800 bg-primary-1 text-white text-center'>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                        ))}
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+        <div className='overflow-y-auto max-h-[70vh] rounded-xl border-2 border-gray-800 custom-scrollbar-container'>
+            <table className='w-full'>
+                <thead className='sticky top-0 z-10'>
+                    {table.getHeaderGroups().map((hg) => (
+                        <tr key={hg.id}>
+                            {hg.headers.map((header) => (
+                                <th key={header.id} className='p-3 border-2 border-gray-800 bg-primary-3 text-white font-bold text-center'>
+                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody>
+                    {table.getRowModel().rows.map((row, rowIndex) => (
+                        <tr
+                            key={row.id}
+                            ref={rowIndex === data.length - 1 ? ref : null}
+                        >
+                            {row.getVisibleCells().map((cell) => (
+                                <td key={cell.id} className='p-3 border-2 border-gray-800 bg-primary-1 text-white text-center'>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     )
 }

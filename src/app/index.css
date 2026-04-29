@@ -114,6 +114,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -155,8 +156,10 @@
 
   /* Якщо primary-1 та primary-2 були фоном для сайдбару/хедеру, 
      в темній темі вони можуть стати трохи світлішими або змінити відтінок */
-  --color-primary-1: #ffffff; /* Приклад зміни */
-  --color-primary-2: #f3f5f7; /* Приклад зміни */
+  --color-primary-1: #ffffff;
+  /* Приклад зміни */
+  --color-primary-2: #f3f5f7;
+  /* Приклад зміни */
 
   --color-gray-1: #f3f3f6;
   --color-gray-2: #b7b7be;
@@ -272,19 +275,25 @@ button:focus {
 .custom-scrollbar-container {
   scrollbar-gutter: stable;
 }
+
 /* Базові стилі для скролбару (світла тема) */
 .custom-scrollbar-container::-webkit-scrollbar {
-  width: 8px; /* w-2 */
+  width: 8px;
+  /* w-2 */
 }
 
 .custom-scrollbar-container::-webkit-scrollbar-track {
-  border-radius: 9999px; /* rounded-full */
-  background-color: var(--color-primary-1); /* bg-primary-1 */
+  border-radius: 9999px;
+  /* rounded-full */
+  background-color: var(--color-primary-1);
+  /* bg-primary-1 */
 }
 
 .custom-scrollbar-container::-webkit-scrollbar-thumb {
-  border-radius: 9999px; /* rounded-full */
-  background-color: var(--color-gray-3); /* bg-gray-3 */
+  border-radius: 9999px;
+  /* rounded-full */
+  background-color: var(--color-gray-3);
+  /* bg-gray-3 */
 }
 
 @media (pointer: coarse) {
@@ -314,7 +323,7 @@ button:focus {
   cursor: pointer;
 }
 
-.p-organizationchart-node-content > div {
+.p-organizationchart-node-content>div {
   width: 100%;
 }
 
@@ -322,7 +331,7 @@ button:focus {
   display: none !important;
 }
 
-.hide-node-toggler .p-organizationchart-node-content + .p-node-toggler {
+.hide-node-toggler .p-organizationchart-node-content+.p-node-toggler {
   display: none !important;
 }
 

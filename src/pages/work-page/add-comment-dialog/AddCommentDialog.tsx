@@ -27,6 +27,7 @@ import {
 } from "@/entities/comments/model";
 import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 type AddCommentDialogProps = {
   workId: string;
@@ -126,7 +127,7 @@ export function AddCommentDialog({
                 className="bg-primary-2"
                 disabled={isLoading}
               >
-                Submit
+                {isLoading ? <Spinner /> : isEdit ? "Edit" : "Submit"}
               </Button>
             </DialogFooter>
           </form>

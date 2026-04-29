@@ -10,6 +10,7 @@ import { Textarea } from "../shadcn-ui/ui/textarea"
 import { reportHooks } from "@/entities/reports/hooks"
 import { showToast } from "../utils/showToast"
 import { handleApiError } from "../api/apiError"
+import { Spinner } from "../shadcn-ui/ui/spinner"
 
 const reportSchema = z.object({
     reason: z.enum(["Spam", "Harassment", "Copyright Violation", "Other", "Inappropriate Content"]),
@@ -99,7 +100,7 @@ export const ReportDialog = ({ open, setOpen, type, targetId }: ReportDialogProp
                             <DialogClose asChild>
                                 <Button variant="outline" className="border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-white">Close</Button>
                             </DialogClose>
-                            <Button type="submit" disabled={isPending} className="bg-blue-600 text-white hover:bg-blue-700">Report</Button>
+                            <Button type="submit" disabled={isPending} className="bg-blue-600 text-white hover:bg-blue-700">{isPending ? <Spinner /> : "Report"}</Button>
                         </DialogFooter>
                     </form>
                 </Form>

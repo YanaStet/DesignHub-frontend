@@ -9,7 +9,7 @@ export const ManageCommentTable = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     commentHooks.useInfinityCommentsQuery();
 
-  const { mutate } = commentHooks.useBanCommentMutation();
+  const { mutate, isPending } = commentHooks.useBanCommentMutation();
   const [open, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState<Comment | null>(null);
 
@@ -27,6 +27,7 @@ export const ManageCommentTable = () => {
         onOpenChange={setOpen}
         mutate={mutate}
         data={selectedData}
+        isPending={isPending}
       />
     </div>
   );

@@ -21,6 +21,7 @@ import { COMMENT_KEYS } from "@/entities/comments/model";
 import { LikeHooks } from "@/entities/likes/hooks";
 import { LIKE_KEYS } from "@/entities/likes/model";
 import { ReportDialog } from "@/shared/custom-ui/ReportDialog";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 export function WorkPage() {
   const [openReportDialog, setOpenReportDialog] = useState(false)
@@ -42,7 +43,7 @@ export function WorkPage() {
     workId || "",
   );
   const { mutate: view } = WorkHooks.useViewWorkMutation(workId || "");
-  const { mutate: like } = LikeHooks.useToggleLikeMutation(workId || "");
+  const { mutate: like, isPending: isLikePending } = LikeHooks.useToggleLikeMutation(workId || "");
 
   const queryClient = useQueryClient();
 
@@ -56,7 +57,7 @@ export function WorkPage() {
     };
   }, [data]);
   const { data: similarWorks } = WorkHooks.useGetAllWorksQuery(params);
-  const { mutate: createComment } = commentHooks.useCreateCommentMutation();
+  const { mutate: createComment, isPending: isCommentPending } = commentHooks.useCreateCommentMutation();
 
   const handlePostComment = () => {
     createComment(
@@ -122,7 +123,7 @@ export function WorkPage() {
                     className="bg-transparent hover:bg-transparent hover:scale-120 transition-all cursor-pointer duration-300"
                     onClick={handleToggleLike}
                   >
-                    {isLikesLoading ? (
+                    {isLikesLoading || isLikePending ? (
                       <Loader />
                     ) : likes?.liked ? (
                       <Icon name="FullHeart" className="w-5" />
@@ -231,7 +232,7 @@ export function WorkPage() {
             className="w-10 h-10 bg-primary-2"
             onClick={handlePostComment}
           >
-            Add
+            {isCommentPending ? <Spinner /> : "Add"}
           </Button>
         </div>
         <div className="max-h-[380px] overflow-auto custom-scrollbar-container flex flex-col items-center">

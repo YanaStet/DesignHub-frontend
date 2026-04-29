@@ -32,6 +32,7 @@ import { tagHooks } from "@/entities/tags/hooks";
 import type { Work, WorkRequest } from "@/entities/works/model";
 import type { Tag } from "@/entities/tags/model";
 import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 type AddWorkDialogProps = {
   open: boolean;
@@ -202,7 +203,7 @@ export function AddWorkDialog({
                 className="bg-primary-2"
                 disabled={isLoading}
               >
-                Submit
+                {isLoading ? <Spinner /> : "Submit"}
               </Button>
             </DialogFooter>
           </form>

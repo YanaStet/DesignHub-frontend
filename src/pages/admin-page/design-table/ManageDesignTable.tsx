@@ -8,7 +8,7 @@ import { ModerLogDialog } from "../moder-log-dialog/ModerLogDialog";
 export const ManageDesignTable = () => {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = WorkHooks.useWorkInfiniteQuery({ q: "", tags: [] });
 
-    const { mutate } = WorkHooks.useBanWorkMutation();
+    const { mutate, isPending } = WorkHooks.useBanWorkMutation();
     const [open, setOpen] = useState(false);
     const [selectedData, setSelectedData] = useState<Work | null>(null);
 
@@ -25,6 +25,7 @@ export const ManageDesignTable = () => {
                 onOpenChange={setOpen}
                 mutate={mutate}
                 data={selectedData}
+                isPending={isPending}
             />
         </div>
     )

@@ -28,6 +28,7 @@ import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Label } from "@/shared/shadcn-ui/ui/label";
 import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 type ManageProfileDialogProps = {
   open: boolean;
@@ -182,7 +183,7 @@ export function ManageProfileDialog({
                 className="bg-primary-2"
                 disabled={isLoading}
               >
-                Submit
+                {isLoading ? <Spinner /> : "Submit"}
               </Button>
             </DialogFooter>
           </form>

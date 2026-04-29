@@ -36,6 +36,7 @@ import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
 import { useQueryClient } from "@tanstack/react-query";
 import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 type AddWorkDialogProps = {
   open: boolean;
@@ -188,7 +189,9 @@ export function EditWorkDialog({
                     icon={<Icon name="Plus" />}
                   />
                 </div>
-                <Button type="button" disabled={isUpdateCoverLoading} onClick={handleUpdateCover}>Update</Button>
+                <Button type="button" disabled={isUpdateCoverLoading} onClick={handleUpdateCover}>
+                  {isUpdateCoverLoading ? <Spinner /> : "Update"}
+                </Button>
               </div>
             </div>
 
@@ -208,7 +211,12 @@ export function EditWorkDialog({
                     icon={<Icon name="Plus" />}
                   />
                 </div>
-                <Button type="button" disabled={isUpdateContentLoading} onClick={handleUpdateContent}>Update</Button>
+                <Button
+                  type="button"
+                  disabled={isUpdateContentLoading}
+                  onClick={handleUpdateContent}>
+                  {isUpdateContentLoading ? <Spinner /> : "Update"}
+                </Button>
               </div>
             </div>
 
@@ -266,7 +274,7 @@ export function EditWorkDialog({
                 className="bg-primary-2"
                 disabled={isUpdateWorkLoading}
               >
-                Submit
+                {isUpdateWorkLoading ? <Spinner /> : "Submit"}
               </Button>
             </DialogFooter>
           </form>

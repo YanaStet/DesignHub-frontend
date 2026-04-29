@@ -28,6 +28,7 @@ import { z } from "zod";
 import { COMMENT_KEYS } from "@/entities/comments/model";
 import { USER_KEYS } from "@/entities/users/model";
 import { WORK_KEYS } from "@/entities/works/model";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 export const moderLogSchema = z.object({
   reason: z.string().min(10, "Reason must be at least 10 characters long."),
@@ -48,6 +49,7 @@ type ModerLogDialogProps<T> = {
     unknown
   >;
   data: T | null;
+  isPending: boolean;
 };
 
 export const ModerLogDialog = <T,>({
@@ -55,6 +57,7 @@ export const ModerLogDialog = <T,>({
   onOpenChange,
   mutate,
   data,
+  isPending,
 }: ModerLogDialogProps<T>) => {
   const form = useForm<ModerLogSchema>({
     defaultValues: {
@@ -124,10 +127,10 @@ export const ModerLogDialog = <T,>({
                 <FormItem>
                   <FormLabel>Reason</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Reason" 
-                      {...field} 
-                      className="bg-[#1f2023] border-gray-700 text-white placeholder-gray-500 min-h-[100px]" 
+                    <Textarea
+                      placeholder="Reason"
+                      {...field}
+                      className="bg-[#1f2023] border-gray-700 text-white placeholder-gray-500 min-h-[100px]"
                     />
                   </FormControl>
                   <FormMessage />
@@ -141,7 +144,7 @@ export const ModerLogDialog = <T,>({
                 </Button>
               </DialogClose>
               <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
-                Save changes
+                {isPending ? <Spinner /> : "Save changes"}
               </Button>
             </DialogFooter>
           </form>

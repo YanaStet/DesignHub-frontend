@@ -24,6 +24,7 @@ import {
   type RegFormSchema,
 } from "./loginSchema";
 import { UserHooks } from "@/entities/users/hooks";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 export function LoginPage() {
   const [isReg, setIsReg] = useState(false);
@@ -38,7 +39,7 @@ export function LoginPage() {
   });
 
   const { mutate: login, isPending: isLoading } = AuthHooks.useLoginMutation();
-  const { mutate: register } = UserHooks.useCreateUserMutation();
+  const { mutate: register, isPending: isRegLoading } = UserHooks.useCreateUserMutation();
 
   const navigate = useNavigate();
 
@@ -179,9 +180,9 @@ export function LoginPage() {
               <Button
                 type="submit"
                 className="mt-3 w-full bg-primary-2"
-                disabled={isLoading}
+                disabled={isRegLoading}
               >
-                Sign In
+                {isRegLoading ? <Spinner /> : "Sign In"}
               </Button>
 
               <Typography
@@ -244,7 +245,7 @@ export function LoginPage() {
                 className="mt-3 w-full bg-primary-2"
                 disabled={isLoading}
               >
-                Login
+                {isLoading ? <Spinner /> : "Login"}
               </Button>
               <Typography
                 className="text-gray-4 flex gap-1 mt-3"

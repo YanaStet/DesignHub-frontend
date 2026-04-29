@@ -8,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../shadcn-ui/ui/alert-dialog";
+import { Spinner } from "../shadcn-ui/ui/spinner";
 
 type CustomAlertDialogProps = {
   open: boolean;
@@ -55,7 +56,7 @@ export function CustomAlertDialog({
             disabled={loading}
             className="bg-red-500"
           >
-            {confirmLabel || "Continue"}
+            {loading ? <Spinner /> : confirmLabel || "Continue"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
