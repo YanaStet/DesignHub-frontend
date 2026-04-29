@@ -9,8 +9,13 @@ import { useParams } from "react-router-dom";
 import { WorkHooks } from "@/entities/works/hooks";
 import { InfinityWorkList } from "@/shared/custom-ui/InfinityWorkList";
 import { UserHooks } from "@/entities/users/hooks";
+import { Button } from "@/shared/shadcn-ui/ui/button";
+import { Icon } from "@/shared/shadcn-ui/ui/icon";
+import { ReportDialog } from "@/shared/custom-ui/ReportDialog";
+import { useState } from "react";
 
 export function DesignerProfilePage() {
+  const [openReportDialog, setOpenReportDialog] = useState(false)
   const { userId } = useParams();
   const { data } = DesignerProfileHooks.useDesignerProfileByIdQuery(
     userId || ""
@@ -60,9 +65,14 @@ export function DesignerProfilePage() {
               {user?.lastName[0]}
             </AvatarFallback>
           </Avatar>
-          <Typography variant="h3" className="text-gray-4 mt-10">
-            {user?.firstName} {user?.lastName}
-          </Typography>
+          <div className="flex gap-3 mt-10 items-center">
+            <Typography variant="h3" className="text-gray-4">
+              {user?.firstName} {user?.lastName}
+            </Typography>
+            <Button onClick={() => setOpenReportDialog(true)} className="bg-transparent hover:bg-transparent hover:scale-120 transition-all cursor-pointer duration-300">
+              <Icon name="Report" className="w-5 text-white" />
+            </Button>
+          </div>
           <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
             {data?.bio}
           </Typography>
@@ -84,6 +94,7 @@ export function DesignerProfilePage() {
           />
         </div>
       </div>
+      <ReportDialog open={openReportDialog} setOpen={setOpenReportDialog} type={"User"} targetId={userId || ""} />
     </div>
   );
 }

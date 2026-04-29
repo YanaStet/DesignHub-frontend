@@ -1,6 +1,6 @@
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { USER_KEYS, type PaginatedUsers, type User } from "../model";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import { userService } from "../api/service";
 import type { PaginationResponse } from "@/shared/types";
 
@@ -8,7 +8,7 @@ export function useInfinityUserQuery(
 ) {
     return useInfiniteQuery<
         PaginationResponse<User>,
-        AxiosError,
+        HttpError,
         InfiniteData<PaginatedUsers>, // TData (дані після select, тут = InfiniteData)
         [string],
         number

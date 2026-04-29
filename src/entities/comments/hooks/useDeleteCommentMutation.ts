@@ -1,12 +1,11 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
-import type { ApiErrorResponse } from "@/shared/types";
+import type { HttpError } from "@/shared/api/api";
 import type { Comment } from "../model";
 import { commentService } from "../api/service";
 
 export function useDeleteCommentMutation(
   commentId: string,
-): UseMutationResult<Comment, AxiosError<ApiErrorResponse>> {
+): UseMutationResult<Comment, HttpError> {
   return useMutation({
     mutationFn: () => commentService.deleteComment(commentId),
   });

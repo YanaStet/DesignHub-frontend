@@ -20,8 +20,12 @@ import { Input } from "@/shared/shadcn-ui/ui/input";
 import { COMMENT_KEYS } from "@/entities/comments/model";
 import { LikeHooks } from "@/entities/likes/hooks";
 import { LIKE_KEYS } from "@/entities/likes/model";
+import { ReportDialog } from "@/shared/custom-ui/ReportDialog";
 
 export function WorkPage() {
+  const [openReportDialog, setOpenReportDialog] = useState(false)
+  const [openCommentReportDialog, setOpenCommentReportDialog] = useState(false)
+  const [targetCommentId, setTargetCommentId] = useState<string>("")
   const [commentText, setCommentText] = useState("");
   const [open, setOpen] = useState(false);
   const [openCommentSheet, setOpenCommentSheet] = useState(false);
@@ -129,6 +133,9 @@ export function WorkPage() {
                   <Typography variant="h1" className="text-gray-4">
                     {data?.title}
                   </Typography>
+                  <Button onClick={() => setOpenReportDialog(true)} className="bg-transparent hover:bg-transparent hover:scale-120 transition-all cursor-pointer duration-300">
+                    <Icon name="Report" className="w-5 text-white" />
+                  </Button>
                 </div>
                 <div className="flex gap-1 flex-row items-center mt-5">
                   <Link
@@ -233,7 +240,7 @@ export function WorkPage() {
           ) : (
             comments &&
             comments?.map((comment, i) => (
-              <CommentItem comment={comment} key={i} />
+              <CommentItem comment={comment} key={i} setOpenCommentReportDialog={setOpenCommentReportDialog} setTargetCommentId={setTargetCommentId} />
             ))
           )}
           {(comments?.length || 0) < 1 && (
@@ -256,6 +263,9 @@ export function WorkPage() {
           )}
         </div>
       </CustomSheet>
+
+      <ReportDialog open={openReportDialog} setOpen={setOpenReportDialog} type={"Design"} targetId={workId || ""} />
+      <ReportDialog open={openCommentReportDialog} setOpen={setOpenCommentReportDialog} type={"Comment"} targetId={targetCommentId || ""} />
     </div>
   );
 }

@@ -15,7 +15,6 @@ import { DesignerProfilePageLazy } from "@/pages/designer-profile/DesignerProfil
 import { AdminPageLazy } from "@/pages/admin-page/Admin.page.pazy";
 
 const routes: RouteObject[] = [
-  {},
   {
     element: <AuthRedirectRoute />,
     children: [

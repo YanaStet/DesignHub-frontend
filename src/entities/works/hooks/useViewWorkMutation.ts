@@ -1,11 +1,10 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
-import type { ApiErrorResponse } from "@/shared/types";
+import type { HttpError } from "@/shared/api/api";
 import { workService } from "../api/service";
 
 export function useViewWorkMutation(
   workId: string,
-): UseMutationResult<string, AxiosError<ApiErrorResponse>> {
+): UseMutationResult<string, HttpError> {
   return useMutation({
     mutationFn: () => workService.viewWork(workId),
   });

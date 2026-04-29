@@ -93,6 +93,7 @@ export function MyProfilePage() {
         showToast("success", "You created work!");
         queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY] });
         setOpenWorkDialog(false);
+
       },
       onError: (er) => {
         handleApiError(er);
@@ -190,35 +191,7 @@ export function MyProfilePage() {
               {selectedTab === 'projects' && tabDisplay.projects}
               {selectedTab === 'liked' && tabDisplay.liked}
 
-              {/* {allWorks && allWorks.length > 0 ? (
-                <InfinityWorkList
-                  fetchNextPage={fetchNextPage}
-                  hasNextPage={hasNextPage}
-                  isFetchingNextPage={isFetchingNextPage}
-                  works={allWorks}
-                  myProfile
-                />
-              ) : (
-                <div className="h-full w-full flex justify-center items-center">
-                  <Typography variant="body2" className="text-gray-3">
-                    There is no works yet
-                  </Typography>
-                </div>
-              )}
-              {allLikedWorks && allLikedWorks.length > 0 ? (
-                <InfinityWorkList
-                  works={allLikedWorks}
-                  fetchNextPage={fetchNextLikedWorksPage}
-                  hasNextPage={hasNextLikedWorksPage}
-                  isFetchingNextPage={isFetchingNextLikedWorksPage}
-                />
-              ) : (
-                <div className="h-full w-full flex justify-center items-center">
-                  <Typography variant="body2" className="text-gray-3">
-                    There is no works yet
-                  </Typography>
-                </div>
-              )} */}
+
             </div>
           </div>
           <AddWorkDialog

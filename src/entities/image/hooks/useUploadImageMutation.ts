@@ -1,11 +1,10 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
-import type { ApiErrorResponse } from "@/shared/types";
+import type { HttpError } from "@/shared/api/api";
 import { imageService } from "../api/service";
 
 export function useUploadImageMutation(): UseMutationResult<
   { file_url: string },
-  AxiosError<ApiErrorResponse>,
+  HttpError,
   File
 > {
   return useMutation({

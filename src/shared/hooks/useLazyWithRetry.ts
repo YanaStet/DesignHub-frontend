@@ -5,6 +5,8 @@ type RetryOptions = {
   delay?: number;
 };
 
+const RELOAD_KEY = 'lazy_module_reload';
+
 export function useLazyWithRetry<T extends React.ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
   options: RetryOptions = {},
@@ -18,6 +20,8 @@ export function useLazyWithRetry<T extends React.ComponentType<any>>(
       const tryImport = async () => {
         try {
           const module = await importFunc();
+          // Clear reload flag on successful import
+          sessionStorage.removeItem(RELOAD_KEY);
           resolve(module);
         } catch (error) {
           console.error(
@@ -37,8 +41,14 @@ export function useLazyWithRetry<T extends React.ComponentType<any>>(
                 'Failed to fetch dynamically imported module',
               )
             ) {
-              console.log('All retry attempts failed, reloading page...');
-              window.location.reload();
+              // Only reload once to prevent infinite loop
+              const hasReloaded = sessionStorage.getItem(RELOAD_KEY);
+              if (!hasReloaded) {
+                sessionStorage.setItem(RELOAD_KEY, 'true');
+                console.log('All retry attempts failed, reloading page...');
+                window.location.reload();
+                return;
+              }
             }
             reject(error);
           }

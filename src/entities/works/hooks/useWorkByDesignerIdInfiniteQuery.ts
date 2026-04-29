@@ -1,6 +1,6 @@
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { WORK_KEYS, type Work, type WorkQueryParams } from "../model";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import { workService } from "../api/service";
 import type { PaginationResponse } from "@/shared/types";
 
@@ -11,7 +11,7 @@ export function useWorkByDesignerIdInfiniteQuery(
 ) {
   return useInfiniteQuery<
     PaginationResponse<Work>,
-    AxiosError,
+    HttpError,
     InfiniteData<PaginationResponse<Work>>, // TData (дані після select, тут = InfiniteData)
     [string, string, typeof initialParams],
     number

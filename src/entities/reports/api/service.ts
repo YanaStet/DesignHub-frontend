@@ -1,5 +1,5 @@
 import type { PaginationParams, PaginationResponse } from "@/shared/types";
-import type { CreateReport, Report, Status } from "../model/types";
+import type { CreateReport, Report } from "../model/types";
 import api from "@/shared/api/api";
 import { buildQueryParams } from "@/shared/utils/query";
 

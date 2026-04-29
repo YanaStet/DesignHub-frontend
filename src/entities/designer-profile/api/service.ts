@@ -16,7 +16,7 @@ class DesignerProfileService {
     const request = new FormData();
     if (body.bio) request.append("bio", body.bio);
     if (body.specialization) request.append("specialization", body.specialization);
-    if (body.experience) request.append("experience", body.experience.toString());
+    if (body.experience != null) request.append("experience", body.experience.toString());
     if (body.avatar) request.append("avatar", body.avatar);
     if (body.header) request.append("header", body.header);
 

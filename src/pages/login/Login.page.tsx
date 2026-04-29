@@ -45,7 +45,7 @@ export function LoginPage() {
   const handleSubmitLogin = (values: LoginFormSchema) => {
     login(
       {
-        username: values.email,
+        email: values.email,
         password: values.password,
       },
       {
@@ -73,7 +73,7 @@ export function LoginPage() {
         onSuccess: () => {
           login(
             {
-              username: values.email,
+              email: values.email,
               password: values.password,
             },
             {

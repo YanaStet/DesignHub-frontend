@@ -1,5 +1,5 @@
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import { commentService } from "../api/service";
 import type { PaginationParams, PaginationResponse } from "@/shared/types";
 import { COMMENT_KEYS, type Comment } from "../model";
@@ -7,7 +7,7 @@ import { COMMENT_KEYS, type Comment } from "../model";
 export function useInfinityCommentsQuery() {
   return useInfiniteQuery<
     PaginationResponse<Comment>,
-    AxiosError,
+    HttpError,
     InfiniteData<PaginationResponse<Comment>>, // TData (дані після select, тут = InfiniteData)
     [string, string],
     number

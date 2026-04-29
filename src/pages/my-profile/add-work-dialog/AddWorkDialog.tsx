@@ -63,9 +63,7 @@ export function AddWorkDialog({
   const { data: tags } = tagHooks.useGetAllTagsQuery();
 
   const handleFileChange = (file: File | null) => {
-    if (file) {
-      setImg(file);
-    }
+    setImg(file);
   };
   const handleAddTag = (tag: Tag) => {
     if (!selectedTags.includes(tag)) {

@@ -1,13 +1,22 @@
-export type Reason = "Spam" | "Harassment" | "Copyright" | "Other" | "Inappropriate Content";
-export type Status = "Pending" | "Resolved" | "Rejected";
+export type Status = "Pending" | "Resolved" | "Dismissed";
 export type TargetType = "Design" | "Comment" | "User";
+
+export const Reason = {
+    SPAM: "Spam",
+    HARASSMENT: "Harassment",
+    COPYRIGHT_VIOLATION: "Copyright Violation",
+    OTHER: "Other",
+    INAPPROPRIATE_CONTENT: "Inappropriate Content",
+} as const;
+
+export type ReasonValue = (typeof Reason)[keyof typeof Reason];
 
 export type Report = {
     _id: string;
     reporterId: string;
     targetId: string;
     targetType: TargetType;
-    reason: Reason;
+    reason: ReasonValue;
     description: string;
     status: Status;
     resolvedAt: string;
@@ -17,10 +26,10 @@ export type Report = {
 export type CreateReport = {
     targetId: string;
     targetType: TargetType;
-    reason: Reason;
+    reason: ReasonValue;
     description: string;
 }
 
 export type ResolveReport = {
-    status: Status;
+    status: 'Resolved' | 'Dismissed';
 }

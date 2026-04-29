@@ -2,6 +2,7 @@ import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 import { UserHooks } from "@/entities/users/hooks";
 import { Header } from "@/features/Header";
 import { Loader } from "@/shared/custom-ui/Loader";
+import { HttpError } from "@/shared/api/api";
 import { useMe } from "@/shared/store/meStore";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
 import { useEffect } from "react";
@@ -25,9 +26,9 @@ export function PublicLayout() {
     }
   }, [me, profile]);
 
-  // Якщо запит /me повернув помилку (401) — користувач не авторизований
+  // Redirect to login only on 401 (Unauthorized), not on any error
   useEffect(() => {
-    if (error) {
+    if (error && error instanceof HttpError && error.status === 401) {
       navigate(ROUTE_PATHS.LOGIN);
     }
   }, [error, navigate]);

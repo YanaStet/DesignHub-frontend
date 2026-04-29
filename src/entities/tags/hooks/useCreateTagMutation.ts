@@ -1,12 +1,11 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import type { Tag } from "../model";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import { tagService } from "../api/service";
-import type { ApiErrorResponse } from "@/shared/types";
 
 export function useCreateTagMutation(): UseMutationResult<
   Tag,
-  AxiosError<ApiErrorResponse>,
+  HttpError,
   string
 > {
   return useMutation({

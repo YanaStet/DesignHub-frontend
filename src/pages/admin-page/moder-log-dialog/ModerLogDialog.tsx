@@ -18,11 +18,10 @@ import {
   FormMessage,
 } from "@/shared/shadcn-ui/ui/form";
 import { Textarea } from "@/shared/shadcn-ui/ui/textarea";
-import type { ApiErrorResponse } from "@/shared/types";
 import { showToast } from "@/shared/utils/showToast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient, type UseMutateFunction } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -41,7 +40,7 @@ type ModerLogDialogProps<T> = {
   onOpenChange: (open: boolean) => void;
   mutate: UseMutateFunction<
     T,
-    AxiosError<ApiErrorResponse, any>,
+    HttpError,
     {
       id: string;
       reason: string;

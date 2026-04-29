@@ -1,9 +1,8 @@
+import type { User } from "@/entities/users/model";
+
 export type AuthRequest = {
-  username: string;
+  email: string;
   password: string;
 };
 
-export type AuthResponse = {
-  access_token: string;
-  token_type: string;
-};
+export type AuthResponse = { message: string, user: User }

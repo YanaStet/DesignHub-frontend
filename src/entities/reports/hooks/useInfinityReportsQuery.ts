@@ -1,6 +1,6 @@
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { REPORT_KEYS, type Report } from "../model";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import type { PaginationParams, PaginationResponse } from "@/shared/types";
 import reportService from "../api/service";
 
@@ -8,7 +8,7 @@ export function useInfinityReportsQuery(
 ) {
     return useInfiniteQuery<
         PaginationResponse<Report>,
-        AxiosError,
+        HttpError,
         InfiniteData<PaginationResponse<Report>>, // TData (дані після select, тут = InfiniteData)
         [string],
         number

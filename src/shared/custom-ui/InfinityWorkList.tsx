@@ -8,7 +8,7 @@ import type {
   InfiniteData,
   InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import clsx from "clsx";
 import { Loader } from "./Loader";
 import type { PaginationResponse } from "../types";
@@ -22,7 +22,7 @@ type InfinityWorkListProps = {
   ) => Promise<
     InfiniteQueryObserverResult<
       InfiniteData<PaginationResponse<Work>, unknown>,
-      AxiosError<unknown, any>
+      HttpError
     >
   >;
   classNames?: string;

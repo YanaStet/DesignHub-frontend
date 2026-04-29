@@ -25,12 +25,15 @@ import { AddCommentDialog } from "../add-comment-dialog/AddCommentDialog";
 import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
 import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
+import { Button } from "@/shared/shadcn-ui/ui/button";
 
 type CommentProps = {
   comment: Comment;
+  setOpenCommentReportDialog: (open: boolean) => void;
+  setTargetCommentId: (id: string) => void;
 };
 
-export function CommentItem({ comment }: CommentProps) {
+export function CommentItem({ comment, setOpenCommentReportDialog, setTargetCommentId }: CommentProps) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const { me } = useMe();
@@ -85,9 +88,17 @@ export function CommentItem({ comment }: CommentProps) {
       </Avatar>
       <div className="w-full">
         <div className="flex justify-between w-full">
-          <Typography className="text-gray-6">
-            {comment.author.firstName} {comment.author.lastName}
-          </Typography>
+          <div className="flex items-center gap-2">
+            <Typography className="text-gray-6">
+              {comment.author.firstName} {comment.author.lastName}
+            </Typography>
+            <Button onClick={() => {
+              setOpenCommentReportDialog(true)
+              setTargetCommentId(comment._id)
+            }} className="bg-transparent hover:bg-transparent hover:scale-120 transition-all cursor-pointer duration-300">
+              <Icon name="Report" className="w-5 text-white" />
+            </Button>
+          </div>
 
           {comment.author._id === me?._id && (
             <DropdownMenu>
@@ -120,7 +131,7 @@ export function CommentItem({ comment }: CommentProps) {
       />
       <AddCommentDialog
         isEdit
-        workId={comment.design}
+        workId={comment.design._id}
         open={openEdit}
         setOpen={setOpenEdit}
         handleEditComment={handleEdit}

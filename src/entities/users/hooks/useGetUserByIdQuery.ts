@@ -5,13 +5,13 @@ import {
 } from "@tanstack/react-query";
 import { USER_KEYS, type User } from "../model";
 import { userService } from "../api/service";
-import { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 
 export function useGetUserBiIdQuery<TData = User>(
   userId: string,
-  options?: Partial<UseQueryOptions<User, AxiosError, TData>>
+  options?: Partial<UseQueryOptions<User, HttpError, TData>>
 ): UseQueryResult<TData> {
-  return useQuery<User, AxiosError, TData>({
+  return useQuery<User, HttpError, TData>({
     queryKey: [USER_KEYS.GET_USER_BY_ID],
     queryFn: () => userService.getUserById(userId),
     ...options,

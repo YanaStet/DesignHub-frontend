@@ -4,14 +4,13 @@ import { handleApiError } from "@/shared/api/apiError";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shared/shadcn-ui/ui/dropdown-menu";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
-import type { ApiErrorResponse } from "@/shared/types";
 import { showToast } from "@/shared/utils/showToast";
 import { useQueryClient, type UseMutateFunction } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { AxiosError } from "axios";
+import type { HttpError } from "@/shared/api/api";
 import clsx from "clsx";
 
-export const getReportColumns = (mutate: UseMutateFunction<Report, AxiosError<ApiErrorResponse, any>, props, unknown>): ColumnDef<Report>[] => {
+export const getReportColumns = (mutate: UseMutateFunction<Report, HttpError, props, unknown>): ColumnDef<Report>[] => {
     const queryClient = useQueryClient();
 
     const handleResolve = (report: Report) => {
