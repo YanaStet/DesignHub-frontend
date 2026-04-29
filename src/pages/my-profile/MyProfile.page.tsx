@@ -41,7 +41,12 @@ export function MyProfilePage() {
     q: null,
     tags: null,
   });
-  const { data: likedWorks, fetchNextPage: fetchNextLikedWorksPage, hasNextPage: hasNextLikedWorksPage, isFetchingNextPage: isFetchingNextLikedWorksPage } = WorkHooks.useLikedWorksByDesignerIdIfinityQuery(me?._id || "", {
+  const {
+    data: likedWorks,
+    fetchNextPage: fetchNextLikedWorksPage,
+    hasNextPage: hasNextLikedWorksPage,
+    isFetchingNextPage: isFetchingNextLikedWorksPage,
+  } = WorkHooks.useLikedWorksByDesignerIdIfinityQuery(me?._id || "", {
     q: null,
     tags: null
   })

@@ -6,7 +6,7 @@ import { type Comment } from "@/entities/comments/model";
 import { ModerLogDialog } from "../moder-log-dialog/ModerLogDialog";
 
 export const ManageCommentTable = () => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     commentHooks.useInfinityCommentsQuery();
 
   const { mutate, isPending } = commentHooks.useBanCommentMutation();
@@ -16,6 +16,7 @@ export const ManageCommentTable = () => {
   return (
     <div>
       <InfinityTable
+        isLoading={isLoading}
         fetchNextPage={fetchNextPage}
         data={data?.pages.flatMap((page) => page.data) || []}
         hasNextPage={hasNextPage}

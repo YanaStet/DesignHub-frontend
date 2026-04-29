@@ -3,12 +3,13 @@ import { reportHooks } from "@/entities/reports/hooks";
 import { getReportColumns } from "./columns";
 
 export const ManageReportTable = () => {
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = reportHooks.useInfinityReportsQuery();
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = reportHooks.useInfinityReportsQuery();
     const { mutate } = reportHooks.useResolveReportMutation()
 
     return (
         <div>
             <InfinityTable
+                isLoading={isLoading}
                 fetchNextPage={fetchNextPage}
                 data={data?.pages.flatMap((page) => page.data) || []}
                 hasNextPage={hasNextPage}

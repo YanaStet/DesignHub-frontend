@@ -6,7 +6,7 @@ import { type Work } from "@/entities/works/model";
 import { ModerLogDialog } from "../moder-log-dialog/ModerLogDialog";
 
 export const ManageDesignTable = () => {
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = WorkHooks.useWorkInfiniteQuery({ q: "", tags: [] });
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = WorkHooks.useWorkInfiniteQuery({ q: "", tags: [] });
 
     const { mutate, isPending } = WorkHooks.useBanWorkMutation();
     const [open, setOpen] = useState(false);
@@ -15,6 +15,7 @@ export const ManageDesignTable = () => {
     return (
         <div>
             <InfinityTable
+                isLoading={isLoading}
                 fetchNextPage={fetchNextPage}
                 data={data?.pages.flatMap((page) => page.data) || []}
                 hasNextPage={hasNextPage}

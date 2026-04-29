@@ -6,7 +6,7 @@ import { type User } from "@/entities/users/model";
 import { ModerLogDialog } from "../moder-log-dialog/ModerLogDialog";
 
 export const ManageUserTable = () => {
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = UserHooks.useInfinityUserQuery();
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = UserHooks.useInfinityUserQuery();
 
     const { mutate, isPending } = UserHooks.useBanUserMutation();
     const [open, setOpen] = useState(false);
@@ -15,6 +15,7 @@ export const ManageUserTable = () => {
     return (
         <div>
             <InfinityTable
+                isLoading={isLoading}
                 fetchNextPage={fetchNextPage}
                 data={data?.pages.flatMap((page) => page.data) || []}
                 hasNextPage={hasNextPage}

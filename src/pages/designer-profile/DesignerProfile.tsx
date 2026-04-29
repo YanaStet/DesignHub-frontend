@@ -13,6 +13,7 @@ import { Button } from "@/shared/shadcn-ui/ui/button";
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { ReportDialog } from "@/shared/custom-ui/ReportDialog";
 import { useState } from "react";
+import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 
 export function DesignerProfilePage() {
   const [openReportDialog, setOpenReportDialog] = useState(false)
@@ -29,7 +30,7 @@ export function DesignerProfilePage() {
     q: null,
     tags: null,
   });
-  const { data: user } = UserHooks.useGetUserBiIdQuery(userId || "");
+  const { data: user, isLoading: isUserLoading } = UserHooks.useGetUserBiIdQuery(userId || "");
 
   const allWorks = works?.pages.flatMap((page) => page.data) || [];
 
@@ -65,7 +66,7 @@ export function DesignerProfilePage() {
               {user?.lastName[0]}
             </AvatarFallback>
           </Avatar>
-          <div className="flex gap-3 mt-10 items-center">
+          {isUserLoading ? <Spinner /> : <><div className="flex gap-3 mt-10 items-center">
             <Typography variant="h3" className="text-gray-4">
               {user?.firstName} {user?.lastName}
             </Typography>
@@ -73,12 +74,12 @@ export function DesignerProfilePage() {
               <Icon name="Report" className="w-5 text-white" />
             </Button>
           </div>
-          <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
-            {data?.bio}
-          </Typography>
-          <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
-            Experience: {data?.experience} years
-          </Typography>
+            <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
+              {data?.bio}
+            </Typography>
+            <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
+              Experience: {data?.experience} years
+            </Typography></>}
         </div>
         <div className="w-325">
           <div className="w-full h-px bg-gray-6"></div>

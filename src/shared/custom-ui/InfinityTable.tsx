@@ -4,6 +4,7 @@ import { useInView } from 'react-intersection-observer';
 import type {
     FetchNextPageOptions,
 } from "@tanstack/react-query";
+import { Spinner } from '../shadcn-ui/ui/spinner';
 
 
 
@@ -14,10 +15,11 @@ type InfinityTableProps<T> = {
     fetchNextPage: (
         options?: FetchNextPageOptions | undefined,
     ) => Promise<any>;
-    columns: ColumnDef<T>[]
+    columns: ColumnDef<T>[];
+    isLoading: boolean;
 }
 
-export default function InfinityTable<T>({ data, columns, hasNextPage, isFetchingNextPage, fetchNextPage }: InfinityTableProps<T>) {
+export default function InfinityTable<T>({ data, columns, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading }: InfinityTableProps<T>) {
     const { ref, inView } = useInView({
         rootMargin: "200px",
     });
@@ -31,7 +33,7 @@ export default function InfinityTable<T>({ data, columns, hasNextPage, isFetchin
 
     return (
         <div className='overflow-y-auto max-h-[70vh] rounded-xl border-2 border-gray-800 custom-scrollbar-container'>
-            <table className='w-full'>
+            {isLoading ? <Spinner /> : <table className='w-full'>
                 <thead className='sticky top-0 z-10'>
                     {table.getHeaderGroups().map((hg) => (
                         <tr key={hg.id}>
@@ -57,7 +59,7 @@ export default function InfinityTable<T>({ data, columns, hasNextPage, isFetchin
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table>}
         </div>
     )
 }
