@@ -1,6 +1,6 @@
 import { WORK_KEYS, type Work } from "@/entities/works/model";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "../shadcn-ui/ui/icon";
 import {
   DropdownMenu,
@@ -26,6 +26,7 @@ type WorkCardProps = {
 export function WorkCard({ work, myProfile }: WorkCardProps) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const navigate = useNavigate();
   const { mutate: deleteWork, isPending: isDeleteLoading } =
     WorkHooks.useDeleteWorkMutation(work._id);
 
@@ -53,9 +54,9 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
 
   return (
     <>
-      <Link
-        to={`/works/${work._id}`}
-        className="relative flex p-3 gap-3 flex-col bg-primary-1 rounded-2xl hover:scale-103 transition-transform duration-400"
+      <div
+        onClick={() => navigate(`/works/${work._id}`)}
+        className="relative flex p-3 gap-3 flex-col bg-primary-1 rounded-2xl hover:scale-103 transition-transform duration-400 cursor-pointer"
       >
         {myProfile && (
           <div className="absolute top-4 right-4 text-gray-4">
@@ -142,7 +143,7 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
             ))}
           </div>
         )}
-      </Link>
+      </div>
       <CustomAlertDialog
         open={openDelete}
         onOpenChange={setOpenDelete}

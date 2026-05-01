@@ -49,7 +49,8 @@ export function AddWorkDialog({
   isLoading,
   defaultValues,
 }: AddWorkDialogProps) {
-  const [img, setImg] = useState<File | null>(null);
+  const [coverImg, setCoverImg] = useState<File | null>(null);
+  const [contentImg, setContentImg] = useState<File | null>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   const form = useForm<WorkCreateSchema>({
@@ -63,8 +64,11 @@ export function AddWorkDialog({
 
   const { data: tags } = tagHooks.useGetAllTagsQuery();
 
-  const handleFileChange = (file: File | null) => {
-    setImg(file);
+  const handleCoverFileChange = (file: File | null) => {
+    setCoverImg(file);
+  };
+  const handleContentFileChange = (file: File | null) => {
+    setContentImg(file);
   };
   const handleAddTag = (tag: Tag) => {
     if (!selectedTags.includes(tag)) {
@@ -76,8 +80,8 @@ export function AddWorkDialog({
       tags: selectedTags.map((t) => t._id),
       description: body.description || null,
       title: body.title,
-      coverImage: img,
-      designFile: img,
+      coverImage: coverImg,
+      designFile: contentImg,
     });
   };
 
@@ -136,13 +140,24 @@ export function AddWorkDialog({
 
             <div className="grid w-full max-w-sm items-center gap-3">
               <Label htmlFor="picture" className="text-gray-6 mt-3">
-                {defaultValues
-                  ? "Leave the field empty, if you want to keep previous image"
-                  : "Picture"}
+                Cover
               </Label>
               <FileUploadField
-                onChange={handleFileChange}
-                value={img}
+                onChange={handleCoverFileChange}
+                value={coverImg}
+                accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+                label="Upload cover image"
+                icon={<Icon name="Plus" />}
+              />
+            </div>
+
+            <div className="grid w-full max-w-sm items-center gap-3">
+              <Label htmlFor="picture" className="text-gray-6 mt-3">
+                Content
+              </Label>
+              <FileUploadField
+                onChange={handleContentFileChange}
+                value={contentImg}
                 accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
                 label="Upload content image"
                 icon={<Icon name="Plus" />}

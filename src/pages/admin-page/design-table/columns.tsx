@@ -11,20 +11,36 @@ import clsx from "clsx";
 import { type Work } from "@/entities/works/model";
 
 import type { Dispatch, SetStateAction } from "react";
+import { Typography } from "@/shared/shadcn-ui/ui/typography";
+import { useNavigate } from "react-router-dom";
 
 export const getWorkColumns = (
   setOpen: (open: boolean) => void,
   setSelectedData: Dispatch<SetStateAction<Work | null>>,
 ): ColumnDef<Work>[] => {
+  const navigate = useNavigate();
+
   const handleBanWork = (work: Work) => {
     setOpen(true);
     setSelectedData(work);
+  };
+
+  const handleVisitDesign = (work: Work) => {
+    navigate(`/works/${work._id}`);
   };
 
   return [
     {
       accessorKey: "title",
       header: "Title",
+      cell: ({ row }) => {
+        const work = row.original;
+        return (
+          <Typography variant="body2" className="text-white cursor-pointer hover:underline" onClick={() => handleVisitDesign(work)}>
+            {work.title}
+          </Typography>
+        );
+      },
     },
     {
       accessorKey: "description",

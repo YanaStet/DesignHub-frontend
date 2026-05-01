@@ -9,17 +9,23 @@ import {
 import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import clsx from "clsx";
-
 import type { Dispatch, SetStateAction } from "react";
+import { Typography } from "@/shared/shadcn-ui/ui/typography";
+import { useNavigate } from "react-router-dom";
 
 export const getUserColumns = (
   setOpen: (open: boolean) => void,
   setSelectedData: Dispatch<SetStateAction<User | null>>,
 ): ColumnDef<User>[] => {
+  const navigate = useNavigate();
   const handleBanUser = (user: User) => {
     setOpen(true);
     setSelectedData(user);
   };
+
+  const handleVisitUserProfile = (user: User) => {
+    navigate(`/users/${user._id}`);
+  }
 
   return [
     {
@@ -33,6 +39,14 @@ export const getUserColumns = (
     {
       accessorKey: "email",
       header: "Email",
+      cell: ({ row }) => {
+        const user = row.original;
+        return (
+          <Typography variant="body2" className="text-white cursor-pointer hover:underline" onClick={() => handleVisitUserProfile(user)}>
+            {user.email}
+          </Typography>
+        );
+      },
     },
     {
       accessorKey: "isBanned",

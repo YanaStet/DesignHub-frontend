@@ -5,11 +5,11 @@ import { buildQueryParams } from "@/shared/utils/query";
 
 class CommentService {
   async getByWorkIdComments(workId: string): Promise<Comment[]> {
-    const data = await api.get<Comment[]>(`/comments/${workId}`);
+    const data = await api.get<Comment[]>(`/comments/design/${workId}`);
     return data;
   }
   async createComment(body: CommentRequest): Promise<Comment> {
-    const data = await api.post<Comment>(`/comments/${body.designId}`, {
+    const data = await api.post<Comment>(`/comments/design/${body.designId}`, {
       text: body.content,
     });
     return data;
@@ -39,6 +39,10 @@ class CommentService {
     const data = await api.put<Comment>(`/comments/ban/${commentId}`, {
       reason,
     });
+    return data;
+  }
+  async getCommentById(commentId: string): Promise<Comment> {
+    const data = await api.get<Comment>(`/comments/${commentId}`);
     return data;
   }
 }

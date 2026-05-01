@@ -1,4 +1,5 @@
 import { useBanCommentMutation } from "./useBanCommentMutation";
+import { useCommentByIdQuery } from "./useCommentByIdQuery";
 import { useCommentsByWorkIdQuery } from "./useCommentsByWorkIdQuery";
 import { useCreateCommentMutation } from "./useCreateCommentMutation";
 import { useDeleteCommentMutation } from "./useDeleteCommentMutation";
@@ -11,5 +12,6 @@ export const commentHooks = {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
   useInfinityCommentsQuery,
-  useBanCommentMutation
+  useBanCommentMutation,
+  useCommentByIdQuery
 };

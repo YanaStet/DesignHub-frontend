@@ -95,7 +95,7 @@ export function DesignerProfilePage() {
           />
         </div>
       </div>
-      <ReportDialog open={openReportDialog} setOpen={setOpenReportDialog} type={"User"} targetId={userId || ""} />
+      <ReportDialog open={openReportDialog} setOpen={setOpenReportDialog} type={"User"} targetId={user?._id || ""} />
     </div>
   );
 }

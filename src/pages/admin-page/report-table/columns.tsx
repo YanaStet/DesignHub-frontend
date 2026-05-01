@@ -10,7 +10,15 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { HttpError } from "@/shared/api/api";
 import clsx from "clsx";
 
-export const getReportColumns = (mutate: UseMutateFunction<Report, HttpError, props, unknown>): ColumnDef<Report>[] => {
+export const getReportColumns = (
+    mutate: UseMutateFunction<Report, HttpError, props, unknown>,
+    setOpenDesignPreview: (open: boolean) => void,
+    setDesignId: (designId: string) => void,
+    setOpenUserPreview: (open: boolean) => void,
+    setUserId: (userId: string) => void,
+    setOpenCommentPreview: (open: boolean) => void,
+    setCommentId: (commentId: string) => void
+): ColumnDef<Report>[] => {
     const queryClient = useQueryClient();
 
     const handleResolve = (report: Report) => {
@@ -48,7 +56,26 @@ export const getReportColumns = (mutate: UseMutateFunction<Report, HttpError, pr
     },
     {
         accessorKey: "targetType",
-        header: 'Type'
+        header: 'Type',
+        cell: ({ row }) => {
+            const report = row.original;
+            return (
+                <Button variant="outline" size="sm" className="bg-primary-1 border-0" onClick={() => {
+                    if (report.targetType === 'Design') {
+                        setDesignId(report.targetId);
+                        setOpenDesignPreview(true);
+                    } else if (report.targetType === 'User') {
+                        setUserId(report.targetId);
+                        setOpenUserPreview(true);
+                    } else if (report.targetType === 'Comment') {
+                        setCommentId(report.targetId);
+                        setOpenCommentPreview(true);
+                    }
+                }}>
+                    {report.targetType}
+                </Button>
+            );
+        }
     },
     {
         accessorKey: "status",
