@@ -25,6 +25,7 @@ import {
 } from "./loginSchema";
 import { UserHooks } from "@/entities/users/hooks";
 import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
+import { GoogleLogin } from "@react-oauth/google";
 
 export function LoginPage() {
   const [isReg, setIsReg] = useState(false);
@@ -39,9 +40,23 @@ export function LoginPage() {
   });
 
   const { mutate: login, isPending: isLoading } = AuthHooks.useLoginMutation();
+  const { mutate: googleLogin } = AuthHooks.useGoogleLoginMutation();
   const { mutate: register, isPending: isRegLoading } = UserHooks.useCreateUserMutation();
 
   const navigate = useNavigate();
+
+  const handleGoogleSuccess = (credentialResponse: any) => {
+    if (credentialResponse.credential) {
+      googleLogin(credentialResponse.credential, {
+        onSuccess: () => {
+          showToast("success", "You successfully logged in with Google.");
+        },
+        onError: (er) => {
+          handleApiError(er);
+        },
+      });
+    }
+  };
 
   const handleSubmitLogin = (values: LoginFormSchema) => {
     login(
@@ -185,6 +200,19 @@ export function LoginPage() {
                 {isRegLoading ? <Spinner /> : "Sign In"}
               </Button>
 
+              <div className="flex justify-center mt-4 w-full overflow-hidden rounded-md">
+                <GoogleLogin
+                  theme="filled_black"
+                  size="large"
+                  width={384}
+                  text="signin_with"
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => {
+                    showToast("error", "Google login failed");
+                  }}
+                />
+              </div>
+
               <Typography
                 className="text-gray-4 flex gap-1 mt-3"
                 variant="body3"
@@ -247,6 +275,20 @@ export function LoginPage() {
               >
                 {isLoading ? <Spinner /> : "Login"}
               </Button>
+
+              <div className="flex justify-center mt-4 w-full overflow-hidden rounded-md">
+                <GoogleLogin
+                  theme="filled_black"
+                  size="large"
+                  width={384}
+                  text="signin_with"
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => {
+                    showToast("error", "Google login failed");
+                  }}
+                />
+              </div>
+
               <Typography
                 className="text-gray-4 flex gap-1 mt-3"
                 variant="body3"

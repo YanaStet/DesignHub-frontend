@@ -9,6 +9,10 @@ class AuthService {
   async logout(): Promise<void> {
     await api.post("/auth/logout");
   }
+
+  async googleLogin(idToken: string): Promise<AuthResponse> {
+    return api.post<AuthResponse>('/auth/google', { token: idToken });
+  }
 }
 
 export const authService = new AuthService();

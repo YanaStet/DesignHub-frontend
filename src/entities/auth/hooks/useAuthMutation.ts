@@ -19,3 +19,18 @@ export function useLoginMutation(): UseMutationResult<
     },
   });
 }
+
+export function useGoogleLoginMutation(): UseMutationResult<
+  AuthResponse,
+  HttpError,
+  string // idToken
+> {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: (idToken: string) => authService.googleLogin(idToken),
+    onSuccess: () => {
+      navigate("/");
+    },
+  });
+}
