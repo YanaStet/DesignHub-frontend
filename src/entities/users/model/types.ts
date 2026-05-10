@@ -18,7 +18,6 @@ export type UserRequest = {
   firstName: string;
   lastName: string;
   password: string;
-  role: Role;
 };
 
 export type PaginatedUsers = PaginationResponse<User>;

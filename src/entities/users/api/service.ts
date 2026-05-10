@@ -2,14 +2,15 @@ import api from "@/shared/api/api";
 import type { PaginatedUsers, User, UserRequest } from "../model/types";
 import { buildQueryParams } from "@/shared/utils/query";
 import type { PaginationParams } from "@/shared/types";
+import type { AuthResponse } from "@/entities/auth/model/types";
 
 class UserService {
   async getAllUsers(): Promise<User[]> {
     const data = await api.get<User[]>("/users/");
     return data;
   }
-  async createUser(body: UserRequest): Promise<User> {
-    const data = await api.post<User>("/auth/register", body);
+  async createUser(body: UserRequest): Promise<AuthResponse> {
+    const data = await api.post<AuthResponse>("/auth/register", body);
     return data;
   }
   async getMe(): Promise<User> {

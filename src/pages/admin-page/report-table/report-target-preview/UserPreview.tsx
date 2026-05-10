@@ -40,7 +40,7 @@ export const UserPreview = ({
     })
 
     const { data: designer } = DesignerProfileHooks.useDesignerProfileByIdQuery(userId);
-    const { data: user, isLoading } = UserHooks.useGetUserBiIdQuery(designer?.user || '');
+    const { data: user, isLoading } = UserHooks.useGetUserByIdQuery(designer?.user || '');
 
     const handleBanUser = (values: z.infer<typeof banSchema>) => {
         if (user?._id) {

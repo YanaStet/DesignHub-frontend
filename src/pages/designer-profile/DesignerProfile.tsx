@@ -30,7 +30,7 @@ export function DesignerProfilePage() {
     q: null,
     tags: null,
   });
-  const { data: user, isLoading: isUserLoading } = UserHooks.useGetUserBiIdQuery(userId || "");
+  const { data: user, isLoading: isUserLoading } = UserHooks.useGetUserByIdQuery(userId || "");
 
   const allWorks = works?.pages.flatMap((page) => page.data) || [];
 

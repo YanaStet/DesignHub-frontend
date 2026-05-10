@@ -12,7 +12,7 @@ export function useGetWorkByIdQuery<TData = Work>(
   options?: Partial<UseQueryOptions<Work, HttpError, TData>>,
 ): UseQueryResult<TData> {
   return useQuery<Work, HttpError, TData>({
-    queryKey: [WORK_KEYS.GET_ALL_WORK, workId],
+    queryKey: [WORK_KEYS.GET_WORK_BY_ID, workId],
     queryFn: () => workService.getWorkById(workId),
     ...options,
   });

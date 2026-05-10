@@ -15,11 +15,10 @@ import { InfinityWorkList } from "@/shared/custom-ui/InfinityWorkList";
 
 export function HomePage() {
   const [searchValue, setSearchValue] = useState("");
-  const [params, setParams] = useState<Omit<WorkQueryParams, "skip" | "limit">>(
+  const [params, setParams] = useState<Omit<WorkQueryParams, "page" | "limit">>(
     {
       tags: null,
       q: null,
-      page: 1,
     },
   );
 
@@ -33,7 +32,6 @@ export function HomePage() {
   } = WorkHooks.useWorkInfiniteQuery(params);
 
   const handleSearch = () => {
-    setSearchValue(searchValue);
     setParams((prev) => ({
       ...prev,
       q: searchValue,

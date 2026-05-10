@@ -13,7 +13,7 @@ export function usePaginatedUsersQuery<TData = PaginatedUsers>(
     options?: Partial<UseQueryOptions<PaginatedUsers, HttpError, TData>>
 ): UseQueryResult<TData> {
     return useQuery<PaginatedUsers, HttpError, TData>({
-        queryKey: [USER_KEYS.GET_ALL_USER],
+        queryKey: [USER_KEYS.PAGINATED_USERS, params],
         queryFn: () => userService.getPaginatedUsers(params),
         ...options,
     });

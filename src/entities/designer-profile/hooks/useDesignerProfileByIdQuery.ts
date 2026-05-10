@@ -12,7 +12,7 @@ export function useDesignerProfileByIdQuery<TData = DesignerProfile>(
   options?: Partial<UseQueryOptions<DesignerProfile, HttpError, TData>>
 ): UseQueryResult<TData> {
   return useQuery<DesignerProfile, HttpError, TData>({
-    queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME, designer_id],
+    queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_BY_ID, designer_id],
     queryFn: () => designerProfileService.getDesignerProfileById(designer_id),
     ...options,
   });

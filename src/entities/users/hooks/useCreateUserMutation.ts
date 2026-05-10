@@ -1,10 +1,11 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import type { User, UserRequest } from "../model";
+import type { UserRequest } from "../model";
 import type { HttpError } from "@/shared/api/api";
 import { userService } from "../api/service";
+import type { AuthResponse } from "@/entities/auth/model/types";
 
 export function useCreateUserMutation(): UseMutationResult<
-  User,
+  AuthResponse,
   HttpError,
   UserRequest
 > {

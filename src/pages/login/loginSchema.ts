@@ -4,8 +4,7 @@ export const loginFormSchema = z.object({
   email: z.email(),
   password: z
     .string()
-    .min(8, { error: "8 symbols." })
-    .max(8, { error: "8 symbols." }),
+    .min(8, { error: "Мінімум 8 символів." }),
 });
 
 export type LoginFormSchema = z.infer<typeof loginFormSchema>;
@@ -16,8 +15,7 @@ export const regFormSchema = z.object({
   email: z.email(),
   password: z
     .string()
-    .min(8, { error: "8 symbols." })
-    .max(8, { error: "8 symbols." }),
+    .min(8, { error: "Мінімум 8 символів." }),
 });
 
 export type RegFormSchema = z.infer<typeof regFormSchema>;

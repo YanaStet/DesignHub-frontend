@@ -22,8 +22,6 @@ import {
 } from "@/entities/designer-profile/model";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/shadcn-ui/ui/tabs";
 
-export type StarIcon = "full" | "half" | "empty";
-
 export function MyProfilePage() {
   const [selectedTab, setSelectedTab] = useState<"projects" | "liked">("projects");
   const [openWorkDialog, setOpenWorkDialog] = useState(false);
@@ -46,7 +44,7 @@ export function MyProfilePage() {
     fetchNextPage: fetchNextLikedWorksPage,
     hasNextPage: hasNextLikedWorksPage,
     isFetchingNextPage: isFetchingNextLikedWorksPage,
-  } = WorkHooks.useLikedWorksByDesignerIdIfinityQuery(me?._id || "", {
+  } = WorkHooks.useLikedWorksByDesignerIdInfinityQuery(me?._id || "", {
     q: null,
     tags: null
   })

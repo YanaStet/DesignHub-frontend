@@ -3,20 +3,18 @@ import { useCreateWorkMutation } from "./useCreateWorkMutation";
 import { useDeleteWorkMutation } from "./useDeleteWorkMutation";
 import { useGetAllWorksQuery } from "./useGetAllWorksQuery";
 import { useGetWorkByIdQuery } from "./useGetWorkByIdQuery";
-import { useLikedWorksByDesignerIdIfinityQuery } from "./useLikedWorksByDesignerIdInfinityQuery";
+import { useLikedWorksByDesignerIdInfinityQuery } from "./useLikedWorksByDesignerIdInfinityQuery";
 import { useUpdateContentMutation } from "./useUpdateContentMutation";
 import { useUpdateCoverMutation } from "./useUpdateCoverMutation";
 import { useUpdateWorkMutation } from "./useUpdateWorkMutation";
 import { useViewWorkMutation } from "./useViewWorkMutation";
 import { useWorkByDesignerIdInfiniteQuery } from "./useWorkByDesignerIdInfiniteQuery";
 import { useWorkInfiniteQuery } from "./useWorkInfiniteQuery";
-import { useWorksByDesignerIdQuery } from "./useWorksByDesignerIdQuery";
 
 export const WorkHooks = {
   useGetAllWorksQuery,
   useWorkInfiniteQuery,
   useGetWorkByIdQuery,
-  useWorksByDesignerIdQuery,
   useWorkByDesignerIdInfiniteQuery,
   useCreateWorkMutation,
   useDeleteWorkMutation,
@@ -24,6 +22,6 @@ export const WorkHooks = {
   useViewWorkMutation,
   useUpdateCoverMutation,
   useUpdateContentMutation,
-  useLikedWorksByDesignerIdIfinityQuery,
+  useLikedWorksByDesignerIdInfinityQuery,
   useBanWorkMutation
 };

@@ -1,5 +1,6 @@
 import { authService } from "@/entities/auth/api/service";
 import logo from "@/shared/assets/logo.png";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Avatar,
   AvatarFallback,
@@ -18,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 export function Header() {
   const { me, avatar_url, setMe, setAvatarUrl, setDesignerProfile } = useMe();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
 
   const handleLogOut = async () => {
@@ -25,6 +27,7 @@ export function Header() {
     setMe(null);
     setAvatarUrl(undefined);
     setDesignerProfile(null);
+    queryClient.clear();
     navigate(ROUTE_PATHS.LOGIN);
   };
 

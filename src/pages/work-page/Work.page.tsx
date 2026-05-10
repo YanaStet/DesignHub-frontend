@@ -9,7 +9,6 @@ import { CommentItem } from "./comment-item/Comment";
 
 import { useEffect, useMemo, useState } from "react";
 import { WORK_KEYS, type WorkQueryParams } from "@/entities/works/model";
-import { AddCommentDialog } from "./add-comment-dialog/AddCommentDialog";
 import { WorkCard } from "../../shared/custom-ui/WorkCard";
 import { CustomSheet } from "@/shared/custom-ui/CustomSheet";
 import { handleApiError } from "@/shared/api/apiError";
@@ -28,7 +27,6 @@ export function WorkPage() {
   const [openCommentReportDialog, setOpenCommentReportDialog] = useState(false)
   const [targetCommentId, setTargetCommentId] = useState<string>("")
   const [commentText, setCommentText] = useState("");
-  const [open, setOpen] = useState(false);
   const [openCommentSheet, setOpenCommentSheet] = useState(false);
   const [openSimilarSheet, setOpenSimilarSheet] = useState(false);
   const { workId } = useParams();
@@ -85,15 +83,12 @@ export function WorkPage() {
   };
 
   useEffect(() => {
-    view(
-      {},
-      {
-        onError: (er) => handleApiError(er),
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [WORK_KEYS.GET_ALL_WORK] });
-        },
+    view(undefined, {
+      onError: (er) => handleApiError(er),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [WORK_KEYS.GET_WORK_BY_ID] });
       },
-    );
+    });
   }, []);
 
   return (
@@ -156,12 +151,7 @@ export function WorkPage() {
                   </Link>
                   <span className="h-1 w-1 rounded-full bg-primary-3" />
                   <Typography variant="body4" className="text-primary-3">
-                    {/* {
-                      new Date(data?.createdAt || "")
-                        .toISOString()
-                        .split("T")[0]
-                    } */}
-                    {data?.createdAt}
+                    {new Date(data?.createdAt || "").toLocaleDateString()}
                   </Typography>
                 </div>
                 <Typography variant="h3" className="text-gray-4 my-3">
@@ -213,7 +203,7 @@ export function WorkPage() {
           <Icon name="Similar" className="text-gray-4" />
         </Button>
       </div>
-      <AddCommentDialog open={open} setOpen={setOpen} workId={workId || ""} />
+
 
       <CustomSheet
         title="Comments"

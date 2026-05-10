@@ -7,12 +7,12 @@ import { USER_KEYS, type User } from "../model";
 import { userService } from "../api/service";
 import type { HttpError } from "@/shared/api/api";
 
-export function useGetUserBiIdQuery<TData = User>(
+export function useGetUserByIdQuery<TData = User>(
   userId: string,
   options?: Partial<UseQueryOptions<User, HttpError, TData>>
 ): UseQueryResult<TData> {
   return useQuery<User, HttpError, TData>({
-    queryKey: [USER_KEYS.GET_USER_BY_ID],
+    queryKey: [USER_KEYS.GET_USER_BY_ID, userId],
     queryFn: () => userService.getUserById(userId),
     ...options,
   });

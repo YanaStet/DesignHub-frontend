@@ -4,15 +4,16 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { AuthRedirectRoute } from "./AuthRedirectRoute";
+import { AdminRoute } from "./AdminRoute";
 import { ROUTE_PATHS } from "@/shared/utils/routes";
-import { HomePageLazy } from "@/pages/home/Home.page.pazy";
+import { HomePageLazy } from "@/pages/home/Home.page.lazy";
 import { PublicLayout } from "./PublicLayout";
-import { WorkPageLazy } from "@/pages/work-page/Work.page.pazy";
+import { WorkPageLazy } from "@/pages/work-page/Work.page.lazy";
 import { UnauthorizedLayout } from "./UnauthorizedLayout";
 import { LoginPageLazy } from "@/pages/login/Login.page.lazy";
 import { MyProfilePageLazy } from "@/pages/my-profile/MyProfile.page.lazy";
-import { DesignerProfilePageLazy } from "@/pages/designer-profile/DesignerProfile.page.pazy";
-import { AdminPageLazy } from "@/pages/admin-page/Admin.page.pazy";
+import { DesignerProfilePageLazy } from "@/pages/designer-profile/DesignerProfile.page.lazy";
+import { AdminPageLazy } from "@/pages/admin-page/Admin.page.lazy";
 
 const routes: RouteObject[] = [
   {
@@ -38,8 +39,13 @@ const routes: RouteObject[] = [
             element: <MyProfilePageLazy />,
           },
           {
-            path: ROUTE_PATHS.ADMIN,
-            element: <AdminPageLazy />,
+            element: <AdminRoute />,
+            children: [
+              {
+                path: ROUTE_PATHS.ADMIN,
+                element: <AdminPageLazy />,
+              }
+            ],
           }
         ],
       },

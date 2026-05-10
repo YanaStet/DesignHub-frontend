@@ -50,6 +50,7 @@ export function LoginPage() {
       googleLogin(credentialResponse.credential, {
         onSuccess: () => {
           showToast("success", "You successfully logged in with Google.");
+          navigate("/");
         },
         onError: (er) => {
           handleApiError(er);
@@ -83,7 +84,6 @@ export function LoginPage() {
         firstName: values.firstName,
         lastName: values.lastName,
         password: values.password,
-        role: "user",
       },
       {
         onSuccess: () => {
@@ -112,7 +112,7 @@ export function LoginPage() {
     <div className="flex items-center justify-center h-full">
       <div className="w-full max-w-md p-8 bg-primary-1 rounded-lg shadow-lg flex-col gap-3">
         <Typography variant="h2" className="text-gray-4">
-          {isReg ? "Sign In" : "Login"}
+          {isReg ? "Sign Up" : "Login"}
         </Typography>
 
         {isReg && (
@@ -197,7 +197,7 @@ export function LoginPage() {
                 className="mt-3 w-full bg-primary-2"
                 disabled={isRegLoading}
               >
-                {isRegLoading ? <Spinner /> : "Sign In"}
+                {isRegLoading ? <Spinner /> : "Create Account"}
               </Button>
 
               <div className="flex justify-center mt-4 w-full overflow-hidden rounded-md">
@@ -295,7 +295,7 @@ export function LoginPage() {
               >
                 Don't have an account yet?{" "}
                 <span className="cursor-pointer" onClick={() => setIsReg(true)}>
-                  Sign In
+                  Sign Up
                 </span>
               </Typography>
             </form>

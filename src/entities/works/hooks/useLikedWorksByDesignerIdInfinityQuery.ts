@@ -5,7 +5,7 @@ import { workService } from "../api/service";
 import type { PaginationResponse } from "@/shared/types";
 
 
-export function useLikedWorksByDesignerIdIfinityQuery(
+export function useLikedWorksByDesignerIdInfinityQuery(
     userId: string,
     initialParams: Omit<WorkQueryParams, "page" | "limit">,
 ) {
