@@ -1,12 +1,7 @@
-export type DesignerProfile = {
-  _id: string;
-  specialization: string | null;
-  experience: number | null;
-  bio: string | null;
-  header_image: string | null;
-  avatar: string | null;
-  user: string;
-};
+import type { UserProfile } from "@/entities/users/model";
+
+// Re-export UserProfile as DesignerProfile for backward compatibility
+export type DesignerProfile = UserProfile;
 
 export type DesignerProfileRequest = {
   specialization: string | null;

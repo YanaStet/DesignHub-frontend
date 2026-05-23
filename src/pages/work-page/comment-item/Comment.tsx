@@ -24,7 +24,7 @@ import { useState } from "react";
 import { AddCommentDialog } from "../add-comment-dialog/AddCommentDialog";
 import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
-import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
+import { UserHooks } from "@/entities/users/hooks";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 
 type CommentProps = {
@@ -39,9 +39,9 @@ export function CommentItem({ comment, setOpenCommentReportDialog, setTargetComm
   const { me } = useMe();
   const queryClient = useQueryClient();
 
-  const { data: profile } = DesignerProfileHooks.useDesignerProfileByIdQuery(
-    comment.author._id
-  );
+  const { data: authorUser } = UserHooks.useGetUserByIdQuery(comment.author._id);
+  const profile = authorUser?.profile;
+
   const { mutate, isPending } = commentHooks.useDeleteCommentMutation(
     comment._id
   );

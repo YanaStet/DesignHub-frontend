@@ -1,4 +1,3 @@
-import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 import {
   Avatar,
   AvatarFallback,
@@ -18,9 +17,7 @@ import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
 export function DesignerProfilePage() {
   const [openReportDialog, setOpenReportDialog] = useState(false)
   const { userId } = useParams();
-  const { data } = DesignerProfileHooks.useDesignerProfileByIdQuery(
-    userId || ""
-  );
+  const { data: user, isLoading: isUserLoading } = UserHooks.useGetUserByIdQuery(userId || "");
   const {
     data: works,
     fetchNextPage,
@@ -30,17 +27,17 @@ export function DesignerProfilePage() {
     q: null,
     tags: null,
   });
-  const { data: user, isLoading: isUserLoading } = UserHooks.useGetUserByIdQuery(userId || "");
 
+  const profile = user?.profile;
   const allWorks = works?.pages.flatMap((page) => page.data) || [];
 
   return (
     <div>
       <div>
-        {data?.header_image ? (
+        {profile?.header_image ? (
           <div className="w-full max-h-35 2xl:max-h-60 overflow-hidden">
             <img
-              src={data?.header_image}
+              src={profile?.header_image}
               alt="Photo"
               className="object-cover h-full w-full"
             />
@@ -57,7 +54,7 @@ export function DesignerProfilePage() {
         <div>
           <Avatar className="w-37 h-37 absolute top-[-75px]">
             <AvatarImage
-              src={data?.avatar || undefined}
+              src={profile?.avatar || undefined}
               alt="@shadcn"
               className="object-cover"
             />
@@ -75,10 +72,10 @@ export function DesignerProfilePage() {
             </Button>
           </div>
             <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
-              {data?.bio}
+              {profile?.bio}
             </Typography>
             <Typography variant="body3" className="text-gray-4 mt-5 max-w-60">
-              Experience: {data?.experience} years
+              Experience: {profile?.experience} years
             </Typography></>}
         </div>
         <div className="w-325">

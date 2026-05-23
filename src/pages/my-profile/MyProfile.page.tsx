@@ -21,13 +21,14 @@ import {
   type DesignerProfileRequest,
 } from "@/entities/designer-profile/model";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/shadcn-ui/ui/tabs";
+import { USER_KEYS } from "@/entities/users/model";
 
 export function MyProfilePage() {
   const [selectedTab, setSelectedTab] = useState<"projects" | "liked">("projects");
   const [openWorkDialog, setOpenWorkDialog] = useState(false);
   const [openDesignerProfileDialog, setOpenDesignerProfileDialog] =
     useState(false);
-  const { me, myProfile, setDesignerProfile } = useMe();
+  const { me, myProfile, setDesignerProfile, setMe, setAvatarUrl } = useMe();
   const queryClient = useQueryClient();
 
   const {
@@ -112,8 +113,12 @@ export function MyProfilePage() {
         queryClient.invalidateQueries({
           queryKey: [DESIGNER_PROFILE_KEYS.DESIGNER_PROFILE_ME],
         });
+        queryClient.invalidateQueries({
+          queryKey: [USER_KEYS.GET_ME],
+        });
         setOpenDesignerProfileDialog(false);
         setDesignerProfile(res);
+        setAvatarUrl(res.avatar || undefined);
       },
       onError: (er) => {
         handleApiError(er);

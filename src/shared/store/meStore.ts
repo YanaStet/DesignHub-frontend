@@ -1,17 +1,16 @@
-import type { DesignerProfile } from "@/entities/designer-profile/model";
-import type { User } from "@/entities/users/model";
+import type { User, UserProfile } from "@/entities/users/model";
 import { create } from "zustand";
 
 type MeStore = {
   me: User | null;
   avatar_url?: string;
-  myProfile: DesignerProfile | null;
+  myProfile: UserProfile | null;
 };
 
 type MeActions = {
   setMe: (me: User | null) => void;
   setAvatarUrl: (avatar_url: string | undefined) => void;
-  setDesignerProfile: (profile: DesignerProfile | null) => void;
+  setDesignerProfile: (profile: UserProfile | null) => void;
 };
 
 export const useMe = create<MeStore & MeActions>((set) => ({

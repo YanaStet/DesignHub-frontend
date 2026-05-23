@@ -1,4 +1,3 @@
-import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 import { UserHooks } from "@/entities/users/hooks";
 import { Header } from "@/features/Header";
 import { Loader } from "@/shared/custom-ui/Loader";
@@ -8,21 +7,20 @@ import { Outlet } from "react-router-dom";
 
 export function PublicLayout() {
   const { data: me, error, isLoading } = UserHooks.useGetMeQuery();
-  const { data: profile } = DesignerProfileHooks.useDesignerProfileQuery();
   const { setMe, setAvatarUrl, setDesignerProfile } = useMe();
 
   useEffect(() => {
     if (me !== undefined && error === null) {
       setMe(me);
+      if (me?.profile) {
+        setDesignerProfile(me.profile);
+        setAvatarUrl(me.profile.avatar || undefined);
+      } else {
+        setDesignerProfile(null);
+        setAvatarUrl(undefined);
+      }
     }
-    if (profile) {
-      setDesignerProfile(profile);
-      setAvatarUrl(profile.avatar || undefined);
-    } else {
-      setDesignerProfile(null);
-      setAvatarUrl(undefined);
-    }
-  }, [me, profile]);
+  }, [me]);
 
   return (
     <div className="max-h-screen overflow-y-hidden">

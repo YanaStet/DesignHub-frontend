@@ -1,6 +1,4 @@
-import { DesignerProfileHooks } from "@/entities/designer-profile/hooks";
 import { UserHooks } from "@/entities/users/hooks";
-import { USER_KEYS } from "@/entities/users/model";
 import { handleApiError } from "@/shared/api/apiError";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/shadcn-ui/ui/dialog";
@@ -10,8 +8,6 @@ import { Textarea } from "@/shared/shadcn-ui/ui/textarea";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { showToast } from "@/shared/utils/showToast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
@@ -32,15 +28,13 @@ export const UserPreview = ({
     userId
 }: DesignPreviewProps) => {
     const { mutate, isPending } = UserHooks.useBanUserMutation()
-    const queryClient = useQueryClient()
     const navigate = useNavigate()
 
     const form = useForm<z.infer<typeof banSchema>>({
         resolver: zodResolver(banSchema),
     })
 
-    const { data: designer } = DesignerProfileHooks.useDesignerProfileByIdQuery(userId);
-    const { data: user, isLoading } = UserHooks.useGetUserByIdQuery(designer?.user || '');
+    const { data: user, isLoading } = UserHooks.useGetUserByIdQuery(userId);
 
     const handleBanUser = (values: z.infer<typeof banSchema>) => {
         if (user?._id) {
@@ -54,12 +48,6 @@ export const UserPreview = ({
             })
         }
     }
-
-    useEffect(() => {
-        if (designer?.user) {
-            queryClient.invalidateQueries({ queryKey: [USER_KEYS.GET_USER_BY_ID] })
-        }
-    }, [designer?.user])
 
     return (<Dialog
         open={open}
