@@ -1,3 +1,5 @@
+import { Download } from "lucide-react";
+import { getFileTypeLabel, formatFileSize } from "@/shared/utils/fileHelpers";
 import { WorkHooks } from "@/entities/works/hooks";
 import { handleApiError } from "@/shared/api/apiError";
 import { Button } from "@/shared/shadcn-ui/ui/button";
@@ -66,8 +68,39 @@ export const DesignPreview = ({
                                 <img src={design?.coverUrl} alt="" className="rounded-xl" />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <Typography className="text-white">Design</Typography>
-                                <img src={design?.designUrl} alt="" className="rounded-xl" />
+                                <Typography className="text-white">
+                                    Design {design?.designFile?.fileType ? `(${getFileTypeLabel(design.designFile.fileType)})` : ''}
+                                </Typography>
+                                {design?.designFile?.fileType === 'video' ? (
+                                    <video
+                                        src={design?.designFile?.url || design?.designUrl}
+                                        controls
+                                        className="rounded-xl max-h-48"
+                                    />
+                                ) : design?.designFile?.fileType && !['image'].includes(design.designFile.fileType) ? (
+                                    <div className="rounded-xl bg-neutral-800 p-3 flex flex-col gap-1">
+                                        <Typography variant="body4" className="text-gray-4 truncate">
+                                            {design?.designFile?.originalName || 'Design file'}
+                                        </Typography>
+                                        {design?.designFile?.fileSize && (
+                                            <Typography variant="body4" className="text-gray-3">
+                                                {formatFileSize(design.designFile.fileSize)}
+                                            </Typography>
+                                        )}
+                                        <a
+                                            href={design?.designFile?.url || design?.designUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            download
+                                            className="flex items-center gap-1 text-blue-400 text-sm mt-1 hover:underline"
+                                        >
+                                            <Download className="w-3 h-3" />
+                                            Download
+                                        </a>
+                                    </div>
+                                ) : (
+                                    <img src={design?.designFile?.url || design?.designUrl} alt="" className="rounded-xl" />
+                                )}
                             </div>
                         </div>
                             <div className="flex flex-col gap-2 my-3">

@@ -37,6 +37,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { showToast } from "@/shared/utils/showToast";
 import { handleApiError } from "@/shared/api/apiError";
 import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
+import { DESIGN_FILE_ACCEPT } from "@/shared/utils/fileHelpers";
 
 type AddWorkDialogProps = {
   open: boolean;
@@ -113,7 +114,7 @@ export function EditWorkDialog({
       updateContent(contentFile, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [WORK_KEYS.INFINITE_QUERY] });
-          showToast("success", "Content image updated!");
+          showToast("success", "Design file updated!");
         },
         onError: handleApiError
       });
@@ -196,18 +197,18 @@ export function EditWorkDialog({
             </div>
 
             <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="picture" className="text-gray-6 mt-3">
+              <Label htmlFor="designFile" className="text-gray-6 mt-3">
                 {defaultValues
-                  ? "Leave the field empty, if you want to keep previous image"
-                  : "Picture"}
+                  ? "Leave the field empty, if you want to keep previous file"
+                  : "Design File"}
               </Label>
               <div className="flex gap-2 items-center">
                 <div className="w-full">
                   <FileUploadField
                     onChange={handleContentChange}
                     value={contentFile}
-                    accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
-                    label="Upload content image"
+                    accept={DESIGN_FILE_ACCEPT}
+                    label="Upload design file (image, video, PSD, AI, PDF...)"
                     icon={<Icon name="Plus" />}
                   />
                 </div>

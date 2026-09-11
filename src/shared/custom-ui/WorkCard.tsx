@@ -17,6 +17,7 @@ import { handleApiError } from "../api/apiError";
 import { useMe } from "../store/meStore";
 import { ROUTE_PATHS } from "../utils/routes";
 import { EditWorkDialog } from "@/pages/my-profile/edit-work-dialog/EditWorkDialog";
+import { getFileTypeBadge } from "@/shared/utils/fileHelpers";
 
 type WorkCardProps = {
   work: Work;
@@ -88,7 +89,7 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
             </DropdownMenu>
           </div>
         )}
-        <div className="w-50 h-30 2xl:w-70 2xl:h-40 flex justify-center overflow-hidden">
+        <div className="w-50 h-30 2xl:w-70 2xl:h-40 flex justify-center overflow-hidden relative">
           {work.coverUrl !== null ? (
             <img
               src={work.coverUrl}
@@ -99,6 +100,11 @@ export function WorkCard({ work, myProfile }: WorkCardProps) {
             <div className="w-50 h-30 2xl:w-80 2xl:h-50 bg-gray-1 rounded-2xl flex items-center justify-center">
               <div className="w-15 h-15 rounded-full bg-gray-2" />
             </div>
+          )}
+          {work.designFile?.fileType && work.designFile.fileType !== 'image' && (
+            <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-black/60 text-white text-xs font-medium">
+              {getFileTypeBadge(work.designFile.fileType)}
+            </span>
           )}
         </div>
         <div className="flex gap-1 flex-row items-center">

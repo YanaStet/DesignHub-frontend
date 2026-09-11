@@ -9,6 +9,7 @@ import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Button } from "@/shared/shadcn-ui/ui/button";
 import clsx from "clsx";
 import { type Work } from "@/entities/works/model";
+import { getFileTypeLabel } from "@/shared/utils/fileHelpers";
 
 import type { Dispatch, SetStateAction } from "react";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
@@ -45,6 +46,20 @@ export const getWorkColumns = (
     {
       accessorKey: "description",
       header: "Description",
+    },
+    {
+      accessorKey: "designFile.fileType",
+      header: "File Type",
+      cell: ({ row }) => {
+        const work = row.original;
+        const fileType = work.designFile?.fileType;
+        if (!fileType) return <span className="text-gray-3">—</span>;
+        return (
+          <span className="px-2 py-1 rounded-full bg-neutral-800 text-gray-4 text-xs">
+            {getFileTypeLabel(fileType)}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "author",

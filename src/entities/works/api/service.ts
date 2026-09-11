@@ -34,6 +34,9 @@ class WorkService {
     request.append("coverImage", body.coverImage || "");
     request.append("designFile", body.designFile || "");
     request.append("tags", JSON.stringify(body.tags));
+    if (body.figmaUrl) {
+      request.append("figmaUrl", body.figmaUrl);
+    }
     const data = await api.post<Work>("/designs", request);
     return data;
   }

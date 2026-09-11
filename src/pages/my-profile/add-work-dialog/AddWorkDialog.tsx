@@ -33,6 +33,7 @@ import type { Work, WorkRequest } from "@/entities/works/model";
 import type { Tag } from "@/entities/tags/model";
 import { FileUploadField } from "@/shared/custom-ui/FileUploadField";
 import { Spinner } from "@/shared/shadcn-ui/ui/spinner";
+import { DESIGN_FILE_ACCEPT } from "@/shared/utils/fileHelpers";
 
 type AddWorkDialogProps = {
   open: boolean;
@@ -51,6 +52,7 @@ export function AddWorkDialog({
 }: AddWorkDialogProps) {
   const [coverImg, setCoverImg] = useState<File | null>(null);
   const [contentImg, setContentImg] = useState<File | null>(null);
+  const [figmaUrl, setFigmaUrl] = useState('');
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   const form = useForm<WorkCreateSchema>({
@@ -82,6 +84,7 @@ export function AddWorkDialog({
       title: body.title,
       coverImage: coverImg,
       designFile: contentImg,
+      figmaUrl: figmaUrl || undefined,
     });
   };
 
@@ -158,9 +161,22 @@ export function AddWorkDialog({
               <FileUploadField
                 onChange={handleContentFileChange}
                 value={contentImg}
-                accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
-                label="Upload content image"
+                accept={DESIGN_FILE_ACCEPT}
+                label="Upload design file (image, video, PSD, AI, PDF...)"
                 icon={<Icon name="Plus" />}
+              />
+            </div>
+
+            <div className="grid w-full max-w-sm items-center gap-3">
+              <Label htmlFor="figmaUrl" className="text-gray-6 mt-3">
+                Figma URL (optional)
+              </Label>
+              <Input
+                id="figmaUrl"
+                value={figmaUrl}
+                onChange={(e) => setFigmaUrl(e.target.value)}
+                placeholder="https://www.figma.com/file/..."
+                className="text-gray-6"
               />
             </div>
 

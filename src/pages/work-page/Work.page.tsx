@@ -6,6 +6,8 @@ import { Icon } from "@/shared/shadcn-ui/ui/icon";
 import { Typography } from "@/shared/shadcn-ui/ui/typography";
 import { Link, useParams } from "react-router-dom";
 import { CommentItem } from "./comment-item/Comment";
+import { Download } from "lucide-react";
+import { getFileTypeLabel, formatFileSize } from "@/shared/utils/fileHelpers";
 
 import { useEffect, useMemo, useState } from "react";
 import { WORK_KEYS, type WorkQueryParams } from "@/entities/works/model";
@@ -100,17 +102,111 @@ export function WorkPage() {
           <>
             <div className="flex gap-10">
               <div className="w-130 h-70 2xl:w-165 2xl:h-90 overflow-hidden rounded-2xl">
-                {data?.designUrl ? (
-                  <img
-                    src={data.designUrl}
-                    alt="Photo"
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <div className="w-full h-full 2xl:w-80 2xl:h-50 bg-gray-1 rounded-2xl flex items-center justify-center">
-                    <div className="w-15 h-15 rounded-full bg-gray-2" />
-                  </div>
-                )}
+                {(() => {
+                  const fileType = data?.designFile?.fileType;
+                  const fileUrl = data?.designFile?.url || data?.designUrl;
+
+                  if (fileType === 'video') {
+                    return (
+                      <video
+                        src={fileUrl}
+                        controls
+                        className="w-full h-full object-contain bg-black"
+                      />
+                    );
+                  }
+
+                  if (fileType === 'pdf') {
+                    return (
+                      <div className="w-full h-full flex flex-col">
+                        <iframe
+                          src={fileUrl}
+                          title="PDF Preview"
+                          className="w-full flex-1 border-0"
+                        />
+                        <a
+                          href={fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          download
+                          className="flex items-center justify-center gap-2 py-2 bg-primary-2 text-white text-sm rounded-b-2xl hover:opacity-90 transition"
+                        >
+                          <Download className="w-4 h-4" />
+                          Download PDF
+                        </a>
+                      </div>
+                    );
+                  }
+
+                  if (fileType === 'figma' && data?.designFile?.figmaUrl) {
+                    return (
+                      <iframe
+                        src={`https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(data.designFile.figmaUrl)}`}
+                        title="Figma Preview"
+                        className="w-full h-full border-0"
+                        allowFullScreen
+                      />
+                    );
+                  }
+
+                  if (fileType && !['image', 'video', 'pdf'].includes(fileType)) {
+                    // Non-previewable files: PSD, AI, Sketch, Figma without URL, Other
+                    return (
+                      <div className="w-full h-full flex flex-col">
+                        {data?.coverUrl ? (
+                          <img
+                            src={data.coverUrl}
+                            alt={data?.title || 'Design'}
+                            className="w-full flex-1 object-cover"
+                          />
+                        ) : (
+                          <div className="flex-1 bg-gray-1 flex items-center justify-center">
+                            <div className="w-15 h-15 rounded-full bg-gray-2" />
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between px-4 py-3 bg-primary-1 border-t border-gray-2">
+                          <div className="flex flex-col gap-0.5">
+                            <Typography variant="body3" className="text-gray-4 font-medium">
+                              {data?.designFile?.originalName || `${getFileTypeLabel(fileType)} file`}
+                            </Typography>
+                            <Typography variant="body4" className="text-gray-3">
+                              {getFileTypeLabel(fileType)}{data?.designFile?.fileSize ? ` · ${formatFileSize(data.designFile.fileSize)}` : ''}
+                            </Typography>
+                          </div>
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Button variant="default" className="bg-primary-2 gap-2">
+                              <Download className="w-4 h-4" />
+                              Download
+                            </Button>
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Default: image or fallback
+                  if (fileUrl) {
+                    return (
+                      <img
+                        src={fileUrl}
+                        alt={data?.title || 'Photo'}
+                        className="object-cover w-full h-full"
+                      />
+                    );
+                  }
+
+                  return (
+                    <div className="w-full h-full 2xl:w-80 2xl:h-50 bg-gray-1 rounded-2xl flex items-center justify-center">
+                      <div className="w-15 h-15 rounded-full bg-gray-2" />
+                    </div>
+                  );
+                })()}
               </div>
               <div>
                 <div className="flex items-center gap-2">
